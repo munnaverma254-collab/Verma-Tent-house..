@@ -78,7 +78,7 @@
         .bill-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px; /* Increased gap slightly */
+            gap: 10px;
             border-top: 2px solid #000;
             border-bottom: 2px solid #000;
         }
@@ -87,7 +87,7 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 12px;
-            table-layout: fixed; /* Ensures columns respect width */
+            table-layout: fixed;
         }
         th, td {
             border: 1px solid #000;
@@ -99,11 +99,10 @@
         th {
             background-color: #e0e0e0;
             font-weight: bold;
-            white-space: nowrap; /* Prevent header text wrap */
+            white-space: nowrap;
         }
         .item-name {
             text-align: left;
-            /* Width handled in HTML */
         }
         
         /* Inputs inside table */
@@ -294,11 +293,11 @@
     <div style="display: flex; border: 1px solid black; border-top: none;">
         <div style="width: 50%; display: flex; justify-content: flex-end; padding: 5px; border-right: 1px solid black;">
             <strong>सामान का टोटल: </strong> <span id="total-left" style="margin-left: 10px; width: 60px;">0</span>
-            <span style="width: 45px;"></span> <!-- Spacer to avoid overlap with new column -->
+            <span style="width: 45px;"></span>
         </div>
         <div style="width: 50%; display: flex; justify-content: flex-end; padding: 5px;">
             <strong>सामान का टोटल: </strong> <span id="total-right" style="margin-left: 10px; width: 60px;">0</span>
-            <span style="width: 45px;"></span> <!-- Spacer -->
+            <span style="width: 45px;"></span>
         </div>
     </div>
 
@@ -370,9 +369,19 @@
 </div>
 
 <script>
-    // New Updated List for Left Column
-    let leftItems = [
+    // FULL LIST OF ITEMS
+    // Added "Aluminium Top" at the correct spot for Right Column placement
+    const fullList = [
+        "टेन्ट (Tent)", 
+        "टेन्ट (Tent)", 
         "टेन्ट (Tent)",
+        "टेन्ट राउन्ड (Tent Round)",
+        "टेन्ट राउन्ड (Tent Round)",
+        "टेन्ट राउन्ड (Tent Round)",
+        "हलुवाई टेन्ट (Halwai Tent)",
+        "वालिंग टेन्ट (Walling Tent)",
+        "वालिंग टेन्ट (Walling Tent)",
+        "वालिंग टेन्ट (Walling Tent)",
         "कुर्सी फाइबर (Fiber Chair)",
         "VIP कुर्सी (VIP Chair)",
         "मेज (Table)",
@@ -410,14 +419,23 @@
         "डोगा (Donga/Serving Bowl)",
         "ट्रे (Tray)",
         "गोला तासा (Round Basin)",
+        "अल्युमिनियम टोप (Aluminium Top)", // Added here (Item 16 on right side)
         "नाव (Naav/Boat Shaped Vessel)"
     ];
 
-    let rightItems = [
+    // Split logic
+    let leftItems = fullList.slice(0, 33);
+    let movedItems = fullList.slice(33);
+
+    // Existing Right Items
+    let originalRightItems = [
         "समियाना (पाइप वाला)", "बिछवना हाफ", "रावती", "बाउन्डरी", "सिंघासन", 
         "मण्डप", "दरी", "तिरपाल", "जेनरेटर", "राड", "हाइलोजन",
         "", "", "", "", "", "", "", "", "", "", "" 
     ];
+
+    // Merge
+    let rightItems = movedItems.concat(originalRightItems);
 
     // Align Rows
     const maxLen = Math.max(leftItems.length, rightItems.length);
@@ -432,8 +450,8 @@
         const tbody = document.getElementById(id);
         items.forEach((item, index) => {
             const tr = document.createElement('tr');
-            const rowNum = startCount + index;
-            
+            const rowNum = index + 1; // 1-based index per column
+
             const side = isRightSide ? 'r' : 'l';
             const pcsId = `qty_${side}_${index}`;
             const rateId = `rate_${side}_${index}`;
@@ -467,7 +485,6 @@
 
     function calculateString(str) {
         try {
-            // Support x or * for multiplication, and + - /
             let sanitized = str.toLowerCase().replace(/x/g, '*').replace(/[^-()\d/*+.]/g, '');
             if (!sanitized) return 0;
             return new Function('return ' + sanitized)();
@@ -484,14 +501,11 @@
         let pcs = 0;
         
         // --- TENT LOGIC ---
-        // If Name contains "Tent" or "टेन्ट" AND Input contains * or x
         if((itemName.includes("टेन्ट") || itemName.toLowerCase().includes("tent")) && 
            (pcsInput.includes('*') || pcsInput.toLowerCase().includes('x'))) {
             
              let cleanInput = pcsInput.toLowerCase().replace(/x/g, '*');
-             // Try to split by * to check if it's dimensions like 15*15
              let parts = cleanInput.split('*');
-             // Only apply division logic if it looks like dimensions and not addition
              if (parts.length === 2 && !cleanInput.includes('+') && !cleanInput.includes('-')) {
                  let l = parseFloat(parts[0]) || 0;
                  let w = parseFloat(parts[1]) || 0;
@@ -507,7 +521,6 @@
         }
 
         const total = pcs * rate;
-        // Round to 2 decimal places
         document.getElementById(`amt_${side}_${index}`).value = total === 0 ? '' : Math.round(total * 100) / 100;
         
         calcFinal();
