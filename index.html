@@ -57,7 +57,7 @@
             border: 2px solid #FFD700;
             position: relative;
             overflow: hidden;
-            min-height: 300px;
+            min-height: 350px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -158,6 +158,10 @@
         .amount-row input { text-align: right; border: none; background: transparent; font-weight: bold; width: 100px; }
         .highlight-input { background: #fff !important; border: 1px solid #000080 !important; color: #000 !important; padding: 5px; border-radius: 4px; font-size: 16px !important; }
 
+        .terms { background: #fffbe6; padding: 10px; border-radius: 5px; border: 1px solid #ffe58f; font-size: 12px; margin-top: 15px; }
+        .terms ul { padding-left: 20px; margin: 0; }
+        .terms li { margin-bottom: 3px; }
+
         .signature-section { display: flex; justify-content: space-between; margin-top: 40px; font-size: 12px; font-weight: bold; }
         .sign-box { border-top: 1px solid #333; width: 100px; text-align: center; }
 
@@ -183,6 +187,14 @@
             .header-grid { grid-template-columns: 1fr 1fr; }
             .shop-title { grid-column: span 2; order: -1; }
         }
+
+        /* Services & Gallery Styles (Restored) */
+        .services-container, .gallery-container, .contact-container { max-width: 900px; margin: 0 auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .service-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .service-card { background: #fff; border: 1px solid #eee; border-radius: 8px; padding: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+        .gallery-item img { width: 100%; height: 100px; object-fit: cover; border-radius: 4px; }
+
 
         /* History Filters */
         .filter-section { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
@@ -212,6 +224,7 @@
             <div class="nav-item" onclick="switchView('history')">📜 रिकॉर्ड</div>
             <div class="nav-item" onclick="switchView('labour')">👷 लेबर</div>
             <div class="nav-item" onclick="switchView('services')">🛠️ सेवाएं</div>
+            <div class="nav-item" onclick="switchView('contact')">📞 संपर्क</div>
             <div class="nav-item" onclick="switchView('gallery')">🖼️ गैलरी</div>
         </div>
     </div>
@@ -239,6 +252,8 @@
             <p style="color: #ccc; font-size: 0.9em;">रघुनाथपुर, बलिया (उ०प्र०)</p>
             
             <button class="royal-btn" onclick="switchView('bill')">📝 नया बिल बनाएं</button>
+            <br>
+            <button class="action-btn btn-new" style="padding:10px 20px; font-size:1em; background:transparent; border:1px solid #FFD700; margin-top: 15px;" onclick="switchView('history')">🔍 पुराना बिल देखें</button>
             <br>
             <button class="photo-change-btn" onclick="document.getElementById('sliderInput').click()">🖼️ स्लाइडर फोटो बदलें</button>
             <input type="file" id="sliderInput" multiple accept="image/*" style="display:none;" onchange="handleSliderUpload(event)">
@@ -365,6 +380,9 @@
                     <li>बुकिंग पर 50% अग्रिम जमा करें।</li>
                     <li>टूट-फूट या नुकसान की जिम्मेदारी पार्टी की होगी।</li>
                 </ul>
+                <div style="margin-top: 10px; font-weight: bold;">
+                    शर्त मंजूर: <label><input type="radio" name="terms" value="yes" onchange="autoSaveLocal()"> हाँ</label> <label><input type="radio" name="terms" value="no" onchange="autoSaveLocal()"> नहीं</label>
+                </div>
             </div>
         </div>
 
@@ -372,24 +390,40 @@
     </div>
 </div>
 
-<!-- SERVICES, GALLERY, CONTACT (Standard) -->
+<!-- SERVICES VIEW (Restored) -->
 <div id="services-view" class="view-section">
-    <div class="labour-container">
-        <h2 style="text-align:center; color:#000080;">हमारी सेवाएं</h2>
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px,1fr)); gap:15px;">
-            <div style="border:1px solid #ccc; padding:15px; border-radius:5px;"><h3>⛺ टेंट</h3><p>वाटरप्रूफ पंडाल, पाइप पंडाल</p></div>
-            <div style="border:1px solid #ccc; padding:15px; border-radius:5px;"><h3>🪑 फर्नीचर</h3><p>वीआईपी सोफा, कुर्सियां</p></div>
-            <div style="border:1px solid #ccc; padding:15px; border-radius:5px;"><h3>💡 लाइट</h3><p>हैलोजन, LED लाइट, झूमर</p></div>
+    <div class="services-container">
+        <h2 style="text-align:center; color:#000080; border-bottom:2px solid #ddd; padding-bottom:10px;">हमारी सेवाएं</h2>
+        <div class="service-grid">
+            <div class="service-card"><h3>⛺ टेंट</h3><ul><li>वाटरप्रूफ पंडाल, पाइप पंडाल, एंट्री गेट।</li></ul></div>
+            <div class="service-card"><h3>🪑 फर्नीचर</h3><ul><li>वीआईपी सोफा, कुर्सियां, राउंड टेबल।</li></ul></div>
+            <div class="service-card"><h3>💡 लाइट</h3><ul><li>हैलोजन, LED लाइट, झूमर, जनरेटर।</li></ul></div>
+            <div class="service-card"><h3>🍽️ कैटरिंग</h3><ul><li>क्रोकरी, वेटर सर्विस, बड़े बर्तन।</li></ul></div>
+            <div class="service-card"><h3>✨ सजावट</h3><ul><li>जयमाल स्टेज, मंडप, फ्लावर डेकोरेशन।</li></ul></div>
         </div>
     </div>
 </div>
 
+<!-- CONTACT VIEW (Restored) -->
+<div id="contact-view" class="view-section">
+    <div class="contact-container">
+        <h2 style="text-align:center; color:#000080;">संपर्क करें</h2>
+        <div style="text-align:center; padding:20px; border:1px solid #eee; border-radius:10px;">
+            <p><strong>वर्मा टेन्ट हाउस एण्ड समियाना</strong><br>ग्राम + पोस्ट - रघुनाथपुर, जिला - बलिया</p>
+            <p style="font-size:18px; font-weight:bold;">📞 9918691464, 7408832903</p>
+            <iframe width="100%" height="250" frameborder="0" style="margin-top:15px;" src="https://maps.google.com/maps?q=Raghunathpur,+Ballia,+Uttar+Pradesh&t=&z=13&ie=UTF8&iwloc=&output=embed"></iframe>
+            <br><br>
+            <a href="https://maps.app.goo.gl/SJ4XoPdQU8h72pBF6" target="_blank" style="background:#000080; color:white; padding:10px 20px; text-decoration:none; border-radius:5px;">📍 Google Map पर देखें</a>
+        </div>
+    </div>
+</div>
+
+<!-- GALLERY VIEW -->
 <div id="gallery-view" class="view-section">
-    <div class="labour-container">
-        <h2 style="text-align:center;">गैलरी</h2>
-        <div style="background:#ddd; padding:10px; text-align:center; margin-bottom:10px; cursor:pointer;" onclick="document.getElementById('galleryInput').click()">📸 फोटो अपलोड करें</div>
-        <input type="file" id="galleryInput" multiple accept="image/*" style="display:none;" onchange="window.handleImageUpload(event)">
-        <div id="gallery-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:5px;"></div>
+    <div class="gallery-container">
+        <h2 style="text-align:center; color:#000080;">गैलरी</h2>
+        <div style="background:#ddd; padding:15px; text-align:center; margin-bottom:15px; border-radius:10px; cursor:pointer;" onclick="document.getElementById('galleryInput').click()">📸 फोटो अपलोड करें<input type="file" id="galleryInput" multiple accept="image/*" style="display:none;" onchange="window.handleImageUpload(event)"></div>
+        <div id="gallery-grid" class="gallery-grid"></div>
     </div>
 </div>
 
@@ -838,4 +872,5 @@
 
 </body>
 </html>
+
 
