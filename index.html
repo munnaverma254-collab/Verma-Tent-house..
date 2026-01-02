@@ -180,21 +180,29 @@
         .labour-table th { color: #333; border: 1px solid #ddd; padding: 8px; }
         .labour-table td { border: 1px solid #ddd; padding: 8px; text-align: center; }
         
-        .labour-input-row { display: grid; grid-template-columns: 1.5fr 1fr 1fr 0.5fr 1.5fr 0.5fr; gap: 5px; margin-bottom: 10px; align-items: center; background: #fffbe6; padding: 10px; border-radius: 5px; }
-        @media (max-width: 600px) {
+        .labour-input-row { display: grid; grid-template-columns: 1fr 0.8fr 0.8fr 0.4fr 1.2fr 0.4fr; gap: 5px; margin-bottom: 10px; align-items: center; background: #fffbe6; padding: 10px; border-radius: 5px; }
+        @media (max-width: 768px) {
             .labour-input-row { grid-template-columns: 1fr 1fr; }
-            .btn-add-labour { grid-column: span 2; }
             .header-grid { grid-template-columns: 1fr 1fr; }
             .shop-title { grid-column: span 2; order: -1; }
         }
 
-        /* Services & Gallery Styles (Restored) */
+        /* Services & Gallery Styles */
         .services-container, .gallery-container, .contact-container { max-width: 900px; margin: 0 auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         .service-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
         .service-card { background: #fff; border: 1px solid #eee; border-radius: 8px; padding: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        
         .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
-        .gallery-item img { width: 100%; height: 100px; object-fit: cover; border-radius: 4px; }
-
+        .gallery-item { position: relative; height: 100px; cursor: pointer; border: 1px solid #ddd; overflow: hidden; }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+        .gallery-item:hover img { transform: scale(1.05); }
+        .video-thumbnail { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; background: #000; color: white; text-align: center; font-size: 10px; text-decoration: none; }
+        
+        /* Lightbox */
+        #lightbox { display: none; position: fixed; z-index: 5000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); justify-content: center; align-items: center; flex-direction: column; }
+        #lightbox img { max-width: 90%; max-height: 80%; border: 2px solid white; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        #lightbox-close { position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; cursor: pointer; }
+        #lightbox-caption { color: white; margin-top: 10px; font-size: 16px; }
 
         /* History Filters */
         .filter-section { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
@@ -238,19 +246,22 @@
 
 <div id="toast">Alert</div>
 
+<!-- Lightbox for Gallery -->
+<div id="lightbox">
+    <span id="lightbox-close" onclick="closeLightbox()">&times;</span>
+    <img id="lightbox-img" src="">
+</div>
+
 <!-- HOME VIEW (Auto Slider) -->
 <div id="home-view" class="view-section active">
     <div class="welcome-hero">
-        <!-- Slider Container -->
         <div class="hero-slider" id="hero-slider">
             <div class="slide-img active" style="background: radial-gradient(circle, #001f4d 0%, #000000 100%);"></div>
         </div>
-        
         <div class="hero-content">
             <h1 class="welcome-title">वर्मा टेंट हाउस</h1>
             <p class="welcome-subtitle">✨ शाही शादियों का भरोसेमंद साथी ✨</p>
             <p style="color: #ccc; font-size: 0.9em;">रघुनाथपुर, बलिया (उ०प्र०)</p>
-            
             <button class="royal-btn" onclick="switchView('bill')">📝 नया बिल बनाएं</button>
             <br>
             <button class="action-btn btn-new" style="padding:10px 20px; font-size:1em; background:transparent; border:1px solid #FFD700; margin-top: 15px;" onclick="switchView('history')">🔍 पुराना बिल देखें</button>
@@ -261,12 +272,11 @@
     </div>
 </div>
 
-<!-- LABOUR VIEW (New) -->
+<!-- LABOUR VIEW -->
 <div id="labour-view" class="view-section">
     <div class="labour-container">
         <h2 style="text-align:center; color:#000080;">👷 मजदूर/लेबर मैनेजमेंट</h2>
         
-        <!-- Add New Labour -->
         <div class="labour-form">
             <input type="text" id="new-labour-name" placeholder="मजदूर का नाम (Labour Name)" style="padding:10px; flex:1; border:1px solid #ccc; border-radius:5px;">
             <button onclick="addNewLabour()" style="padding:10px 20px; background:#27ae60; color:white; border:none; border-radius:5px; cursor:pointer;">➕ Add Labour</button>
@@ -294,7 +304,6 @@
 <div id="invoice-view" class="view-section">
     <div class="container" id="invoice-area">
         
-        <!-- Header with Logo and QR -->
         <div class="header-grid">
             <div class="logo-box">
                 <img id="business-logo" class="logo-img" alt="Logo">
@@ -318,7 +327,7 @@
         
         <div style="display:flex; justify-content:space-between; margin:10px 0; font-weight:bold; font-size:13px; border-top:2px solid #000080; padding-top:5px;">
             <span>प्रो० शिवनारायण वर्मा</span>
-            <span>Date: <input type="date" id="bill-date" onchange="autoSaveLocal()" style="border:none; font-weight:bold;"></span>
+            <span>Date: <input type="date" id="bill-date" onchange="autoSaveLocal()" style="border:none; font-weight:bold;"> <span id="bill-time" style="margin-left:5px; color:#555;"></span></span>
         </div>
 
         <div class="customer-details">
@@ -380,8 +389,10 @@
                     <li>बुकिंग पर 50% अग्रिम जमा करें।</li>
                     <li>टूट-फूट या नुकसान की जिम्मेदारी पार्टी की होगी।</li>
                 </ul>
-                <div style="margin-top: 10px; font-weight: bold;">
-                    शर्त मंजूर: <label><input type="radio" name="terms" value="yes" onchange="autoSaveLocal()"> हाँ</label> <label><input type="radio" name="terms" value="no" onchange="autoSaveLocal()"> नहीं</label>
+                <div style="margin-top: 15px; font-weight: bold; border-top: 1px solid #ddd; padding-top: 5px;">
+                    शर्त मंजूर (Terms Agreed): 
+                    <label style="margin-left:10px;"><input type="radio" name="terms" value="yes" onchange="autoSaveLocal()"> हाँ (Yes)</label> 
+                    <label style="margin-left:10px;"><input type="radio" name="terms" value="no" onchange="autoSaveLocal()"> नहीं (No)</label>
                 </div>
             </div>
         </div>
@@ -390,7 +401,7 @@
     </div>
 </div>
 
-<!-- SERVICES VIEW (Restored) -->
+<!-- SERVICES VIEW -->
 <div id="services-view" class="view-section">
     <div class="services-container">
         <h2 style="text-align:center; color:#000080; border-bottom:2px solid #ddd; padding-bottom:10px;">हमारी सेवाएं</h2>
@@ -404,7 +415,7 @@
     </div>
 </div>
 
-<!-- CONTACT VIEW (Restored) -->
+<!-- CONTACT VIEW -->
 <div id="contact-view" class="view-section">
     <div class="contact-container">
         <h2 style="text-align:center; color:#000080;">संपर्क करें</h2>
@@ -412,8 +423,6 @@
             <p><strong>वर्मा टेन्ट हाउस एण्ड समियाना</strong><br>ग्राम + पोस्ट - रघुनाथपुर, जिला - बलिया</p>
             <p style="font-size:18px; font-weight:bold;">📞 9918691464, 7408832903</p>
             <iframe width="100%" height="250" frameborder="0" style="margin-top:15px;" src="https://maps.google.com/maps?q=Raghunathpur,+Ballia,+Uttar+Pradesh&t=&z=13&ie=UTF8&iwloc=&output=embed"></iframe>
-            <br><br>
-            <a href="https://maps.app.goo.gl/SJ4XoPdQU8h72pBF6" target="_blank" style="background:#000080; color:white; padding:10px 20px; text-decoration:none; border-radius:5px;">📍 Google Map पर देखें</a>
         </div>
     </div>
 </div>
@@ -422,7 +431,16 @@
 <div id="gallery-view" class="view-section">
     <div class="gallery-container">
         <h2 style="text-align:center; color:#000080;">गैलरी</h2>
-        <div style="background:#ddd; padding:15px; text-align:center; margin-bottom:15px; border-radius:10px; cursor:pointer;" onclick="document.getElementById('galleryInput').click()">📸 फोटो अपलोड करें<input type="file" id="galleryInput" multiple accept="image/*" style="display:none;" onchange="window.handleImageUpload(event)"></div>
+        <div style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
+            <div style="flex:1; background:#ddd; padding:10px; text-align:center; border-radius:5px; cursor:pointer;" onclick="document.getElementById('galleryInput').click()">
+                📸 फोटो अपलोड (Upload Photo)
+                <input type="file" id="galleryInput" multiple accept="image/*" style="display:none;" onchange="window.handleImageUpload(event)">
+            </div>
+            <div style="flex:2; display:flex; gap:5px;">
+                <input type="text" id="video-link-input" placeholder="YouTube/Video Link here..." style="flex:1; padding:5px; border:1px solid #ccc; border-radius:5px;">
+                <button onclick="addVideoLink()" style="background:#e74c3c; color:white; border:none; padding:5px 15px; border-radius:5px;">Add Video</button>
+            </div>
+        </div>
         <div id="gallery-grid" class="gallery-grid"></div>
     </div>
 </div>
@@ -435,7 +453,7 @@
     const firebaseConfig = { apiKey: "AIzaSyBQ61XTeTsapoD3oBAfMI9YHA3p0ibRym4", authDomain: "verma-tent-house-a3f17.firebaseapp.com", projectId: "verma-tent-house-a3f17", storageBucket: "verma-tent-house-a3f17.firebasestorage.app", messagingSenderId: "659727419794", appId: "1:659727419794:web:ce5326b9d78b702b73194b", measurementId: "G-64PWQGZPXP" };
 
     let db, billsRef, labourRef, galleryRef;
-    window.currentBillId = null; // Smart Save Tracking
+    window.currentBillId = null;
 
     try {
         const app = initializeApp(firebaseConfig);
@@ -467,46 +485,44 @@
             snap.forEach(doc => {
                 const d = doc.data();
                 const entries = d.entries || [];
-                // Calculate Totals
                 let totalDays = 0, totalPay = 0, totalFood = 0;
                 entries.forEach(e => {
                     totalDays += parseFloat(e.work || 0);
                     totalPay += parseFloat(e.pay || 0);
                     if(e.food) totalFood += parseFloat(e.foodCost || 0);
                 });
-                const balance = totalPay - totalFood; // Simple logic: Pay given minus food cost? Or just track totals? Prompt says "Pura hisab". Usually: Total Work Pay - (Cash Given + Food Cost).
-                // Let's stick to displaying totals for now.
 
                 list.innerHTML += `
                     <div class="labour-card" id="labour-card-${doc.id}">
                         <div class="labour-header" onclick="toggleLabour('${doc.id}')">
                             <span>👤 <strong>${d.name}</strong></span>
-                            <span style="font-size:12px;">Days: ${totalDays} | Paid: ₹${totalPay}</span>
+                            <span style="font-size:12px;">Work: ${totalDays} Day | Paid: ₹${totalPay}</span>
                         </div>
                         <div class="labour-body" id="labour-body-${doc.id}">
                             <div class="labour-input-row">
                                 <input type="date" id="date-${doc.id}" class="l-date" value="${new Date().toISOString().split('T')[0]}" style="width:100%">
-                                <select id="work-${doc.id}" style="width:100%"><option value="1">1 Day</option><option value="0.5">Half Day</option><option value="0">Absent</option></select>
-                                <input type="number" id="pay-${doc.id}" placeholder="Payment ₹" style="width:100%">
+                                <select id="work-${doc.id}" style="width:100%"><option value="1">1 Day</option><option value="0.5">Half</option><option value="0">Absent/Adv</option></select>
+                                <input type="number" id="pay-${doc.id}" placeholder="₹ Pay/Adv" style="width:100%">
                                 <div style="display:flex; flex-direction:column; align-items:center; font-size:10px;">
-                                    <label>Food?</label>
+                                    <label>Food</label>
                                     <input type="checkbox" id="food-${doc.id}" onchange="toggleFoodInput('${doc.id}')">
                                 </div>
-                                <input type="number" id="foodCost-${doc.id}" placeholder="Food ₹" value="0" style="width:100%; display:none;">
+                                <input type="text" id="note-${doc.id}" placeholder="Note/Reason" style="width:100%">
                                 <button onclick="addLabourEntry('${doc.id}')" style="background:#000080; color:white; border:none; padding:5px; border-radius:4px;">Save</button>
                             </div>
+                            <input type="number" id="foodCost-${doc.id}" placeholder="Food ₹" value="0" style="width:100%; display:none; margin-bottom:5px;">
                             
                             <div class="labour-table-container">
                                 <table class="labour-table">
-                                    <thead><tr><th>Date</th><th>Work</th><th>Pay</th><th>Food</th><th>Total</th><th>Action</th></tr></thead>
+                                    <thead><tr><th>Date</th><th>Work</th><th>Pay</th><th>Food</th><th>Note</th><th>X</th></tr></thead>
                                     <tbody>
                                         ${entries.slice().reverse().map((e, idx) => `
                                             <tr>
                                                 <td>${e.date}</td>
                                                 <td>${e.work}</td>
-                                                <td style="color:green;">₹${e.pay}</td>
-                                                <td style="color:red;">${e.food ? 'Yes (₹'+e.foodCost+')' : '-'}</td>
-                                                <td><b>₹${(parseFloat(e.pay) + parseFloat(e.foodCost||0))}</b></td>
+                                                <td style="color:green;">${e.pay>0 ? '₹'+e.pay : '-'}</td>
+                                                <td style="color:red;">${e.food ? '₹'+e.foodCost : '-'}</td>
+                                                <td style="font-size:11px; color:#555;">${e.note || '-'}</td>
                                                 <td><button onclick="deleteLabourEntry('${doc.id}', ${entries.length - 1 - idx})" style="color:red; background:none; border:none;">×</button></td>
                                             </tr>
                                         `).join('')}
@@ -514,7 +530,7 @@
                                 </table>
                             </div>
                             <div style="text-align:right; padding-top:10px;">
-                                <button onclick="deleteLabour('${doc.id}')" style="background:red; color:white; border:none; padding:5px 10px; border-radius:5px; font-size:10px;">Delete Labour</button>
+                                <button onclick="deleteLabour('${doc.id}')" style="background:red; color:white; border:none; padding:5px 10px; border-radius:5px; font-size:10px;">Delete Account</button>
                             </div>
                         </div>
                     </div>`;
@@ -524,7 +540,16 @@
         // Gallery Loader
         onSnapshot(query(galleryRef, orderBy("timestamp", "desc")), (snap) => {
             const grid = document.getElementById('gallery-grid'); if(!grid) return; grid.innerHTML = "";
-            snap.forEach(doc => { grid.innerHTML += `<div style="position:relative;"><img src="${doc.data().image}" style="width:100%; height:100px; object-fit:cover; border-radius:4px;"><button onclick="delDoc('gallery','${doc.id}')" style="position:absolute;top:0;right:0;background:red;color:white;border:none;">×</button></div>`; });
+            snap.forEach(doc => { 
+                const d = doc.data();
+                let content = "";
+                if(d.type === 'video') {
+                     content = `<a href="${d.url}" target="_blank" class="video-thumbnail">▶️ Play Video<br>${d.url.substring(0,20)}...</a>`;
+                } else {
+                     content = `<img src="${d.image}" onclick="openLightbox('${d.image}')">`;
+                }
+                grid.innerHTML += `<div class="gallery-item">${content}<button onclick="delDoc('gallery','${doc.id}')" style="position:absolute;top:0;right:0;background:red;color:white;border:none;z-index:10;">×</button></div>`; 
+            });
         });
 
     } catch(e) { console.error("Firebase Error:", e); }
@@ -558,11 +583,9 @@
 
         try {
             if (window.currentBillId) {
-                // UPDATE Existing
                 await setDoc(doc(db, "bills", window.currentBillId), billData);
                 showToast("Bill Updated ✅");
             } else {
-                // CREATE New
                 const ref = await addDoc(billsRef, billData);
                 window.currentBillId = ref.id;
                 showToast("Bill Saved ✅");
@@ -573,21 +596,17 @@
     window.loadBill = (id) => {
         const d = window.billsData[id];
         if(!d || !confirm("Open this old bill? Unsaved changes will be lost.")) return;
-        
-        window.currentBillId = id; // Set ID for Smart Save
-        
+        window.currentBillId = id;
         document.getElementById('cust-name').value = d.custName;
         document.getElementById('cust-address').value = d.custAddress;
         document.getElementById('cust-mobile').value = d.custMobile;
-        document.getElementById('bill-date').value = d.billDate; // Keep original date
+        document.getElementById('bill-date').value = d.billDate;
         document.getElementById('date-give').value = d.dateGive;
         document.getElementById('date-return').value = d.dateReturn;
         document.getElementById('advance').value = d.advance;
         
-        // Clear grid first
         document.querySelectorAll('input[id^="qty_"]').forEach(i => i.value = "");
         document.querySelectorAll('input[id^="amt_"]').forEach(i => i.value = "");
-        
         d.items.forEach(x => { 
             if(document.getElementById(`qty_${x.i}`)) { 
                 document.getElementById(`qty_${x.i}`).value = x.q; 
@@ -603,12 +622,13 @@
 
     window.clearBillData = (ask=true) => {
         if(ask && !confirm("Start fresh new bill?")) return;
-        window.currentBillId = null; // Reset ID for New Bill
+        window.currentBillId = null;
         document.querySelectorAll('#invoice-view input').forEach(i => { 
             if(!i.id.startsWith('name_') && i.type !== 'button' && i.type !== 'file') i.value = ''; 
         });
-        document.getElementById('bill-date').valueAsDate = new Date(); // Reset date to today
+        document.getElementById('bill-date').valueAsDate = new Date();
         document.getElementById('days-input').value = 1;
+        setBillTime();
         localStorage.removeItem('verma_bill_autosave');
     };
 
@@ -625,10 +645,11 @@
         const date = document.getElementById(`date-${id}`).value;
         const work = document.getElementById(`work-${id}`).value;
         const pay = document.getElementById(`pay-${id}`).value || 0;
+        const note = document.getElementById(`note-${id}`).value || "";
         const isFood = document.getElementById(`food-${id}`).checked;
         const foodCost = document.getElementById(`foodCost-${id}`).value || 0;
 
-        const entry = { date, work, pay, food: isFood, foodCost: isFood ? foodCost : 0 };
+        const entry = { date, work, pay, note, food: isFood, foodCost: isFood ? foodCost : 0 };
         
         try {
             const labourDoc = doc(db, "labour", id);
@@ -660,13 +681,20 @@
                 const img = new Image(); img.src = evt.target.result;
                 img.onload = async () => {
                     const c = document.createElement('canvas'); const ctx = c.getContext('2d');
-                    const scale = 800/img.width; c.width = 800; c.height = img.height*scale;
+                    const scale = 1000/img.width; c.width = 1000; c.height = img.height*scale;
                     ctx.drawImage(img,0,0,c.width,c.height);
-                    try { await addDoc(galleryRef, { image: c.toDataURL('image/jpeg', 0.6), timestamp: Date.now() }); showToast("Uploaded"); } catch(err){}
+                    try { await addDoc(galleryRef, { image: c.toDataURL('image/jpeg', 0.7), type:'image', timestamp: Date.now() }); showToast("Uploaded"); } catch(err){}
                 }
             }; reader.readAsDataURL(file);
         });
     };
+
+    window.addVideoLink = async () => {
+        const url = document.getElementById('video-link-input').value;
+        if(!url) return;
+        try { await addDoc(galleryRef, { url: url, type:'video', timestamp: Date.now() }); showToast("Link Added"); document.getElementById('video-link-input').value = ""; } catch(e){ alert(e); }
+    }
+
     window.delDoc = async (col, id) => { if(confirm("Delete?")) await deleteDoc(doc(db, col, id)); };
 
 </script>
@@ -684,6 +712,22 @@
 
     function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.className = "show"; setTimeout(() => t.className = "", 3000); }
 
+    // Lightbox
+    window.openLightbox = (src) => {
+        document.getElementById('lightbox-img').src = src;
+        document.getElementById('lightbox').style.display = 'flex';
+    }
+    window.closeLightbox = () => {
+        document.getElementById('lightbox').style.display = 'none';
+    }
+
+    // --- BILL TIME ---
+    function setBillTime() {
+        const now = new Date();
+        document.getElementById('bill-time').innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    }
+    setBillTime();
+
     // --- IMAGE & QR LOGIC ---
     function loadImage(event, imgId, storageKey) {
         const file = event.target.files[0];
@@ -698,7 +742,6 @@
             reader.readAsDataURL(file);
         }
     }
-    // Restore Images
     const savedLogo = localStorage.getItem('verma_business_logo');
     if(savedLogo) { document.getElementById('business-logo').src = savedLogo; document.getElementById('business-logo').style.display = 'block'; }
     const savedQR = localStorage.getItem('verma_qr_code');
@@ -727,7 +770,7 @@
     function handleSliderUpload(e) {
         const files = Array.from(e.target.files);
         if(!files.length) return;
-        sliderImages = []; // Reset on new upload
+        sliderImages = []; 
         let loaded = 0;
         files.forEach(file => {
             const reader = new FileReader();
@@ -802,10 +845,7 @@
     }
 
     function autoSaveLocal() {
-        // Only autosave to local if NOT editing an existing old bill to avoid confusion? 
-        // Actually, user might want to recover crash. 
-        if(window.currentBillId) return; // Don't overwrite draft with loaded bill
-
+        if(window.currentBillId) return;
         const data = { custName: document.getElementById('cust-name').value, custAdd: document.getElementById('cust-address').value, custMob: document.getElementById('cust-mobile').value, billDate: document.getElementById('bill-date').value, dateGive: document.getElementById('date-give').value, dateReturn: document.getElementById('date-return').value, advance: document.getElementById('advance').value, items: [] };
         for(let i=0; i<80; i++) data.items.push({ n: document.getElementById(`name_${i}`).value, q: document.getElementById(`qty_${i}`).value, r: document.getElementById(`rate_${i}`).value, b: document.getElementById(`bak_${i}`).value });
         localStorage.setItem('verma_bill_autosave', JSON.stringify(data));
