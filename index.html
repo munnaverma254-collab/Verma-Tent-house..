@@ -16,6 +16,32 @@
         }
         body { font-family: 'Noto Sans Devanagari', sans-serif; background-color: #f4f6f8; margin: 0; padding: 0; overflow-x: hidden; padding-top: var(--header-height); }
         
+        /* LOGIN OVERLAY STYLES */
+        #login-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.95); z-index: 10000;
+            display: flex; justify-content: center; align-items: center;
+            flex-direction: column;
+            color: white;
+        }
+        .login-box {
+            background: white; color: black; padding: 30px; border-radius: 10px;
+            width: 300px; text-align: center; border: 2px solid #FFD700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        .login-box input {
+            width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc;
+            border-radius: 5px; box-sizing: border-box; font-size: 16px;
+        }
+        .login-btn {
+            background: #000080; color: white; padding: 10px 20px; border: none;
+            border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; font-size: 16px;
+        }
+        .forgot-link {
+            color: #000080; text-decoration: underline; font-size: 12px;
+            margin-top: 15px; cursor: pointer; display: block;
+        }
+        
         /* Navbar */
         .navbar { background: linear-gradient(90deg, #000428, #004e92); color: white; padding: 5px 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); position: fixed; top: 0; left: 0; right: 0; z-index: 2000; display: flex; flex-direction: column; align-items: center; min-height: 60px; }
         .nav-scroller { overflow-x: auto; white-space: nowrap; width: 100%; -webkit-overflow-scrolling: touch; padding-bottom: 5px; scrollbar-width: none; }
@@ -210,7 +236,7 @@
         .history-item { background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #000080; }
 
         @media print {
-            .navbar, #home-view, #history-view, #services-view, #gallery-view, #contact-view, #labour-view, #toast, .upload-label, .photo-change-btn, .action-btn { display: none !important; } 
+            .navbar, #home-view, #history-view, #services-view, #gallery-view, #contact-view, #labour-view, #toast, .upload-label, .photo-change-btn, .action-btn, #login-overlay { display: none !important; } 
             #invoice-view { display: block !important; margin: 0; padding: 0; }
             .container { width: 100%; max-width: 100%; box-shadow: none; border: none; padding: 0; }
             .bill-grid-container { flex-direction: row; }
@@ -223,6 +249,27 @@
 </head>
 <body>
 
+<!-- LOGIN OVERLAY -->
+<div id="login-overlay">
+    <div class="welcome-title" style="margin-bottom: 20px;">वर्मा टेंट हाउस</div>
+    <div class="login-box" id="login-form-box">
+        <h3>🔐 Login Required</h3>
+        <input type="text" id="login-id" placeholder="User ID">
+        <input type="password" id="login-pass" placeholder="Password">
+        <button class="login-btn" onclick="checkLogin()">Login</button>
+        <span class="forgot-link" onclick="showForgotPassword()">Forgot Password / ID?</span>
+    </div>
+    
+    <div class="login-box" id="forgot-form-box" style="display:none;">
+        <h3>🔑 Recover Account</h3>
+        <p style="font-size:12px; color:#555;">Enter registered email to recover ID & Password.</p>
+        <!-- Updated Placeholder as requested -->
+        <input type="email" id="recovery-email" placeholder="Enter Registered Gmail">
+        <button class="login-btn" onclick="recoverAccount()">Get Password</button>
+        <span class="forgot-link" onclick="showLoginForm()">Back to Login</span>
+    </div>
+</div>
+
 <!-- Navigation -->
 <nav class="navbar" data-html2canvas-ignore="true">
     <div class="nav-scroller">
@@ -234,6 +281,7 @@
             <div class="nav-item" onclick="switchView('services')">🛠️ सेवाएं</div>
             <div class="nav-item" onclick="switchView('contact')">📞 संपर्क</div>
             <div class="nav-item" onclick="switchView('gallery')">🖼️ गैलरी</div>
+            <div class="nav-item" onclick="logout()" style="color: #ffcccc; border-color: #ffcccc;">🔓 Logout</div>
         </div>
     </div>
     <div class="nav-actions" id="nav-action-buttons" style="display: none;">
@@ -700,6 +748,58 @@
 </script>
 
 <script>
+    // --- LOGIN SYSTEM LOGIC ---
+    // Change these credentials as needed
+    const ADMIN_USER = "admin";
+    const ADMIN_PASS = "verma123";
+    const RECOVERY_EMAIL = "munnaverma254@gmail.com";
+
+    // On Load Check
+    window.onload = function() {
+        if(localStorage.getItem('verma_user_logged_in') === 'true') {
+            document.getElementById('login-overlay').style.display = 'none';
+        }
+        initSlider();
+    };
+
+    function checkLogin() {
+        const u = document.getElementById('login-id').value;
+        const p = document.getElementById('login-pass').value;
+        if(u === ADMIN_USER && p === ADMIN_PASS) {
+            localStorage.setItem('verma_user_logged_in', 'true');
+            document.getElementById('login-overlay').style.display = 'none';
+        } else {
+            alert("❌ Incorrect ID or Password");
+        }
+    }
+
+    function logout() {
+        if(confirm("Are you sure you want to Logout?")) {
+            localStorage.removeItem('verma_user_logged_in');
+            location.reload();
+        }
+    }
+
+    function showForgotPassword() {
+        document.getElementById('login-form-box').style.display = 'none';
+        document.getElementById('forgot-form-box').style.display = 'block';
+    }
+
+    function showLoginForm() {
+        document.getElementById('login-form-box').style.display = 'block';
+        document.getElementById('forgot-form-box').style.display = 'none';
+    }
+
+    function recoverAccount() {
+        const email = document.getElementById('recovery-email').value;
+        if(email.trim().toLowerCase() === RECOVERY_EMAIL) {
+            alert(`✅ Verification Successful!\n\nUser ID: ${ADMIN_USER}\nPassword: ${ADMIN_PASS}\n\nPlease note this down.`);
+            showLoginForm();
+        } else {
+            alert("❌ Invalid Email!\nOnly the registered administrator email is allowed.");
+        }
+    }
+
     // --- UI LOGIC ---
     function switchView(id) {
         document.querySelectorAll('.view-section').forEach(e => e.classList.remove('active'));
@@ -785,7 +885,6 @@
             reader.readAsDataURL(file);
         });
     }
-    initSlider();
 
     // --- LABOUR UI ---
     function toggleLabour(id) {
