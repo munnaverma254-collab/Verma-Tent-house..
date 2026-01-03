@@ -439,6 +439,32 @@
                 </ul>
                 <div style="margin-top: 15px; font-weight: bold; border-top: 1px solid #ddd; padding-top: 5px;">
                     शर्त मंजूर (Terms Agreed): 
+                    <!-- AMOUNT BOX START -->
+<div style="margin-top:15px; display:flex; flex-direction:column; gap:10px;">
+
+    <div style="background:#e3f2fd; padding:10px; border-radius:8px;">
+        <strong>तय पैसा (Agreed Amount):</strong>
+        <input type="number" id="agreedAmount"
+               style="width:100%; padding:8px; font-size:16px; margin-top:5px;"
+               placeholder="यहाँ तय राशि लिखें">
+    </div>
+
+    <div style="background:#e8f5e9; padding:10px; border-radius:8px;">
+        <strong>बैना / एडवांस:</strong>
+        <input type="number" id="manualAdvance"
+               style="width:100%; padding:8px; font-size:16px; margin-top:5px;"
+               placeholder="दिया गया बैना लिखें">
+    </div>
+
+    <div style="background:#fff3e0; padding:10px; border-radius:8px;">
+        <strong>कस्टमर को कितना पैसा देना है:</strong>
+        <input type="number" id="finalDue" readonly
+               style="width:100%; padding:8px; font-size:18px;
+                      margin-top:5px; color:red; font-weight:bold;">
+    </div>
+
+</div>
+<!-- AMOUNT BOX END -->
                     <label style="margin-left:10px;"><input type="radio" name="terms" value="yes" onchange="autoSaveLocal()"> हाँ (Yes)</label> 
                     <label style="margin-left:10px;"><input type="radio" name="terms" value="no" onchange="autoSaveLocal()"> नहीं (No)</label>
                 </div>
@@ -1010,6 +1036,19 @@
 </script>
 
 </body>
+<script>
+function calcManualDue() {
+    var agreed = Number(document.getElementById("agreedAmount").value) || 0;
+    var adv = Number(document.getElementById("manualAdvance").value) || 0;
+    document.getElementById("finalDue").value = agreed - adv;
+}
+
+document.addEventListener("input", function(e) {
+    if (e.target.id === "agreedAmount" || e.target.id === "manualAdvance") {
+        calcManualDue();
+    }
+});
+</script>
 </html>
 
 
