@@ -249,7 +249,6 @@
 </head>
 <body>
 
-<!-- LOGIN OVERLAY -->
 <div id="login-overlay">
     <div class="welcome-title" style="margin-bottom: 20px;">वर्मा टेंट हाउस</div>
     <div class="login-box" id="login-form-box">
@@ -263,14 +262,12 @@
     <div class="login-box" id="forgot-form-box" style="display:none;">
         <h3>🔑 Recover Account</h3>
         <p style="font-size:12px; color:#555;">Enter registered email to recover ID & Password.</p>
-        <!-- Updated Placeholder as requested -->
         <input type="email" id="recovery-email" placeholder="Enter Registered Gmail">
         <button class="login-btn" onclick="recoverAccount()">Get Password</button>
         <span class="forgot-link" onclick="showLoginForm()">Back to Login</span>
     </div>
 </div>
 
-<!-- Navigation -->
 <nav class="navbar" data-html2canvas-ignore="true">
     <div class="nav-scroller">
         <div class="nav-left">
@@ -294,13 +291,11 @@
 
 <div id="toast">Alert</div>
 
-<!-- Lightbox for Gallery -->
 <div id="lightbox">
-    <span id="lightbox-close" onclick="closeLightbox()">&times;</span>
+    <span id="lightbox-close" onclick="closeLightbox()">×</span>
     <img id="lightbox-img" src="">
 </div>
 
-<!-- HOME VIEW (Auto Slider) -->
 <div id="home-view" class="view-section active">
     <div class="welcome-hero">
         <div class="hero-slider" id="hero-slider">
@@ -320,7 +315,6 @@
     </div>
 </div>
 
-<!-- LABOUR VIEW -->
 <div id="labour-view" class="view-section">
     <div class="labour-container">
         <h2 style="text-align:center; color:#000080;">👷 मजदूर/लेबर मैनेजमेंट</h2>
@@ -334,7 +328,6 @@
     </div>
 </div>
 
-<!-- HISTORY VIEW -->
 <div id="history-view" class="view-section">
     <div class="filter-section">
         <h2 style="text-align:center; color:#000080; margin-top:0;">पुराने बिल (History)</h2>
@@ -348,7 +341,6 @@
     <div id="history-list">Loading...</div>
 </div>
 
-<!-- BILL VIEW -->
 <div id="invoice-view" class="view-section">
     <div class="container" id="invoice-area">
         
@@ -384,7 +376,6 @@
             <div>मो०: <input type="text" id="cust-mobile" class="input-line" placeholder="Mobile" oninput="autoSaveLocal()"></div>
         </div>
 
-        <!-- SPLIT TABLE -->
         <div class="bill-grid-container">
             <div class="bill-half">
                 <table>
@@ -439,43 +430,41 @@
                 </ul>
                 <div style="margin-top: 15px; font-weight: bold; border-top: 1px solid #ddd; padding-top: 5px;">
                     शर्त मंजूर (Terms Agreed): 
-                    <!-- AMOUNT BOX START -->
-<div style="margin-top:15px; display:flex; flex-direction:column; gap:10px;">
-
-    <div style="background:#e3f2fd; padding:10px; border-radius:8px;">
-        <strong>तय पैसा (Agreed Amount):</strong>
-        <input type="number" id="agreedAmount"
-               style="width:100%; padding:8px; font-size:16px; margin-top:5px;"
-               placeholder="यहाँ तय राशि लिखें">
-    </div>
-
-    <div style="background:#e8f5e9; padding:10px; border-radius:8px;">
-        <strong>बैना / एडवांस:</strong>
-        <input type="number" id="manualAdvance"
-               style="width:100%; padding:8px; font-size:16px; margin-top:5px;"
-               placeholder="दिया गया बैना लिखें">
-    </div>
-
-    <div style="background:#fff3e0; padding:10px; border-radius:8px;">
-        <strong>कस्टमर को कितना पैसा देना है:</strong>
-        <input type="number" id="finalDue" readonly
-               style="width:100%; padding:8px; font-size:18px;
-                      margin-top:5px; color:red; font-weight:bold;">
-    </div>
-
-</div>
-<!-- AMOUNT BOX END -->
                     <label style="margin-left:10px;"><input type="radio" name="terms" value="yes" onchange="autoSaveLocal()"> हाँ (Yes)</label> 
                     <label style="margin-left:10px;"><input type="radio" name="terms" value="no" onchange="autoSaveLocal()"> नहीं (No)</label>
                 </div>
             </div>
-        </div>
+
+            <div style="margin-top: 20px; border: 2px dashed #000080; padding: 15px; border-radius: 10px; background-color: #f0f4ff;">
+                <h4 style="margin: 0 0 10px 0; text-align: center; color: #000080; text-decoration: underline;">फाइनल सेटलमेंट (Final Settlement)</h4>
+                
+                <div style="display: flex; gap: 10px; justify-content: space-between; flex-wrap: wrap;">
+                    
+                    <div style="flex: 1; min-width: 100px;">
+                        <label style="display: block; font-weight: bold; color: #2e7d32; font-size: 13px; margin-bottom: 5px;">तय पैसा (Agreed Total):</label>
+                        <input type="number" id="manual-agreed" placeholder="₹ Amount" oninput="calcManualBalance()" 
+                               style="width: 100%; padding: 8px; border: 2px solid #2e7d32; border-radius: 5px; font-weight: bold; font-size: 16px; color: #2e7d32; background: #fff;">
+                    </div>
+
+                    <div style="flex: 1; min-width: 100px;">
+                        <label style="display: block; font-weight: bold; color: #d35400; font-size: 13px; margin-bottom: 5px;">बैना (Advance Paid):</label>
+                        <input type="number" id="manual-advance" placeholder="₹ Paid" oninput="calcManualBalance()" 
+                               style="width: 100%; padding: 8px; border: 2px solid #d35400; border-radius: 5px; font-weight: bold; font-size: 16px; color: #d35400; background: #fff;">
+                    </div>
+
+                    <div style="flex: 1; min-width: 100px;">
+                        <label style="display: block; font-weight: bold; color: #c0392b; font-size: 13px; margin-bottom: 5px;">देना बाकी (Balance):</label>
+                        <input type="number" id="manual-balance" readonly 
+                               style="width: 100%; padding: 8px; border: 2px solid #c0392b; background: #fadbd8; border-radius: 5px; font-weight: bold; font-size: 18px; color: #c0392b;">
+                    </div>
+                </div>
+            </div>
+            </div>
 
         <div class="signature-section"><div class="sign-box">ग्राहक</div><div class="sign-box">दुकानदार</div></div>
     </div>
 </div>
 
-<!-- SERVICES VIEW -->
 <div id="services-view" class="view-section">
     <div class="services-container">
         <h2 style="text-align:center; color:#000080; border-bottom:2px solid #ddd; padding-bottom:10px;">हमारी सेवाएं</h2>
@@ -489,7 +478,6 @@
     </div>
 </div>
 
-<!-- CONTACT VIEW -->
 <div id="contact-view" class="view-section">
     <div class="contact-container">
         <h2 style="text-align:center; color:#000080;">संपर्क करें</h2>
@@ -501,7 +489,6 @@
     </div>
 </div>
 
-<!-- GALLERY VIEW -->
 <div id="gallery-view" class="view-section">
     <div class="gallery-container">
         <h2 style="text-align:center; color:#000080;">गैलरी</h2>
@@ -519,7 +506,6 @@
     </div>
 </div>
 
-<!-- FIREBASE & LOGIC -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getFirestore, collection, addDoc, setDoc, onSnapshot, deleteDoc, doc, query, orderBy, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
@@ -652,6 +638,13 @@
             grandTotal: document.getElementById('grand-total').value,
             advance: document.getElementById('advance').value,
             balance: document.getElementById('balance').value,
+            
+            // --- NEW: Save Manual Settlement Fields ---
+            manualAgreed: document.getElementById('manual-agreed').value,
+            manualAdvance: document.getElementById('manual-advance').value,
+            manualBalance: document.getElementById('manual-balance').value,
+            // ------------------------------------------
+
             items: items
         };
 
@@ -678,6 +671,12 @@
         document.getElementById('date-give').value = d.dateGive;
         document.getElementById('date-return').value = d.dateReturn;
         document.getElementById('advance').value = d.advance;
+
+        // --- NEW: Load Manual Settlement Fields ---
+        document.getElementById('manual-agreed').value = d.manualAgreed || "";
+        document.getElementById('manual-advance').value = d.manualAdvance || "";
+        document.getElementById('manual-balance').value = d.manualBalance || "";
+        // ------------------------------------------
         
         document.querySelectorAll('input[id^="qty_"]').forEach(i => i.value = "");
         document.querySelectorAll('input[id^="amt_"]').forEach(i => i.value = "");
@@ -924,6 +923,21 @@
         if(chk.checked) inp.focus();
     }
 
+    // --- NEW: MANUAL BALANCE CALCULATION ---
+    window.calcManualBalance = () => {
+        // तय पैसा (Agreed)
+        const agreed = parseFloat(document.getElementById('manual-agreed').value) || 0;
+        // बैना (Advance)
+        const advance = parseFloat(document.getElementById('manual-advance').value) || 0;
+        
+        // देना बाकी (Balance) = Agreed - Advance
+        const balance = agreed - advance;
+        
+        document.getElementById('manual-balance').value = balance;
+        
+        autoSaveLocal();
+    };
+
     // --- BILL TABLE GENERATION ---
     const itemList = [ "टेन्ट (Tent)", "टेन्ट", "टेन्ट", "टेन्ट राउन्ड", "टेन्ट राउन्ड", "हलुवाई टेन्ट", "वालिंग टेन्ट", "वालिंग टेन्ट", "कुर्सी फाइबर", "VIP कुर्सी", "मेज (Table)", "गोला मेज", "चारपाई", "तोषक", "तकिया", "चादर", "रजाई", "कम्बल", "फोम गदा", "जाजिम", "दरी", "चौकी", "स्टेज", "कालीन", "तिरपाल", "जयमाल सेट", "स्टाल", "गेट", "कनाट", "मैट", "गणेश जी", "भगोना", "तासा", "किस्ती", "बाल्टी", "कल्छुल", "चुल्हा", "जग", "ड्रम", "बर्नल सेट" ];
     const extraItems = ["पानी ट्रे", "डस्टबीन", "डोगा", "ट्रे", "गोला तासा", "अल्युमिनियम टोप", "नाव", "समियाना", "बिछवना हाफ", "रावती", "बाउन्डरी", "सिंघासन", "मण्डप", "जेनरेटर", "राड", "हाइलोजन"];
@@ -971,7 +985,22 @@
 
     function autoSaveLocal() {
         if(window.currentBillId) return;
-        const data = { custName: document.getElementById('cust-name').value, custAdd: document.getElementById('cust-address').value, custMob: document.getElementById('cust-mobile').value, billDate: document.getElementById('bill-date').value, dateGive: document.getElementById('date-give').value, dateReturn: document.getElementById('date-return').value, advance: document.getElementById('advance').value, items: [] };
+        const data = { 
+            custName: document.getElementById('cust-name').value, 
+            custAdd: document.getElementById('cust-address').value, 
+            custMob: document.getElementById('cust-mobile').value, 
+            billDate: document.getElementById('bill-date').value, 
+            dateGive: document.getElementById('date-give').value, 
+            dateReturn: document.getElementById('date-return').value, 
+            advance: document.getElementById('advance').value,
+            
+            // --- NEW: Auto Save Manual Fields ---
+            mAgreed: document.getElementById('manual-agreed').value,
+            mAdvance: document.getElementById('manual-advance').value,
+            // ------------------------------------
+
+            items: [] 
+        };
         for(let i=0; i<80; i++) data.items.push({ n: document.getElementById(`name_${i}`).value, q: document.getElementById(`qty_${i}`).value, r: document.getElementById(`rate_${i}`).value, b: document.getElementById(`bak_${i}`).value });
         localStorage.setItem('verma_bill_autosave', JSON.stringify(data));
     }
@@ -987,6 +1016,13 @@
         if(data.dateGive) document.getElementById('date-give').value = data.dateGive;
         if(data.dateReturn) document.getElementById('date-return').value = data.dateReturn;
         if(data.advance) document.getElementById('advance').value = data.advance;
+        
+        // --- NEW: Load Manual Fields ---
+        if(data.mAgreed) document.getElementById('manual-agreed').value = data.mAgreed;
+        if(data.mAdvance) document.getElementById('manual-advance').value = data.mAdvance;
+        calcManualBalance(); // Recalculate based on loaded values
+        // ------------------------------
+
         if(data.items) { data.items.forEach((item, i) => { if(document.getElementById(`name_${i}`)) { document.getElementById(`name_${i}`).value = item.n; document.getElementById(`qty_${i}`).value = item.q; document.getElementById(`rate_${i}`).value = item.r; document.getElementById(`bak_${i}`).value = item.b; if(item.q || item.r) calcRow(i); } }); }
         calcFinal();
     }
@@ -1036,19 +1072,4 @@
 </script>
 
 </body>
-<script>
-function calcManualDue() {
-    var agreed = Number(document.getElementById("agreedAmount").value) || 0;
-    var adv = Number(document.getElementById("manualAdvance").value) || 0;
-    document.getElementById("finalDue").value = agreed - adv;
-}
-
-document.addEventListener("input", function(e) {
-    if (e.target.id === "agreedAmount" || e.target.id === "manualAdvance") {
-        calcManualDue();
-    }
-});
-</script>
 </html>
-
-
