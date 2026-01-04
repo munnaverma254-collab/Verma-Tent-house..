@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verma Tent House</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&family=Rozha+One&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
     <style>
         /* --- GLOBAL STYLES --- */
         :root {
@@ -48,10 +51,11 @@
         .nav-left { display: inline-flex; gap: 8px; padding: 0 10px; }
         .nav-item { cursor: pointer; padding: 6px 12px; border-radius: 20px; font-weight: bold; transition: all 0.3s; font-size: 13px; color: rgba(255,255,255,0.9); border: 1px solid rgba(255,255,255,0.2); display: inline-block; }
         .nav-item.active { background-color: #fff; color: #000080; box-shadow: 0 2px 5px rgba(0,0,0,0.2); border-color: white; }
-        .nav-actions { display: flex; gap: 8px; justify-content: center; width: 100%; margin-top: 5px; padding-bottom: 5px; }
+        .nav-actions { display: flex; gap: 8px; justify-content: center; width: 100%; margin-top: 5px; padding-bottom: 5px; flex-wrap: wrap; }
         .action-btn { padding: 6px 12px; color: white; border: none; cursor: pointer; font-size: 12px; border-radius: 5px; font-weight: bold; display: flex; align-items: center; gap: 5px; text-decoration: none; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         .btn-download { background: #27ae60; }
         .btn-share { background: #2980b9; }
+        .btn-pdf { background: #e74c3c; } /* Red for PDF */
         .btn-save-db { background: #e67e22; }
         .btn-new { background: #7f8c8d; }
 
@@ -190,6 +194,24 @@
 
         .signature-section { display: flex; justify-content: space-between; margin-top: 40px; font-size: 12px; font-weight: bold; }
         .sign-box { border-top: 1px solid #333; width: 100px; text-align: center; }
+        
+        /* --- NEW STYLE: BILL FOOTER BUTTONS --- */
+        .bill-footer-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px dashed #000080;
+            flex-wrap: wrap;
+        }
+        .bill-footer-actions .action-btn {
+            font-size: 15px;
+            padding: 12px 25px;
+            border-radius: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            font-weight: bold;
+        }
 
         /* LABOUR MANAGEMENT */
         .labour-container { max-width: 900px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
@@ -236,7 +258,7 @@
         .history-item { background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #000080; }
 
         @media print {
-            .navbar, #home-view, #history-view, #services-view, #gallery-view, #contact-view, #labour-view, #toast, .upload-label, .photo-change-btn, .action-btn, #login-overlay { display: none !important; } 
+            .navbar, #home-view, #history-view, #services-view, #gallery-view, #contact-view, #labour-view, #toast, .upload-label, .photo-change-btn, .action-btn, #login-overlay, .bill-footer-actions { display: none !important; } 
             #invoice-view { display: block !important; margin: 0; padding: 0; }
             .container { width: 100%; max-width: 100%; box-shadow: none; border: none; padding: 0; }
             .bill-grid-container { flex-direction: row; }
@@ -281,12 +303,6 @@
             <div class="nav-item" onclick="logout()" style="color: #ffcccc; border-color: #ffcccc;">🔓 Logout</div>
         </div>
     </div>
-    <div class="nav-actions" id="nav-action-buttons" style="display: none;">
-        <button class="action-btn btn-save-db" onclick="saveBillToFirebase()">💾 Save Bill</button>
-        <button class="action-btn btn-new" onclick="clearBillData()">🔄 New Bill</button>
-        <button class="action-btn btn-share" onclick="shareImage()">📤 Share</button>
-        <button class="action-btn btn-download" onclick="downloadImage()">⬇️ Download</button>
-    </div>
 </nav>
 
 <div id="toast">Alert</div>
@@ -318,12 +334,10 @@
 <div id="labour-view" class="view-section">
     <div class="labour-container">
         <h2 style="text-align:center; color:#000080;">👷 मजदूर/लेबर मैनेजमेंट</h2>
-        
         <div class="labour-form">
             <input type="text" id="new-labour-name" placeholder="मजदूर का नाम (Labour Name)" style="padding:10px; flex:1; border:1px solid #ccc; border-radius:5px;">
             <button onclick="addNewLabour()" style="padding:10px 20px; background:#27ae60; color:white; border:none; border-radius:5px; cursor:pointer;">➕ Add Labour</button>
         </div>
-
         <div id="labour-list" class="labour-list">Loading...</div>
     </div>
 </div>
@@ -459,10 +473,18 @@
                     </div>
                 </div>
             </div>
-            </div>
+        </div>
 
         <div class="signature-section"><div class="sign-box">ग्राहक</div><div class="sign-box">दुकानदार</div></div>
     </div>
+    <div class="bill-footer-actions">
+        <button class="action-btn btn-save-db" onclick="saveBillToFirebase()">💾 Save Bill</button>
+        <button class="action-btn btn-new" onclick="clearBillData()">🔄 New Bill</button>
+        <button class="action-btn btn-pdf" onclick="sharePDF()">📄 PDF Share</button>
+        <button class="action-btn btn-share" onclick="shareImage()">📤 IMG Share</button>
+        <button class="action-btn btn-download" onclick="downloadImage()">⬇️ Download</button>
+    </div>
+
 </div>
 
 <div id="services-view" class="view-section">
@@ -505,7 +527,6 @@
         <div id="gallery-grid" class="gallery-grid"></div>
     </div>
 </div>
-
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getFirestore, collection, addDoc, setDoc, onSnapshot, deleteDoc, doc, query, orderBy, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
@@ -638,13 +659,9 @@
             grandTotal: document.getElementById('grand-total').value,
             advance: document.getElementById('advance').value,
             balance: document.getElementById('balance').value,
-            
-            // --- NEW: Save Manual Settlement Fields ---
             manualAgreed: document.getElementById('manual-agreed').value,
             manualAdvance: document.getElementById('manual-advance').value,
             manualBalance: document.getElementById('manual-balance').value,
-            // ------------------------------------------
-
             items: items
         };
 
@@ -672,11 +689,9 @@
         document.getElementById('date-return').value = d.dateReturn;
         document.getElementById('advance').value = d.advance;
 
-        // --- NEW: Load Manual Settlement Fields ---
         document.getElementById('manual-agreed').value = d.manualAgreed || "";
         document.getElementById('manual-advance').value = d.manualAdvance || "";
         document.getElementById('manual-balance').value = d.manualBalance || "";
-        // ------------------------------------------
         
         document.querySelectorAll('input[id^="qty_"]').forEach(i => i.value = "");
         document.querySelectorAll('input[id^="amt_"]').forEach(i => i.value = "");
@@ -706,124 +721,31 @@
     };
 
     window.deleteBill = async (id) => { if(confirm("Permanently delete this bill?")) await deleteDoc(doc(db, "bills", id)); };
-
-    // --- LABOUR FUNCTIONS ---
-    window.addNewLabour = async () => {
-        const name = document.getElementById('new-labour-name').value;
-        if(!name) return;
-        try { await addDoc(labourRef, { name: name, timestamp: Date.now(), entries: [] }); document.getElementById('new-labour-name').value = ""; } catch(e){ alert(e); }
-    };
-
-    window.addLabourEntry = async (id) => {
-        const date = document.getElementById(`date-${id}`).value;
-        const work = document.getElementById(`work-${id}`).value;
-        const pay = document.getElementById(`pay-${id}`).value || 0;
-        const note = document.getElementById(`note-${id}`).value || "";
-        const isFood = document.getElementById(`food-${id}`).checked;
-        const foodCost = document.getElementById(`foodCost-${id}`).value || 0;
-
-        const entry = { date, work, pay, note, food: isFood, foodCost: isFood ? foodCost : 0 };
-        
-        try {
-            const labourDoc = doc(db, "labour", id);
-            const snapshot = await getDoc(labourDoc);
-            const currentEntries = snapshot.data().entries || [];
-            currentEntries.push(entry);
-            await updateDoc(labourDoc, { entries: currentEntries });
-            showToast("Entry Added");
-        } catch(e) { console.error(e); }
-    };
-
-    window.deleteLabourEntry = async (id, index) => {
-        if(!confirm("Remove entry?")) return;
-        const labourDoc = doc(db, "labour", id);
-        const snapshot = await getDoc(labourDoc);
-        const currentEntries = snapshot.data().entries || [];
-        currentEntries.splice(index, 1);
-        await updateDoc(labourDoc, { entries: currentEntries });
-    };
-
+    window.addNewLabour = async () => { const name = document.getElementById('new-labour-name').value; if(!name) return; try { await addDoc(labourRef, { name: name, timestamp: Date.now(), entries: [] }); document.getElementById('new-labour-name').value = ""; } catch(e){ alert(e); } };
+    window.addLabourEntry = async (id) => { const date = document.getElementById(`date-${id}`).value; const work = document.getElementById(`work-${id}`).value; const pay = document.getElementById(`pay-${id}`).value || 0; const note = document.getElementById(`note-${id}`).value || ""; const isFood = document.getElementById(`food-${id}`).checked; const foodCost = document.getElementById(`foodCost-${id}`).value || 0; const entry = { date, work, pay, note, food: isFood, foodCost: isFood ? foodCost : 0 }; try { const labourDoc = doc(db, "labour", id); const snapshot = await getDoc(labourDoc); const currentEntries = snapshot.data().entries || []; currentEntries.push(entry); await updateDoc(labourDoc, { entries: currentEntries }); showToast("Entry Added"); } catch(e) { console.error(e); } };
+    window.deleteLabourEntry = async (id, index) => { if(!confirm("Remove entry?")) return; const labourDoc = doc(db, "labour", id); const snapshot = await getDoc(labourDoc); const currentEntries = snapshot.data().entries || []; currentEntries.splice(index, 1); await updateDoc(labourDoc, { entries: currentEntries }); };
     window.deleteLabour = async (id) => { if(confirm("Delete Labour Profile?")) await deleteDoc(doc(db, "labour", id)); };
-    
-    // --- GALLERY FUNCTIONS ---
-    window.handleImageUpload = async (e) => {
-        const files = e.target.files; if(!files.length) return;
-        Array.from(files).forEach(file => {
-            const reader = new FileReader();
-            reader.onload = (evt) => {
-                const img = new Image(); img.src = evt.target.result;
-                img.onload = async () => {
-                    const c = document.createElement('canvas'); const ctx = c.getContext('2d');
-                    const scale = 1000/img.width; c.width = 1000; c.height = img.height*scale;
-                    ctx.drawImage(img,0,0,c.width,c.height);
-                    try { await addDoc(galleryRef, { image: c.toDataURL('image/jpeg', 0.7), type:'image', timestamp: Date.now() }); showToast("Uploaded"); } catch(err){}
-                }
-            }; reader.readAsDataURL(file);
-        });
-    };
-
-    window.addVideoLink = async () => {
-        const url = document.getElementById('video-link-input').value;
-        if(!url) return;
-        try { await addDoc(galleryRef, { url: url, type:'video', timestamp: Date.now() }); showToast("Link Added"); document.getElementById('video-link-input').value = ""; } catch(e){ alert(e); }
-    }
-
+    window.handleImageUpload = async (e) => { const files = e.target.files; if(!files.length) return; Array.from(files).forEach(file => { const reader = new FileReader(); reader.onload = (evt) => { const img = new Image(); img.src = evt.target.result; img.onload = async () => { const c = document.createElement('canvas'); const ctx = c.getContext('2d'); const scale = 1000/img.width; c.width = 1000; c.height = img.height*scale; ctx.drawImage(img,0,0,c.width,c.height); try { await addDoc(galleryRef, { image: c.toDataURL('image/jpeg', 0.7), type:'image', timestamp: Date.now() }); showToast("Uploaded"); } catch(err){} } }; reader.readAsDataURL(file); }); };
+    window.addVideoLink = async () => { const url = document.getElementById('video-link-input').value; if(!url) return; try { await addDoc(galleryRef, { url: url, type:'video', timestamp: Date.now() }); showToast("Link Added"); document.getElementById('video-link-input').value = ""; } catch(e){ alert(e); } }
     window.delDoc = async (col, id) => { if(confirm("Delete?")) await deleteDoc(doc(db, col, id)); };
 
 </script>
 
 <script>
     // --- LOGIN SYSTEM LOGIC ---
-    // Change these credentials as needed
     const ADMIN_USER = "admin";
     const ADMIN_PASS = "verma123";
     const RECOVERY_EMAIL = "munnaverma254@gmail.com";
 
-    // On Load Check
     window.onload = function() {
-        if(localStorage.getItem('verma_user_logged_in') === 'true') {
-            document.getElementById('login-overlay').style.display = 'none';
-        }
+        if(localStorage.getItem('verma_user_logged_in') === 'true') { document.getElementById('login-overlay').style.display = 'none'; }
         initSlider();
     };
-
-    function checkLogin() {
-        const u = document.getElementById('login-id').value;
-        const p = document.getElementById('login-pass').value;
-        if(u === ADMIN_USER && p === ADMIN_PASS) {
-            localStorage.setItem('verma_user_logged_in', 'true');
-            document.getElementById('login-overlay').style.display = 'none';
-        } else {
-            alert("❌ Incorrect ID or Password");
-        }
-    }
-
-    function logout() {
-        if(confirm("Are you sure you want to Logout?")) {
-            localStorage.removeItem('verma_user_logged_in');
-            location.reload();
-        }
-    }
-
-    function showForgotPassword() {
-        document.getElementById('login-form-box').style.display = 'none';
-        document.getElementById('forgot-form-box').style.display = 'block';
-    }
-
-    function showLoginForm() {
-        document.getElementById('login-form-box').style.display = 'block';
-        document.getElementById('forgot-form-box').style.display = 'none';
-    }
-
-    function recoverAccount() {
-        const email = document.getElementById('recovery-email').value;
-        if(email.trim().toLowerCase() === RECOVERY_EMAIL) {
-            alert(`✅ Verification Successful!\n\nUser ID: ${ADMIN_USER}\nPassword: ${ADMIN_PASS}\n\nPlease note this down.`);
-            showLoginForm();
-        } else {
-            alert("❌ Invalid Email!\nOnly the registered administrator email is allowed.");
-        }
-    }
+    function checkLogin() { const u = document.getElementById('login-id').value; const p = document.getElementById('login-pass').value; if(u === ADMIN_USER && p === ADMIN_PASS) { localStorage.setItem('verma_user_logged_in', 'true'); document.getElementById('login-overlay').style.display = 'none'; } else { alert("❌ Incorrect ID or Password"); } }
+    function logout() { if(confirm("Are you sure you want to Logout?")) { localStorage.removeItem('verma_user_logged_in'); location.reload(); } }
+    function showForgotPassword() { document.getElementById('login-form-box').style.display = 'none'; document.getElementById('forgot-form-box').style.display = 'block'; }
+    function showLoginForm() { document.getElementById('login-form-box').style.display = 'block'; document.getElementById('forgot-form-box').style.display = 'none'; }
+    function recoverAccount() { const email = document.getElementById('recovery-email').value; if(email.trim().toLowerCase() === RECOVERY_EMAIL) { alert(`✅ Verification Successful!\n\nUser ID: ${ADMIN_USER}\nPassword: ${ADMIN_PASS}\n\nPlease note this down.`); showLoginForm(); } else { alert("❌ Invalid Email!\nOnly the registered administrator email is allowed."); } }
 
     // --- UI LOGIC ---
     function switchView(id) {
@@ -832,25 +754,12 @@
         const map = {'home':'home-view', 'bill':'invoice-view', 'history':'history-view', 'services':'services-view', 'gallery':'gallery-view', 'contact':'contact-view', 'labour':'labour-view'};
         const section = document.getElementById(map[id]);
         if(section) section.classList.add('active');
-        document.getElementById('nav-action-buttons').style.display = (id === 'bill') ? 'flex' : 'none';
     }
 
     function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.className = "show"; setTimeout(() => t.className = "", 3000); }
-
-    // Lightbox
-    window.openLightbox = (src) => {
-        document.getElementById('lightbox-img').src = src;
-        document.getElementById('lightbox').style.display = 'flex';
-    }
-    window.closeLightbox = () => {
-        document.getElementById('lightbox').style.display = 'none';
-    }
-
-    // --- BILL TIME ---
-    function setBillTime() {
-        const now = new Date();
-        document.getElementById('bill-time').innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-    }
+    window.openLightbox = (src) => { document.getElementById('lightbox-img').src = src; document.getElementById('lightbox').style.display = 'flex'; }
+    window.closeLightbox = () => { document.getElementById('lightbox').style.display = 'none'; }
+    function setBillTime() { const now = new Date(); document.getElementById('bill-time').innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}); }
     setBillTime();
 
     // --- IMAGE & QR LOGIC ---
@@ -867,78 +776,21 @@
             reader.readAsDataURL(file);
         }
     }
-    const savedLogo = localStorage.getItem('verma_business_logo');
-    if(savedLogo) { document.getElementById('business-logo').src = savedLogo; document.getElementById('business-logo').style.display = 'block'; }
-    const savedQR = localStorage.getItem('verma_qr_code');
-    if(savedQR) { document.getElementById('qr-code-img').src = savedQR; document.getElementById('qr-code-img').style.display = 'block'; }
+    const savedLogo = localStorage.getItem('verma_business_logo'); if(savedLogo) { document.getElementById('business-logo').src = savedLogo; document.getElementById('business-logo').style.display = 'block'; }
+    const savedQR = localStorage.getItem('verma_qr_code'); if(savedQR) { document.getElementById('qr-code-img').src = savedQR; document.getElementById('qr-code-img').style.display = 'block'; }
 
     // --- SLIDER LOGIC ---
     let sliderImages = JSON.parse(localStorage.getItem('verma_slider_images') || '[]');
     let currentSlide = 0;
-    
-    function initSlider() {
-        const container = document.getElementById('hero-slider');
-        if(sliderImages.length > 0) {
-            container.innerHTML = sliderImages.map((src, i) => `<img src="${src}" class="slide-img ${i===0?'active':''}">`).join('');
-        }
-        if(sliderImages.length > 1) setInterval(nextSlide, 4000);
-    }
+    function initSlider() { const container = document.getElementById('hero-slider'); if(sliderImages.length > 0) { container.innerHTML = sliderImages.map((src, i) => `<img src="${src}" class="slide-img ${i===0?'active':''}">`).join(''); } if(sliderImages.length > 1) setInterval(nextSlide, 4000); }
+    function nextSlide() { const slides = document.querySelectorAll('.slide-img'); if(slides.length < 2) return; slides[currentSlide].classList.remove('active'); currentSlide = (currentSlide + 1) % slides.length; slides[currentSlide].classList.add('active'); }
+    function handleSliderUpload(e) { const files = Array.from(e.target.files); if(!files.length) return; sliderImages = []; let loaded = 0; files.forEach(file => { const reader = new FileReader(); reader.onload = (evt) => { sliderImages.push(evt.target.result); loaded++; if(loaded === files.length) { localStorage.setItem('verma_slider_images', JSON.stringify(sliderImages)); initSlider(); } }; reader.readAsDataURL(file); }); }
 
-    function nextSlide() {
-        const slides = document.querySelectorAll('.slide-img');
-        if(slides.length < 2) return;
-        slides[currentSlide].classList.remove('active');
-        currentSlide = (currentSlide + 1) % slides.length;
-        slides[currentSlide].classList.add('active');
-    }
+    // --- LABOUR UI & BILL CALC ---
+    function toggleLabour(id) { document.getElementById(`labour-body-${id}`).classList.toggle('open'); }
+    function toggleFoodInput(id) { const chk = document.getElementById(`food-${id}`); const inp = document.getElementById(`foodCost-${id}`); inp.style.display = chk.checked ? 'block' : 'none'; if(chk.checked) inp.focus(); }
+    window.calcManualBalance = () => { const agreed = parseFloat(document.getElementById('manual-agreed').value) || 0; const advance = parseFloat(document.getElementById('manual-advance').value) || 0; document.getElementById('manual-balance').value = agreed - advance; autoSaveLocal(); };
 
-    function handleSliderUpload(e) {
-        const files = Array.from(e.target.files);
-        if(!files.length) return;
-        sliderImages = []; 
-        let loaded = 0;
-        files.forEach(file => {
-            const reader = new FileReader();
-            reader.onload = (evt) => {
-                sliderImages.push(evt.target.result);
-                loaded++;
-                if(loaded === files.length) {
-                    localStorage.setItem('verma_slider_images', JSON.stringify(sliderImages));
-                    initSlider();
-                }
-            };
-            reader.readAsDataURL(file);
-        });
-    }
-
-    // --- LABOUR UI ---
-    function toggleLabour(id) {
-        const body = document.getElementById(`labour-body-${id}`);
-        body.classList.toggle('open');
-    }
-    function toggleFoodInput(id) {
-        const chk = document.getElementById(`food-${id}`);
-        const inp = document.getElementById(`foodCost-${id}`);
-        inp.style.display = chk.checked ? 'block' : 'none';
-        if(chk.checked) inp.focus();
-    }
-
-    // --- NEW: MANUAL BALANCE CALCULATION ---
-    window.calcManualBalance = () => {
-        // तय पैसा (Agreed)
-        const agreed = parseFloat(document.getElementById('manual-agreed').value) || 0;
-        // बैना (Advance)
-        const advance = parseFloat(document.getElementById('manual-advance').value) || 0;
-        
-        // देना बाकी (Balance) = Agreed - Advance
-        const balance = agreed - advance;
-        
-        document.getElementById('manual-balance').value = balance;
-        
-        autoSaveLocal();
-    };
-
-    // --- BILL TABLE GENERATION ---
     const itemList = [ "टेन्ट (Tent)", "टेन्ट", "टेन्ट", "टेन्ट राउन्ड", "टेन्ट राउन्ड", "हलुवाई टेन्ट", "वालिंग टेन्ट", "वालिंग टेन्ट", "कुर्सी फाइबर", "VIP कुर्सी", "मेज (Table)", "गोला मेज", "चारपाई", "तोषक", "तकिया", "चादर", "रजाई", "कम्बल", "फोम गदा", "जाजिम", "दरी", "चौकी", "स्टेज", "कालीन", "तिरपाल", "जयमाल सेट", "स्टाल", "गेट", "कनाट", "मैट", "गणेश जी", "भगोना", "तासा", "किस्ती", "बाल्टी", "कल्छुल", "चुल्हा", "जग", "ड्रम", "बर्नल सेट" ];
     const extraItems = ["पानी ट्रे", "डस्टबीन", "डोगा", "ट्रे", "गोला तासा", "अल्युमिनियम टोप", "नाव", "समियाना", "बिछवना हाफ", "रावती", "बाउन्डरी", "सिंघासन", "मण्डप", "जेनरेटर", "राड", "हाइलोजन"];
     while(itemList.length < 40) itemList.push(""); 
@@ -949,7 +801,6 @@
         const leftBody = document.getElementById('table-body-left');
         const rightBody = document.getElementById('table-body-right');
         leftBody.innerHTML = ""; rightBody.innerHTML = "";
-
         fullItemList.forEach((item, i) => {
             const rowHtml = `<tr><td style="text-align:center; color:#888;">${i+1}</td><td class="item-name"><input type="text" id="name_${i}" value="${item}" oninput="autoSaveLocal()"></td><td><input type="text" id="qty_${i}" oninput="calcRow(${i}); autoSaveLocal();"></td><td><input type="number" id="rate_${i}" oninput="calcRow(${i}); autoSaveLocal();"></td><td><input type="number" id="amt_${i}" readonly style="font-weight:bold;"></td><td><input type="text" id="bak_${i}" oninput="autoSaveLocal()"></td></tr>`;
             if(i < 40) leftBody.innerHTML += rowHtml; else rightBody.innerHTML += rowHtml;
@@ -957,7 +808,6 @@
         document.getElementById('bill-date').valueAsDate = new Date();
         loadLocalData();
     }
-
     function calcRow(i) {
         const qStr = document.getElementById(`qty_${i}`).value.toLowerCase().replace(/x/g,'*').replace(/[^+*-\d.]/g,'');
         const rate = parseFloat(document.getElementById(`rate_${i}`).value) || 0;
@@ -968,7 +818,6 @@
         document.getElementById(`amt_${i}`).value = Math.round(pcs * rate);
         calcFinal();
     }
-
     function calcFinal() {
         let total = 0;
         document.querySelectorAll('[id^="amt_"]').forEach(e => total += Number(e.value));
@@ -982,32 +831,14 @@
         document.getElementById('grand-total').value = grand;
         document.getElementById('balance').value = grand - (document.getElementById('advance').value || 0);
     }
-
     function autoSaveLocal() {
         if(window.currentBillId) return;
-        const data = { 
-            custName: document.getElementById('cust-name').value, 
-            custAdd: document.getElementById('cust-address').value, 
-            custMob: document.getElementById('cust-mobile').value, 
-            billDate: document.getElementById('bill-date').value, 
-            dateGive: document.getElementById('date-give').value, 
-            dateReturn: document.getElementById('date-return').value, 
-            advance: document.getElementById('advance').value,
-            
-            // --- NEW: Auto Save Manual Fields ---
-            mAgreed: document.getElementById('manual-agreed').value,
-            mAdvance: document.getElementById('manual-advance').value,
-            // ------------------------------------
-
-            items: [] 
-        };
+        const data = { custName: document.getElementById('cust-name').value, custAdd: document.getElementById('cust-address').value, custMob: document.getElementById('cust-mobile').value, billDate: document.getElementById('bill-date').value, dateGive: document.getElementById('date-give').value, dateReturn: document.getElementById('date-return').value, advance: document.getElementById('advance').value, mAgreed: document.getElementById('manual-agreed').value, mAdvance: document.getElementById('manual-advance').value, items: [] };
         for(let i=0; i<80; i++) data.items.push({ n: document.getElementById(`name_${i}`).value, q: document.getElementById(`qty_${i}`).value, r: document.getElementById(`rate_${i}`).value, b: document.getElementById(`bak_${i}`).value });
         localStorage.setItem('verma_bill_autosave', JSON.stringify(data));
     }
-
     function loadLocalData() {
-        const saved = localStorage.getItem('verma_bill_autosave');
-        if(!saved) return;
+        const saved = localStorage.getItem('verma_bill_autosave'); if(!saved) return;
         const data = JSON.parse(saved);
         document.getElementById('cust-name').value = data.custName || '';
         document.getElementById('cust-address').value = data.custAdd || '';
@@ -1016,25 +847,18 @@
         if(data.dateGive) document.getElementById('date-give').value = data.dateGive;
         if(data.dateReturn) document.getElementById('date-return').value = data.dateReturn;
         if(data.advance) document.getElementById('advance').value = data.advance;
-        
-        // --- NEW: Load Manual Fields ---
         if(data.mAgreed) document.getElementById('manual-agreed').value = data.mAgreed;
         if(data.mAdvance) document.getElementById('manual-advance').value = data.mAdvance;
-        calcManualBalance(); // Recalculate based on loaded values
-        // ------------------------------
-
+        calcManualBalance();
         if(data.items) { data.items.forEach((item, i) => { if(document.getElementById(`name_${i}`)) { document.getElementById(`name_${i}`).value = item.n; document.getElementById(`qty_${i}`).value = item.q; document.getElementById(`rate_${i}`).value = item.r; document.getElementById(`bak_${i}`).value = item.b; if(item.q || item.r) calcRow(i); } }); }
         calcFinal();
     }
-
     window.filterHistory = () => {
         const term = document.getElementById('search-box').value.toLowerCase();
         const dateFrom = document.getElementById('filter-date-from').value;
         const dateTo = document.getElementById('filter-date-to').value;
-        
         document.querySelectorAll('.history-item').forEach(e => {
-            const name = e.dataset.name; 
-            const date = e.dataset.date;
+            const name = e.dataset.name; const date = e.dataset.date;
             const matchesTerm = name.includes(term) || date.includes(term);
             let rangeMatch = true;
             if(dateFrom && dateTo) { if(date < dateFrom || date > dateTo) rangeMatch = false; }
@@ -1042,30 +866,95 @@
         });
     };
 
+    // --- SHARE & DOWNLOAD FUNCTIONS (UPDATED) ---
+
+    // 1. Download Image (For Desktop/Storage)
     window.downloadImage = () => {
+        const area = document.getElementById('invoice-area');
+        const originalWidth = area.style.width;
+        area.style.width = '1000px'; // Force Desktop Width
+        const grid = document.querySelector('.bill-grid-container');
+        grid.style.flexDirection = 'row'; // Force Grid to Row
+
+        html2canvas(area, {scale:2, backgroundColor:"#fff"}).then(c=>{
+            area.style.width = originalWidth;
+            grid.style.flexDirection = ''; // Revert
+            const a = document.createElement('a'); a.download = `Bill_${document.getElementById('cust-name').value || 'Verma'}.png`; a.href = c.toDataURL(); a.click();
+        });
+    };
+
+    // 2. Share Image (Mobile Share)
+    window.shareImage = () => {
         const area = document.getElementById('invoice-area');
         const originalWidth = area.style.width;
         area.style.width = '1000px'; 
         const grid = document.querySelector('.bill-grid-container');
         grid.style.flexDirection = 'row';
-        let filename = `Bill_${document.getElementById('cust-name').value || 'Customer'}.png`;
+
         html2canvas(area, {scale:2, backgroundColor:"#fff"}).then(c=>{
             area.style.width = originalWidth;
             grid.style.flexDirection = ''; 
-            const a = document.createElement('a'); a.download = filename; a.href = c.toDataURL(); a.click();
+            c.toBlob(b => { 
+                if(navigator.share) {
+                    navigator.share({files:[new File([b],`Bill_${document.getElementById('cust-name').value}.png`,{type:'image/png'})]});
+                } else {
+                    alert("Share not supported. Use Download.");
+                }
+            });
         });
     };
 
-    window.shareImage = () => {
+    // 3. Share PDF (Full Bill)
+    window.sharePDF = async () => {
+        showToast("PDF बन रहा है... ⏳");
+        const { jsPDF } = window.jspdf;
         const area = document.getElementById('invoice-area');
-        area.style.width = '1000px';
+        
+        // 1. Temporarily widen the bill to look like Desktop view
+        const originalWidth = area.style.width;
+        area.style.width = '1000px'; 
         const grid = document.querySelector('.bill-grid-container');
-        grid.style.flexDirection = 'row';
-        html2canvas(area, {scale:2, backgroundColor:"#fff"}).then(c=>{
-            area.style.width = '';
+        grid.style.flexDirection = 'row'; // Side by side tables
+
+        try {
+            // 2. Capture the invoice area (NOT the buttons)
+            const canvas = await html2canvas(area, { scale: 2, backgroundColor: "#fff", useCORS: true });
+            
+            // 3. Revert styles immediately
+            area.style.width = originalWidth;
             grid.style.flexDirection = '';
-            c.toBlob(b => { if(navigator.share) navigator.share({files:[new File([b],'bill.png',{type:'image/png'})]}); });
-        });
+
+            const imgData = canvas.toDataURL('image/jpeg', 0.8);
+            
+            // 4. Create PDF (A4 size)
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+            pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+            
+            // 5. Create File for Sharing
+            const pdfBlob = pdf.output('blob');
+            const fileName = `Bill_${document.getElementById('cust-name').value || 'Customer'}.pdf`;
+            const file = new File([pdfBlob], fileName, { type: "application/pdf" });
+
+            if (navigator.share) {
+                await navigator.share({
+                    files: [file],
+                    title: 'Verma Tent House Bill',
+                    text: 'Here is your bill PDF.'
+                });
+            } else {
+                pdf.save(fileName);
+                showToast("PDF Downloaded (Share unavailable)");
+            }
+        } catch (error) {
+            console.error(error);
+            showToast("Error creating PDF");
+            // Revert styles if error occurs
+            area.style.width = originalWidth;
+            grid.style.flexDirection = '';
+        }
     };
 
     renderTable();
