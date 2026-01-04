@@ -866,19 +866,19 @@
         });
     };
 
-    // --- SHARE & DOWNLOAD FUNCTIONS (UPDATED) ---
+    // --- UPDATED SHARE & DOWNLOAD FUNCTIONS (FIXED PDF CUTTING) ---
 
     // 1. Download Image (For Desktop/Storage)
     window.downloadImage = () => {
         const area = document.getElementById('invoice-area');
         const originalWidth = area.style.width;
-        area.style.width = '1000px'; // Force Desktop Width
+        area.style.width = '1000px'; 
         const grid = document.querySelector('.bill-grid-container');
-        grid.style.flexDirection = 'row'; // Force Grid to Row
+        grid.style.flexDirection = 'row';
 
         html2canvas(area, {scale:2, backgroundColor:"#fff"}).then(c=>{
             area.style.width = originalWidth;
-            grid.style.flexDirection = ''; // Revert
+            grid.style.flexDirection = '';
             const a = document.createElement('a'); a.download = `Bill_${document.getElementById('cust-name').value || 'Verma'}.png`; a.href = c.toDataURL(); a.click();
         });
     };
@@ -904,34 +904,52 @@
         });
     };
 
-    // 3. Share PDF (Full Bill)
+    // 3. Share PDF (FULL LENGTH FIX)
     window.sharePDF = async () => {
-        showToast("PDF बन रहा है... ⏳");
+        showToast("Generating PDF... ⏳");
         const { jsPDF } = window.jspdf;
         const area = document.getElementById('invoice-area');
         
-        // 1. Temporarily widen the bill to look like Desktop view
+        // Save original styles
         const originalWidth = area.style.width;
+        const originalHeight = area.style.height;
+        const originalOverflow = area.style.overflow;
+        
+        // 1. Force styles to capture full content (prevent cutting)
         area.style.width = '1000px'; 
+        area.style.height = 'auto';     
+        area.style.overflow = 'visible';
+        
         const grid = document.querySelector('.bill-grid-container');
-        grid.style.flexDirection = 'row'; // Side by side tables
+        grid.style.flexDirection = 'row'; 
 
         try {
-            // 2. Capture the invoice area (NOT the buttons)
-            const canvas = await html2canvas(area, { scale: 2, backgroundColor: "#fff", useCORS: true });
+            // 2. Capture FULL height
+            const canvas = await html2canvas(area, { 
+                scale: 2, 
+                backgroundColor: "#fff", 
+                useCORS: true,
+                windowWidth: 1000,
+                scrollY: -window.scrollY // Capture hidden parts
+            });
             
-            // 3. Revert styles immediately
+            // 3. Revert styles
             area.style.width = originalWidth;
+            area.style.height = originalHeight;
+            area.style.overflow = originalOverflow;
             grid.style.flexDirection = '';
 
             const imgData = canvas.toDataURL('image/jpeg', 0.8);
             
-            // 4. Create PDF (A4 size)
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+            // 4. Calculate Dynamic Page Size (Not Fixed A4)
+            const imgWidth = 210; // A4 width in mm
+            // Calculate height proportional to the image
+            const pageHeight = (canvas.height * imgWidth) / canvas.width;
 
-            pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+            // Initialize PDF with CUSTOM height so it never cuts
+            const pdf = new jsPDF('p', 'mm', [imgWidth, pageHeight + 5]); 
+
+            pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, pageHeight);
             
             // 5. Create File for Sharing
             const pdfBlob = pdf.output('blob');
@@ -946,13 +964,12 @@
                 });
             } else {
                 pdf.save(fileName);
-                showToast("PDF Downloaded (Share unavailable)");
+                showToast("PDF Downloaded");
             }
         } catch (error) {
             console.error(error);
             showToast("Error creating PDF");
-            // Revert styles if error occurs
-            area.style.width = originalWidth;
+            area.style.width = originalWidth; // Ensure styles revert on error
             grid.style.flexDirection = '';
         }
     };
