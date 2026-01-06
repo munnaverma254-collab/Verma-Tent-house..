@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verma Tent House</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&family=Rozha+One&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -55,7 +56,7 @@
         .action-btn { padding: 6px 12px; color: white; border: none; cursor: pointer; font-size: 12px; border-radius: 5px; font-weight: bold; display: flex; align-items: center; gap: 5px; text-decoration: none; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         .btn-download { background: #27ae60; }
         .btn-share { background: #2980b9; }
-        .btn-pdf { background: #e74c3c; } /* Red for PDF */
+        .btn-pdf { background: #e74c3c; } 
         .btn-save-db { background: #e67e22; }
         .btn-new { background: #7f8c8d; }
 
@@ -78,84 +79,40 @@
 
         /* --- HOME PAGE (SLIDER) --- */
         .welcome-hero {
-            background: #000;
-            color: var(--gold);
-            text-align: center;
-            padding: 60px 20px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border: 2px solid #FFD700;
-            position: relative;
-            overflow: hidden;
-            min-height: 350px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            background: #000; color: var(--gold); text-align: center; padding: 60px 20px;
+            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 2px solid #FFD700; position: relative; overflow: hidden;
+            min-height: 350px; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
         }
-        
-        .hero-slider {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 0;
-        }
-        
-        .slide-img {
-            width: 100%; height: 100%;
-            object-fit: cover;
-            position: absolute;
-            top: 0; left: 0;
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
-            filter: brightness(0.4); 
-        }
-        
+        .hero-slider { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+        .slide-img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; opacity: 0; transition: opacity 1s ease-in-out; filter: brightness(0.4); }
         .slide-img.active { opacity: 1; }
-
         .hero-content { position: relative; z-index: 1; width: 100%; }
-
         .welcome-title {
-            font-family: 'Rozha One', serif;
-            font-size: 3.5em;
-            margin: 0;
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0px 0px 10px rgba(255, 215, 0, 0.3);
+            font-family: 'Rozha One', serif; font-size: 3.5em; margin: 0;
+            background: var(--gold-gradient); -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; text-shadow: 0px 0px 10px rgba(255, 215, 0, 0.3);
             animation: float 3s ease-in-out infinite;
         }
-
         .welcome-subtitle { color: #fff; font-size: 1.2em; margin-top: 10px; opacity: 0.9; }
-        
         .royal-btn {
-            background: var(--gold-gradient);
-            color: #000; border: none; padding: 15px 40px;
-            font-size: 1.2em; font-weight: bold; border-radius: 50px;
-            cursor: pointer; margin-top: 30px;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-            transition: transform 0.2s;
-            animation: glow 2s infinite alternate;
+            background: var(--gold-gradient); color: #000; border: none; padding: 15px 40px;
+            font-size: 1.2em; font-weight: bold; border-radius: 50px; cursor: pointer; margin-top: 30px;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); transition: transform 0.2s; animation: glow 2s infinite alternate;
         }
         .royal-btn:active { transform: scale(0.95); }
-        
         .photo-change-btn {
-            margin-top: 15px;
-            background: rgba(0,0,0,0.5);
-            color: white;
-            border: 1px solid white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 12px;
+            margin-top: 15px; background: rgba(0,0,0,0.5); color: white;
+            border: 1px solid white; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-size: 12px;
         }
 
-        /* --- BILL DESIGN --- */
+        /* --- BILL DESIGN (Standard) --- */
         .container { 
             width: 100%; max-width: 900px; background: white; margin: 0 auto; 
             padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
             box-sizing: border-box; border: 1px solid #ccc; position: relative;
         }
-        
         .header-grid { display: grid; grid-template-columns: 1fr 2fr 1fr; align-items: center; gap: 10px; margin-bottom: 10px; }
         .logo-box { text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px dashed #ccc; padding: 5px; min-height: 80px; }
         .logo-img { max-height: 90px; max-width: 100%; display: none; }
@@ -171,11 +128,7 @@
         .bill-half { width: 100%; border: 1px solid #ccc; }
         table { width: 100%; border-collapse: collapse; font-size: 13px; }
         
-        /* Sticky Header for Bill */
-        .bill-half thead { 
-            background: #000080; color: white; 
-            position: sticky; top: var(--header-height); z-index: 10;
-        }
+        .bill-half thead { background: #000080; color: white; position: sticky; top: var(--header-height); z-index: 10; }
         
         th { padding: 8px 5px; text-align: center; font-weight: bold; border: 1px solid #fff; white-space: nowrap; }
         td { padding: 4px; border: 1px solid #ddd; vertical-align: middle; }
@@ -195,23 +148,8 @@
         .signature-section { display: flex; justify-content: space-between; margin-top: 40px; font-size: 12px; font-weight: bold; }
         .sign-box { border-top: 1px solid #333; width: 100px; text-align: center; }
         
-        /* --- NEW STYLE: BILL FOOTER BUTTONS --- */
-        .bill-footer-actions {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 2px dashed #000080;
-            flex-wrap: wrap;
-        }
-        .bill-footer-actions .action-btn {
-            font-size: 15px;
-            padding: 12px 25px;
-            border-radius: 30px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            font-weight: bold;
-        }
+        .bill-footer-actions { display: flex; justify-content: center; gap: 15px; margin-top: 30px; padding-top: 20px; border-top: 2px dashed #000080; flex-wrap: wrap; }
+        .bill-footer-actions .action-btn { font-size: 15px; padding: 12px 25px; border-radius: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); font-weight: bold; }
 
         /* LABOUR MANAGEMENT */
         .labour-container { max-width: 900px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
@@ -221,13 +159,11 @@
         .labour-header { background: #000080; color: white; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
         .labour-body { padding: 10px; display: none; }
         .labour-body.open { display: block; }
-        
         .labour-table-container { max-height: 400px; overflow-y: auto; border: 1px solid #eee; }
         .labour-table { width: 100%; border-collapse: collapse; font-size: 13px; }
         .labour-table thead { position: sticky; top: 0; background: #eee; z-index: 5; }
         .labour-table th { color: #333; border: 1px solid #ddd; padding: 8px; }
         .labour-table td { border: 1px solid #ddd; padding: 8px; text-align: center; }
-        
         .labour-input-row { display: grid; grid-template-columns: 1fr 0.8fr 0.8fr 0.4fr 1.2fr 0.4fr; gap: 5px; margin-bottom: 10px; align-items: center; background: #fffbe6; padding: 10px; border-radius: 5px; }
         @media (max-width: 768px) {
             .labour-input-row { grid-template-columns: 1fr 1fr; }
@@ -235,30 +171,73 @@
             .shop-title { grid-column: span 2; order: -1; }
         }
 
-        /* Services & Gallery Styles */
+        /* Services, Gallery & Contact */
         .services-container, .gallery-container, .contact-container { max-width: 900px; margin: 0 auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         .service-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
         .service-card { background: #fff; border: 1px solid #eee; border-radius: 8px; padding: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        
         .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
         .gallery-item { position: relative; height: 100px; cursor: pointer; border: 1px solid #ddd; overflow: hidden; }
         .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
         .gallery-item:hover img { transform: scale(1.05); }
         .video-thumbnail { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; background: #000; color: white; text-align: center; font-size: 10px; text-decoration: none; }
-        
-        /* Lightbox */
         #lightbox { display: none; position: fixed; z-index: 5000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); justify-content: center; align-items: center; flex-direction: column; }
         #lightbox img { max-width: 90%; max-height: 80%; border: 2px solid white; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
         #lightbox-close { position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; cursor: pointer; }
-        #lightbox-caption { color: white; margin-top: 10px; font-size: 16px; }
 
         /* History Filters */
         .filter-section { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
         .filter-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
         .history-item { background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #000080; }
+        .tab-container { display: flex; gap: 10px; margin-bottom: 15px; }
+        .tab-btn { flex: 1; padding: 10px; border: none; background: #ddd; cursor: pointer; border-radius: 5px; font-weight: bold; color: #333; transition: all 0.3s; }
+        .tab-btn.active-tab { background: #000080; color: white; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        .star-icon { font-size: 22px; cursor: pointer; color: #ccc; margin-right: 10px; transition: color 0.2s; }
+        .star-icon.starred { color: gold; text-shadow: 0 0 2px black; }
+        .due-text { color: red; font-weight: bold; font-size: 14px; margin-top: 5px; display: block; }
+
+        /* --- SHORT BILL DESIGN --- */
+        .sb-card {
+            background: white; padding: 20px; border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1); max-width: 500px; margin: 0 auto;
+            font-family: sans-serif; border-top: 5px solid #c0392b; position: relative;
+        }
+        .sb-header-text h2 { color: #c0392b; margin: 0; text-transform: uppercase; font-weight: 800; font-size: 24px; text-align: center; }
+        .sb-sub-text { font-size: 12px; color: #555; text-align: center; margin-bottom: 15px; }
+        .sb-input {
+            width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;
+            font-size: 14px; box-sizing: border-box; outline: none; margin-bottom: 10px;
+        }
+        .sb-input:focus { border-color: #c0392b; box-shadow: 0 0 5px rgba(192, 57, 43, 0.2); }
+        .sb-row { display: flex; gap: 10px; }
+        .sb-add-box {
+            background: #f2f2f2; padding: 15px; border-radius: 5px; display: flex; flex-direction: column; gap: 5px;
+            border: 1px solid #e0e0e0;
+        }
+        .sb-green-btn {
+            background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 5px; font-size: 15px;
+        }
+        .sb-green-btn:active { transform: scale(0.98); }
+        .sb-table-header {
+            background: #222; color: white; display: flex; padding: 8px 5px; font-size: 13px; font-weight: bold; margin-top: 20px; border-radius: 4px 4px 0 0;
+        }
+        .sb-list-item { display: flex; padding: 10px 5px; border-bottom: 1px solid #eee; font-size: 13px; align-items: center; background: white; }
+        .sb-col-1 { width: 10%; text-align: center; }
+        .sb-col-2 { width: 40%; padding-left: 5px; font-weight: 600; }
+        .sb-col-3 { width: 15%; text-align: center; }
+        .sb-col-4 { width: 15%; text-align: center; }
+        .sb-col-5 { width: 20%; text-align: right; font-weight: bold; padding-right: 5px; }
+        .sb-col-6 { width: 10%; text-align: center; color: red; cursor: pointer; font-weight: bold; }
+        .suggestion-list { position: absolute; top: 100%; left: 0; width: 100%; background: white; border: 1px solid #ddd; z-index: 100; max-height: 200px; overflow-y: auto; display: none; box-shadow: 0 4px 10px rgba(0,0,0,0.2); border-radius: 0 0 8px 8px; }
+        .suggestion-item { padding: 10px; border-bottom: 1px solid #f0f0f0; cursor: pointer; display: flex; justify-content: space-between; }
+        .suggestion-item:hover { background: #f0f4ff; }
+        
+        /* NEW: Hidden Template for Short Bill PDF Generation */
+        #short-bill-pdf-template {
+            display: none; width: 800px; background: white; padding: 20px; border: 1px solid #333; margin: 0 auto;
+        }
 
         @media print {
-            .navbar, #home-view, #history-view, #services-view, #gallery-view, #contact-view, #labour-view, #toast, .upload-label, .photo-change-btn, .action-btn, #login-overlay, .bill-footer-actions { display: none !important; } 
+            .navbar, #home-view, #history-view, #services-view, #gallery-view, #contact-view, #labour-view, #toast, .upload-label, .photo-change-btn, .action-btn, #login-overlay, .bill-footer-actions, #short-bill-view, .tab-container { display: none !important; } 
             #invoice-view { display: block !important; margin: 0; padding: 0; }
             .container { width: 100%; max-width: 100%; box-shadow: none; border: none; padding: 0; }
             .bill-grid-container { flex-direction: row; }
@@ -270,7 +249,6 @@
     </style>
 </head>
 <body>
-
 <div id="login-overlay">
     <div class="welcome-title" style="margin-bottom: 20px;">वर्मा टेंट हाउस</div>
     <div class="login-box" id="login-form-box">
@@ -294,7 +272,8 @@
     <div class="nav-scroller">
         <div class="nav-left">
             <div class="nav-item active" onclick="switchView('home')">🏠 होम</div>
-            <div class="nav-item" onclick="switchView('bill')">📄 बिल</div>
+            <div class="nav-item" onclick="switchView('bill')">📄 पक्का बिल</div>
+            <div class="nav-item" onclick="switchView('short-bill')">⚡ शॉर्ट बिल</div> 
             <div class="nav-item" onclick="switchView('history')">📜 रिकॉर्ड</div>
             <div class="nav-item" onclick="switchView('labour')">👷 लेबर</div>
             <div class="nav-item" onclick="switchView('services')">🛠️ सेवाएं</div>
@@ -321,7 +300,10 @@
             <h1 class="welcome-title">वर्मा टेंट हाउस</h1>
             <p class="welcome-subtitle">✨ शाही शादियों का भरोसेमंद साथी ✨</p>
             <p style="color: #ccc; font-size: 0.9em;">रघुनाथपुर, बलिया (उ०प्र०)</p>
-            <button class="royal-btn" onclick="switchView('bill')">📝 नया बिल बनाएं</button>
+            <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+                <button class="royal-btn" onclick="switchView('bill')">📝 पक्का बिल</button>
+                <button class="royal-btn" style="background: linear-gradient(45deg, #00c6ff, #0072ff); color:white;" onclick="switchView('short-bill')">⚡ शॉर्ट बिल</button>
+            </div>
             <br>
             <button class="action-btn btn-new" style="padding:10px 20px; font-size:1em; background:transparent; border:1px solid #FFD700; margin-top: 15px;" onclick="switchView('history')">🔍 पुराना बिल देखें</button>
             <br>
@@ -331,6 +313,112 @@
     </div>
 </div>
 
+<div id="short-bill-view" class="view-section">
+    <div class="sb-card">
+        <div class="sb-header-text">
+            <h2>VERMA TENT HOUSE</h2>
+            <div style="font-size:13px; color:#333; margin-top:2px; font-weight:bold;">Proprietor: Mr. Shivnarayan Verma</div>
+            <div class="sb-sub-text">We provide tents, lights, and all wedding arrangements.</div>
+            <hr style="border:0; border-top:1px solid #333; margin:10px 0 20px 0;">
+        </div>
+
+        <div class="sb-row">
+            <input type="text" id="sb-name" placeholder="Customer Name" class="sb-input">
+            <input type="date" id="sb-date" class="sb-input" style="width:45%;">
+        </div>
+        <input type="number" id="sb-mobile" placeholder="Mobile Number" class="sb-input">
+
+        <div style="margin:10px 0 15px 0; color:#555; font-size:12px; display:flex; justify-content:space-between;">
+            <span>Name: ...........................</span>
+            <span>Date: ...........................</span>
+        </div>
+
+        <div class="sb-add-box">
+            <div style="position:relative;">
+                <input type="text" id="sb-search" placeholder="Item Name (e.g. Chair)" class="sb-input" style="margin:0; background:white;" oninput="handleShortBillSearch()">
+                <div id="sb-suggestions" class="suggestion-list" style="top:42px; width:100%;"></div>
+            </div>
+            
+            <input type="number" id="sb-qty" placeholder="Quantity" class="sb-input" style="margin:0; background:white;">
+            <input type="number" id="sb-rate" placeholder="Rate" class="sb-input" style="margin:0; background:white;">
+            
+            <button onclick="addItemToShortBill()" class="sb-green-btn">Add Item (+)</button>
+        </div>
+
+        <div class="sb-table-header">
+            <div class="sb-col-1">S.No</div>
+            <div class="sb-col-2">Item</div>
+            <div class="sb-col-4">Qty</div> <div class="sb-col-3">Rate</div>
+            <div class="sb-col-5">Total</div>
+            <div class="sb-col-6">X</div>
+        </div>
+
+        <div id="sb-items-list">
+            <div style="text-align:center; padding:20px; color:#aaa; border:1px solid #eee; border-top:none;">No items added</div>
+        </div>
+
+        <div style="background:#f9f9f9; padding:15px; border-radius:0 0 8px 8px; margin-top:0; border:1px solid #eee; border-top:none;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                <span>Total:</span> <strong id="sb-total" style="font-size:18px;">₹0</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                <span>Advance:</span> 
+                <input type="number" id="sb-advance" placeholder="₹" style="width:100px; padding:5px; border:1px solid #ccc; border-radius:4px;" oninput="calcShortBillTotal()">
+            </div>
+            <div style="display:flex; justify-content:space-between; color:#c0392b; font-size:18px; font-weight:bold; border-top:1px dashed #ccc; padding-top:10px; margin-top:5px;">
+                <span>Balance:</span> <span id="sb-balance">₹0</span>
+            </div>
+
+            <div style="display:flex; gap:10px; margin-top:15px; flex-wrap:wrap;">
+                <button onclick="saveShortBill()" class="action-btn btn-save-db" style="flex:1; justify-content:center;">SAVE BILL</button>
+                <button onclick="generateShortBillPDF()" class="action-btn btn-pdf" style="flex:1; justify-content:center;">📄 Share PDF</button>
+                <button onclick="resetShortBill()" class="action-btn btn-new" style="width:100%; justify-content:center;">RESET / NEW</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="short-bill-pdf-template">
+    <div style="border: 2px solid #000080; padding: 20px;">
+        <div style="text-align:center; color:#000080; margin-bottom:20px;">
+            <div style="font-size:14px; font-weight:bold;">!! श्री गणेशाय नमः !!</div>
+            <h1 style="margin:5px 0; font-size:32px; text-transform:uppercase;">वर्मा टेन्ट हाउस</h1>
+            <div style="background:#000080; color:white; border-radius:20px; padding:5px 20px; display:inline-block; font-size:14px;">ग्रा०+पो०- रघुनाथपुर, बलिया</div>
+            <div style="margin-top:5px; font-weight:bold;">📞 9918691464, 7408832903</div>
+            <div style="font-size:14px; font-weight:bold; margin-top:5px; border-top:1px solid #ccc; padding-top:5px;">प्रो० शिवनारायण वर्मा</div>
+        </div>
+        
+        <div style="display:flex; justify-content:space-between; margin-bottom:15px; border:1px solid #ccc; padding:10px; background:#f9f9f9;">
+            <div><strong>Name:</strong> <span id="pdf-cust-name"></span></div>
+            <div><strong>Date:</strong> <span id="pdf-bill-date"></span></div>
+            <div><strong>Mobile:</strong> <span id="pdf-cust-mobile"></span></div>
+        </div>
+
+        <table style="width:100%; border-collapse:collapse; margin-bottom:20px;">
+            <thead>
+                <tr style="background:#000080; color:white;">
+                    <th style="border:1px solid #000; padding:8px;">#</th>
+                    <th style="border:1px solid #000; padding:8px; text-align:left;">Item Name</th>
+                    <th style="border:1px solid #000; padding:8px;">Qty</th>
+                    <th style="border:1px solid #000; padding:8px;">Rate</th>
+                    <th style="border:1px solid #000; padding:8px;">Total</th>
+                </tr>
+            </thead>
+            <tbody id="pdf-items-body"></tbody>
+        </table>
+
+        <div style="text-align:right; font-size:16px;">
+            <div style="margin-bottom:5px;">Total Amount: <strong id="pdf-total"></strong></div>
+            <div style="margin-bottom:5px;">Advance: <strong id="pdf-advance"></strong></div>
+            <div style="font-size:18px; color:#c0392b; border-top:1px solid #000; padding-top:5px;">Balance Due: <strong id="pdf-balance"></strong></div>
+        </div>
+        
+        <div style="margin-top:40px; display:flex; justify-content:space-between; font-weight:bold; font-size:12px;">
+            <div style="border-top:1px solid #000; width:100px; text-align:center;">Signature</div>
+            <div style="border-top:1px solid #000; width:100px; text-align:center;">Proprietor</div>
+        </div>
+    </div>
+</div>
 <div id="labour-view" class="view-section">
     <div class="labour-container">
         <h2 style="text-align:center; color:#000080;">👷 मजदूर/लेबर मैनेजमेंट</h2>
@@ -344,12 +432,22 @@
 
 <div id="history-view" class="view-section">
     <div class="filter-section">
-        <h2 style="text-align:center; color:#000080; margin-top:0;">पुराने बिल (History)</h2>
-        <input type="text" id="search-box" style="width:100%; padding:12px; border:2px solid #000080; border-radius:25px; outline:none;" placeholder="🔍 ग्राहक का नाम या तारीख..." oninput="filterHistory()">
-        <div class="filter-row">
-            <input type="date" id="filter-date-from" style="padding:8px; border:1px solid #ccc; border-radius:5px;" onchange="filterHistory()">
-            <span>से</span>
-            <input type="date" id="filter-date-to" style="padding:8px; border:1px solid #ccc; border-radius:5px;" onchange="filterHistory()">
+        <h2 style="text-align:center; color:#000080; margin-top:0;">📜 पुराने बिल (Records)</h2>
+        
+        <div class="tab-container">
+            <button class="tab-btn active-tab" onclick="setHistoryTab('full')">📄 पक्का बिल (Full)</button>
+            <button class="tab-btn" onclick="setHistoryTab('short')">⚡ शॉर्ट बिल (Short)</button>
+        </div>
+
+        <input type="text" id="search-box" style="width:100%; padding:12px; border:2px solid #000080; border-radius:25px; outline:none; margin-bottom:10px;" placeholder="🔍 ग्राहक का नाम..." oninput="filterHistory()">
+        
+        <div style="background:#f0f4ff; padding:10px; border-radius:8px; border:1px solid #000080;">
+            <label style="font-size:12px; font-weight:bold; color:#000080;">📅 तारीख से खोजें (Calendar Filter):</label>
+            <div class="filter-row">
+                <input type="date" id="filter-date-from" style="padding:8px; border:1px solid #ccc; border-radius:5px; flex:1;" onchange="filterHistory()">
+                <span style="align-self:center;">से</span>
+                <input type="date" id="filter-date-to" style="padding:8px; border:1px solid #ccc; border-radius:5px; flex:1;" onchange="filterHistory()">
+            </div>
         </div>
     </div>
     <div id="history-list">Loading...</div>
@@ -453,19 +551,16 @@
                 <h4 style="margin: 0 0 10px 0; text-align: center; color: #000080; text-decoration: underline;">फाइनल सेटलमेंट (Final Settlement)</h4>
                 
                 <div style="display: flex; gap: 10px; justify-content: space-between; flex-wrap: wrap;">
-                    
                     <div style="flex: 1; min-width: 100px;">
                         <label style="display: block; font-weight: bold; color: #2e7d32; font-size: 13px; margin-bottom: 5px;">तय पैसा (Agreed Total):</label>
                         <input type="number" id="manual-agreed" placeholder="₹ Amount" oninput="calcManualBalance()" 
                                style="width: 100%; padding: 8px; border: 2px solid #2e7d32; border-radius: 5px; font-weight: bold; font-size: 16px; color: #2e7d32; background: #fff;">
                     </div>
-
                     <div style="flex: 1; min-width: 100px;">
                         <label style="display: block; font-weight: bold; color: #d35400; font-size: 13px; margin-bottom: 5px;">बैना (Advance Paid):</label>
                         <input type="number" id="manual-advance" placeholder="₹ Paid" oninput="calcManualBalance()" 
                                style="width: 100%; padding: 8px; border: 2px solid #d35400; border-radius: 5px; font-weight: bold; font-size: 16px; color: #d35400; background: #fff;">
                     </div>
-
                     <div style="flex: 1; min-width: 100px;">
                         <label style="display: block; font-weight: bold; color: #c0392b; font-size: 13px; margin-bottom: 5px;">देना बाकी (Balance):</label>
                         <input type="number" id="manual-balance" readonly 
@@ -484,7 +579,6 @@
         <button class="action-btn btn-share" onclick="shareImage()">📤 IMG Share</button>
         <button class="action-btn btn-download" onclick="downloadImage()">⬇️ Download</button>
     </div>
-
 </div>
 
 <div id="services-view" class="view-section">
@@ -534,7 +628,10 @@
     const firebaseConfig = { apiKey: "AIzaSyBQ61XTeTsapoD3oBAfMI9YHA3p0ibRym4", authDomain: "verma-tent-house-a3f17.firebaseapp.com", projectId: "verma-tent-house-a3f17", storageBucket: "verma-tent-house-a3f17.firebasestorage.app", messagingSenderId: "659727419794", appId: "1:659727419794:web:ce5326b9d78b702b73194b", measurementId: "G-64PWQGZPXP" };
 
     let db, billsRef, labourRef, galleryRef;
-    window.currentBillId = null;
+    window.currentBillId = null;       // For Standard Bill
+    window.currentShortBillId = null;  // For Short Bill Edit Mode
+    window.billsData = {};
+    window.activeHistoryTab = 'full'; 
 
     try {
         const app = initializeApp(firebaseConfig);
@@ -543,34 +640,31 @@
         labourRef = collection(db, "labour");
         galleryRef = collection(db, "gallery");
 
-        // Load History
+        // --- HISTORY LOADER (With Calendar & Star Logic) ---
         onSnapshot(query(billsRef, orderBy("timestamp", "desc")), (snap) => {
-            const list = document.getElementById('history-list'); list.innerHTML = ""; window.billsData = {};
-            if(snap.empty) { list.innerHTML = "<div style='text-align:center; padding:20px;'>No Bills Found</div>"; return; }
+            window.allBillsList = []; // Raw data storage
+            window.billsData = {};
+            
             snap.forEach(doc => {
-                const d = doc.data(); window.billsData[doc.id] = d;
-                list.innerHTML += `
-                    <div class="history-item" data-name="${d.custName.toLowerCase()}" data-date="${d.billDate}">
-                        <div onclick="loadBill('${doc.id}')" style="flex-grow:1; cursor:pointer;">
-                            <strong>${d.custName}</strong> <span style="float:right; color:#000080; font-weight:bold;">₹${d.grandTotal}</span><br>
-                            <span style="font-size:12px; color:#666;">📅 ${d.billDate}</span>
-                        </div>
-                        <button style="background:#c0392b; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer; margin-left:10px;" onclick="deleteBill('${doc.id}')">🗑️</button>
-                    </div>`;
+                const d = doc.data();
+                window.billsData[doc.id] = d;
+                window.allBillsList.push({ id: doc.id, ...d });
             });
+            
+            // Render list if view is active
+            if(window.renderHistoryList) window.renderHistoryList();
         });
 
-        // Load Labour
+        // Load Labour Data
         onSnapshot(query(labourRef, orderBy("name")), (snap) => {
-            const list = document.getElementById('labour-list'); list.innerHTML = "";
+            const list = document.getElementById('labour-list'); if(list) list.innerHTML = "";
             snap.forEach(doc => {
                 const d = doc.data();
                 const entries = d.entries || [];
-                let totalDays = 0, totalPay = 0, totalFood = 0;
+                let totalDays = 0, totalPay = 0;
                 entries.forEach(e => {
                     totalDays += parseFloat(e.work || 0);
                     totalPay += parseFloat(e.pay || 0);
-                    if(e.food) totalFood += parseFloat(e.foodCost || 0);
                 });
 
                 list.innerHTML += `
@@ -623,19 +717,343 @@
             const grid = document.getElementById('gallery-grid'); if(!grid) return; grid.innerHTML = "";
             snap.forEach(doc => { 
                 const d = doc.data();
-                let content = "";
-                if(d.type === 'video') {
-                     content = `<a href="${d.url}" target="_blank" class="video-thumbnail">▶️ Play Video<br>${d.url.substring(0,20)}...</a>`;
-                } else {
-                     content = `<img src="${d.image}" onclick="openLightbox('${d.image}')">`;
-                }
+                let content = d.type === 'video' 
+                    ? `<a href="${d.url}" target="_blank" class="video-thumbnail">▶️ Play Video<br>${d.url.substring(0,20)}...</a>`
+                    : `<img src="${d.image}" onclick="openLightbox('${d.image}')">`;
                 grid.innerHTML += `<div class="gallery-item">${content}<button onclick="delDoc('gallery','${doc.id}')" style="position:absolute;top:0;right:0;background:red;color:white;border:none;z-index:10;">×</button></div>`; 
             });
         });
 
     } catch(e) { console.error("Firebase Error:", e); }
 
-    // --- BILL FUNCTIONS ---
+    // --- HISTORY TAB & RENDER LOGIC ---
+    window.setHistoryTab = (tab) => {
+        window.activeHistoryTab = tab;
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-tab'));
+        event.target.classList.add('active-tab');
+        if(window.renderHistoryList) window.renderHistoryList();
+    };
+
+    window.toggleStar = async (e, id) => {
+        e.stopPropagation(); 
+        const isStarred = window.billsData[id].isStarred || false;
+        try { await updateDoc(doc(db, "bills", id), { isStarred: !isStarred }); } catch(err) { console.error(err); }
+    };
+
+    window.renderHistoryList = () => {
+        const list = document.getElementById('history-list');
+        const term = document.getElementById('search-box').value.toLowerCase();
+        
+        // Update 5: Calendar Filter Inputs
+        const dateFrom = document.getElementById('filter-date-from').value;
+        const dateTo = document.getElementById('filter-date-to').value;
+
+        if(!window.allBillsList) return;
+
+        // 1. Filter by Tab
+        let filtered = window.allBillsList.filter(item => {
+            const isShort = item.billType === 'short';
+            return window.activeHistoryTab === 'short' ? isShort : !isShort;
+        });
+
+        // 2. Filter by Search & Date
+        filtered = filtered.filter(item => {
+            const name = (item.custName || "").toLowerCase();
+            const date = item.billDate || "";
+            const matchesTerm = name.includes(term) || date.includes(term);
+            
+            // Calendar Logic Check
+            let rangeMatch = true;
+            if(dateFrom && dateTo) {
+                if(date < dateFrom || date > dateTo) rangeMatch = false;
+            } else if (dateFrom) {
+                if(date < dateFrom) rangeMatch = false;
+            }
+            
+            return matchesTerm && rangeMatch;
+        });
+
+        // 3. Sort (Starred First)
+        filtered.sort((a, b) => {
+            if (a.isStarred === b.isStarred) return b.timestamp - a.timestamp;
+            return a.isStarred ? -1 : 1;
+        });
+
+        list.innerHTML = "";
+        if(filtered.length === 0) { list.innerHTML = "<div style='text-align:center; padding:20px; color:#888;'>No records found.</div>"; return; }
+
+        filtered.forEach(d => {
+            let dueAmount = d.manualBalance ? parseFloat(d.manualBalance) : parseFloat(d.balance || 0);
+            const dueDisplay = dueAmount > 0 
+                ? `<span class="due-text">देना बाकी: ₹${dueAmount}</span>` 
+                : `<span style="color:green; font-size:12px;">(Paid/Clear)</span>`;
+
+            list.innerHTML += `
+                <div class="history-item" data-id="${d.id}" style="border-left: 5px solid ${d.isStarred ? 'gold' : '#000080'};">
+                    <span class="star-icon ${d.isStarred ? 'starred' : ''}" onclick="toggleStar(event, '${d.id}')">${d.isStarred ? '⭐' : '☆'}</span>
+                    <div onclick="loadBillWrapper('${d.id}', '${d.billType}')" style="flex-grow:1; cursor:pointer;">
+                        <strong style="font-size:16px;">${d.custName}</strong> 
+                        <span style="float:right; color:#000080; font-weight:bold;">₹${d.grandTotal || d.total}</span>
+                        <br>
+                        <span style="font-size:12px; color:#666;">📅 ${d.billDate}</span>
+                        ${dueDisplay}
+                    </div>
+                    <button style="background:#c0392b; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer; margin-left:10px;" onclick="deleteBill('${d.id}')">🗑️</button>
+                </div>`;
+        });
+    };
+
+    window.loadBillWrapper = (id, type) => {
+        if(type === 'short') {
+            loadShortBill(id);
+        } else {
+            loadBill(id);
+        }
+    };
+
+    // Update 6: EDIT MODE for Short Bills
+    window.loadShortBill = (id) => {
+        const d = window.billsData[id];
+        if(!d) return;
+
+        // Set Editing ID
+        window.currentShortBillId = id;
+
+        // Fill Inputs
+        document.getElementById('sb-name').value = d.custName || "";
+        document.getElementById('sb-date').value = d.billDate || "";
+        document.getElementById('sb-mobile').value = d.custMobile || "";
+        document.getElementById('sb-advance').value = d.advance || "";
+
+        // Fill Items Array
+        window.shortBillItems = d.items || [];
+
+        // Render & Switch
+        renderShortBillList();
+        switchView('short-bill');
+        showToast("✏️ Edit Mode: Short Bill Opened");
+    };
+    // --- SHORT BILL LOGIC (Smart Search & Calculations) ---
+    const itemDictionary = [
+        { key: "chair", val: "कुर्सी फाइबर (Chair)", price: 6 },
+        { key: "kurshi", val: "कुर्सी फाइबर (Chair)", price: 6 },
+        { key: "sofa", val: "सोफा (Sofa)", price: 50 },
+        { key: "table", val: "मेज (Table)", price: 30 },
+        { key: "tent", val: "पाइप पंडाल (Tent)", price: 0 },
+        { key: "kanat", val: "कनात (Kanat)", price: 0 },
+        { key: "light", val: "LED लाइट (Light)", price: 100 },
+        { key: "fan", val: "पंखा (Fan)", price: 50 },
+        { key: "gadda", val: "गद्दा (Mattress)", price: 20 },
+        { key: "chadar", val: "चादर (Sheet)", price: 10 },
+        { key: "generator", val: "जेनरेटर (Gen)", price: 500 }
+    ];
+
+    window.shortBillItems = []; 
+
+    window.handleShortBillSearch = () => {
+        const input = document.getElementById('sb-search').value.toLowerCase();
+        const box = document.getElementById('sb-suggestions');
+        box.innerHTML = "";
+        
+        if(input.length < 2) { box.style.display = "none"; return; }
+
+        const matches = itemDictionary.filter(i => i.key.includes(input));
+        
+        if(matches.length > 0) {
+            box.style.display = "block";
+            matches.forEach(m => {
+                const div = document.createElement('div');
+                div.className = "suggestion-item";
+                div.innerHTML = `<span>${m.val}</span> <small>₹${m.price}</small>`;
+                div.onclick = () => {
+                    document.getElementById('sb-search').value = m.val;
+                    document.getElementById('sb-rate').value = m.price;
+                    document.getElementById('sb-qty').focus(); // Auto focus on Quantity
+                    box.style.display = "none";
+                };
+                box.appendChild(div);
+            });
+        } else {
+            box.style.display = "none";
+        }
+    };
+
+    window.addItemToShortBill = () => {
+        const name = document.getElementById('sb-search').value;
+        const qty = parseFloat(document.getElementById('sb-qty').value) || 0;
+        const rate = parseFloat(document.getElementById('sb-rate').value) || 0;
+
+        if(!name || qty <= 0) { alert("Please enter valid Item & Qty"); return; }
+
+        window.shortBillItems.push({ name, qty, rate, total: qty * rate });
+        renderShortBillList();
+        
+        // Clear Inputs
+        document.getElementById('sb-search').value = "";
+        document.getElementById('sb-qty').value = "";
+        document.getElementById('sb-rate').value = "";
+    };
+
+    window.renderShortBillList = () => {
+        const container = document.getElementById('sb-items-list');
+        container.innerHTML = "";
+        let total = 0;
+
+        if (window.shortBillItems.length === 0) {
+            container.innerHTML = "<div style='text-align:center; padding:20px; color:#aaa; border:1px solid #eee; border-top:none;'>No items added</div>";
+        }
+
+        window.shortBillItems.forEach((item, index) => {
+            total += item.total;
+            container.innerHTML += `
+                <div class="sb-list-item">
+                    <div class="sb-col-1">${index + 1}</div>
+                    <div class="sb-col-2">${item.name}</div>
+                    <div class="sb-col-4">${item.qty}</div>
+                    <div class="sb-col-3">${item.rate}</div>
+                    <div class="sb-col-5">₹${item.total}</div>
+                    <div class="sb-col-6" onclick="removeShortItem(${index})">×</div>
+                </div>`;
+        });
+
+        const advance = parseFloat(document.getElementById('sb-advance').value) || 0;
+        document.getElementById('sb-total').innerText = "₹" + total;
+        document.getElementById('sb-balance').innerText = "₹" + (total - advance);
+        window.sbTempTotal = total; 
+    };
+
+    window.removeShortItem = (index) => {
+        window.shortBillItems.splice(index, 1);
+        renderShortBillList();
+    };
+
+    window.calcShortBillTotal = () => {
+        const total = window.sbTempTotal || 0;
+        const advance = parseFloat(document.getElementById('sb-advance').value) || 0;
+        document.getElementById('sb-balance').innerText = "₹" + (total - advance);
+    };
+
+    // --- SAVE LOGIC (HANDLES BOTH NEW AND EDIT) ---
+    window.saveShortBill = async () => {
+        const name = document.getElementById('sb-name').value;
+        const date = document.getElementById('sb-date').value;
+        if(!name || !date || window.shortBillItems.length === 0) { alert("Fill Name, Date and add Items!"); return; }
+
+        const total = window.sbTempTotal;
+        const advance = parseFloat(document.getElementById('sb-advance').value) || 0;
+
+        const billData = {
+            billType: 'short', 
+            custName: name,
+            billDate: date,
+            custMobile: document.getElementById('sb-mobile').value || "",
+            items: window.shortBillItems,
+            total: total,
+            advance: advance,
+            balance: total - advance, 
+            grandTotal: total, // Compatibility field
+            timestamp: Date.now() // Always update timestamp to show at top
+        };
+
+        try {
+            if (window.currentShortBillId) {
+                // UPDATE EXISTING (Edit Mode)
+                await setDoc(doc(db, "bills", window.currentShortBillId), billData, { merge: true });
+                showToast("Short Bill Updated! ✏️");
+            } else {
+                // CREATE NEW
+                await addDoc(billsRef, billData);
+                showToast("Short Bill Saved! ⚡");
+            }
+            
+            resetShortBill();
+            switchView('history'); // Auto go to history to see change
+        } catch(e) { alert("Error: " + e.message); }
+    };
+
+    window.resetShortBill = () => {
+        window.currentShortBillId = null; // Clear Edit ID
+        window.shortBillItems = [];
+        document.getElementById('sb-name').value = "";
+        document.getElementById('sb-date').valueAsDate = new Date();
+        document.getElementById('sb-mobile').value = "";
+        document.getElementById('sb-search').value = "";
+        document.getElementById('sb-qty').value = "";
+        document.getElementById('sb-rate').value = "";
+        document.getElementById('sb-advance').value = "";
+        renderShortBillList();
+    };
+    
+    // Set default date
+    document.getElementById('sb-date').valueAsDate = new Date();
+
+    // --- NEW: GENERATE PDF FOR SHORT BILL ---
+    window.generateShortBillPDF = async () => {
+        if(window.shortBillItems.length === 0) { alert("Add items first!"); return; }
+        
+        showToast("Generating PDF... ⏳");
+
+        // 1. Populate Hidden Template
+        document.getElementById('pdf-cust-name').innerText = document.getElementById('sb-name').value;
+        document.getElementById('pdf-bill-date').innerText = document.getElementById('sb-date').value;
+        document.getElementById('pdf-cust-mobile').innerText = document.getElementById('sb-mobile').value;
+        
+        const tbody = document.getElementById('pdf-items-body');
+        tbody.innerHTML = "";
+        window.shortBillItems.forEach((item, i) => {
+            tbody.innerHTML += `
+                <tr>
+                    <td style="border:1px solid #ddd; padding:8px; text-align:center;">${i+1}</td>
+                    <td style="border:1px solid #ddd; padding:8px;">${item.name}</td>
+                    <td style="border:1px solid #ddd; padding:8px; text-align:center;">${item.qty}</td>
+                    <td style="border:1px solid #ddd; padding:8px; text-align:center;">${item.rate}</td>
+                    <td style="border:1px solid #ddd; padding:8px; text-align:right;">₹${item.total}</td>
+                </tr>`;
+        });
+
+        document.getElementById('pdf-total').innerText = "₹" + window.sbTempTotal;
+        document.getElementById('pdf-advance').innerText = "₹" + (document.getElementById('sb-advance').value || 0);
+        document.getElementById('pdf-balance').innerText = document.getElementById('sb-balance').innerText;
+
+        // 2. Generate PDF using html2canvas & jsPDF
+        const { jsPDF } = window.jspdf;
+        const element = document.getElementById('short-bill-pdf-template');
+        
+        element.style.display = "block"; // Temporarily show
+
+        try {
+            const canvas = await html2canvas(element, { scale: 2, useCORS: true });
+            const imgData = canvas.toDataURL('image/jpeg', 0.9);
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const imgWidth = 210; 
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            
+            pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
+            
+            const fileName = `ShortBill_${document.getElementById('sb-name').value}.pdf`;
+            
+            // Share or Download
+            const pdfBlob = pdf.output('blob');
+            const file = new File([pdfBlob], fileName, { type: "application/pdf" });
+
+            if (navigator.share) {
+                await navigator.share({
+                    files: [file],
+                    title: 'Verma Tent Bill',
+                    text: 'Here is your bill.'
+                });
+            } else {
+                pdf.save(fileName);
+            }
+
+        } catch(err) {
+            console.error(err);
+            alert("PDF Error: " + err.message);
+        } finally {
+            element.style.display = "none"; // Hide again
+        }
+    };
+    // --- STANDARD BILL FUNCTIONS (PAKKA BILL) ---
     window.saveBillToFirebase = async () => {
         if(!db) { alert("Database Error"); return; }
         const name = document.getElementById('cust-name').value;
@@ -648,6 +1066,7 @@
         }
         
         const billData = {
+            billType: 'full', 
             timestamp: Date.now(),
             billDate: document.getElementById('bill-date').value,
             custName: name,
@@ -659,6 +1078,7 @@
             grandTotal: document.getElementById('grand-total').value,
             advance: document.getElementById('advance').value,
             balance: document.getElementById('balance').value,
+            // Final Settlement Data
             manualAgreed: document.getElementById('manual-agreed').value,
             manualAdvance: document.getElementById('manual-advance').value,
             manualBalance: document.getElementById('manual-balance').value,
@@ -667,7 +1087,7 @@
 
         try {
             if (window.currentBillId) {
-                await setDoc(doc(db, "bills", window.currentBillId), billData);
+                await setDoc(doc(db, "bills", window.currentBillId), billData, { merge: true });
                 showToast("Bill Updated ✅");
             } else {
                 const ref = await addDoc(billsRef, billData);
@@ -679,7 +1099,7 @@
 
     window.loadBill = (id) => {
         const d = window.billsData[id];
-        if(!d || !confirm("Open this old bill? Unsaved changes will be lost.")) return;
+        if(!d) return;
         window.currentBillId = id;
         document.getElementById('cust-name').value = d.custName;
         document.getElementById('cust-address').value = d.custAddress;
@@ -689,10 +1109,12 @@
         document.getElementById('date-return').value = d.dateReturn;
         document.getElementById('advance').value = d.advance;
 
+        // Load Final Settlement Data
         document.getElementById('manual-agreed').value = d.manualAgreed || "";
         document.getElementById('manual-advance').value = d.manualAdvance || "";
         document.getElementById('manual-balance').value = d.manualBalance || "";
         
+        // Reset & Fill Table
         document.querySelectorAll('input[id^="qty_"]').forEach(i => i.value = "");
         document.querySelectorAll('input[id^="amt_"]').forEach(i => i.value = "");
         d.items.forEach(x => { 
@@ -721,6 +1143,8 @@
     };
 
     window.deleteBill = async (id) => { if(confirm("Permanently delete this bill?")) await deleteDoc(doc(db, "bills", id)); };
+    
+    // --- LABOUR & GALLERY UTILS ---
     window.addNewLabour = async () => { const name = document.getElementById('new-labour-name').value; if(!name) return; try { await addDoc(labourRef, { name: name, timestamp: Date.now(), entries: [] }); document.getElementById('new-labour-name').value = ""; } catch(e){ alert(e); } };
     window.addLabourEntry = async (id) => { const date = document.getElementById(`date-${id}`).value; const work = document.getElementById(`work-${id}`).value; const pay = document.getElementById(`pay-${id}`).value || 0; const note = document.getElementById(`note-${id}`).value || ""; const isFood = document.getElementById(`food-${id}`).checked; const foodCost = document.getElementById(`foodCost-${id}`).value || 0; const entry = { date, work, pay, note, food: isFood, foodCost: isFood ? foodCost : 0 }; try { const labourDoc = doc(db, "labour", id); const snapshot = await getDoc(labourDoc); const currentEntries = snapshot.data().entries || []; currentEntries.push(entry); await updateDoc(labourDoc, { entries: currentEntries }); showToast("Entry Added"); } catch(e) { console.error(e); } };
     window.deleteLabourEntry = async (id, index) => { if(!confirm("Remove entry?")) return; const labourDoc = doc(db, "labour", id); const snapshot = await getDoc(labourDoc); const currentEntries = snapshot.data().entries || []; currentEntries.splice(index, 1); await updateDoc(labourDoc, { entries: currentEntries }); };
@@ -732,7 +1156,7 @@
 </script>
 
 <script>
-    // --- LOGIN SYSTEM LOGIC ---
+    // --- UI, LOGIN & CALCULATION SCRIPTS ---
     const ADMIN_USER = "admin";
     const ADMIN_PASS = "verma123";
     const RECOVERY_EMAIL = "munnaverma254@gmail.com";
@@ -747,11 +1171,11 @@
     function showLoginForm() { document.getElementById('login-form-box').style.display = 'block'; document.getElementById('forgot-form-box').style.display = 'none'; }
     function recoverAccount() { const email = document.getElementById('recovery-email').value; if(email.trim().toLowerCase() === RECOVERY_EMAIL) { alert(`✅ Verification Successful!\n\nUser ID: ${ADMIN_USER}\nPassword: ${ADMIN_PASS}\n\nPlease note this down.`); showLoginForm(); } else { alert("❌ Invalid Email!\nOnly the registered administrator email is allowed."); } }
 
-    // --- UI LOGIC ---
+    // Navigation & UI
     function switchView(id) {
         document.querySelectorAll('.view-section').forEach(e => e.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active'));
-        const map = {'home':'home-view', 'bill':'invoice-view', 'history':'history-view', 'services':'services-view', 'gallery':'gallery-view', 'contact':'contact-view', 'labour':'labour-view'};
+        const map = {'home':'home-view', 'bill':'invoice-view', 'history':'history-view', 'services':'services-view', 'gallery':'gallery-view', 'contact':'contact-view', 'labour':'labour-view', 'short-bill': 'short-bill-view'};
         const section = document.getElementById(map[id]);
         if(section) section.classList.add('active');
     }
@@ -762,7 +1186,7 @@
     function setBillTime() { const now = new Date(); document.getElementById('bill-time').innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}); }
     setBillTime();
 
-    // --- IMAGE & QR LOGIC ---
+    // Image & Slider
     function loadImage(event, imgId, storageKey) {
         const file = event.target.files[0];
         if (file) {
@@ -779,18 +1203,18 @@
     const savedLogo = localStorage.getItem('verma_business_logo'); if(savedLogo) { document.getElementById('business-logo').src = savedLogo; document.getElementById('business-logo').style.display = 'block'; }
     const savedQR = localStorage.getItem('verma_qr_code'); if(savedQR) { document.getElementById('qr-code-img').src = savedQR; document.getElementById('qr-code-img').style.display = 'block'; }
 
-    // --- SLIDER LOGIC ---
     let sliderImages = JSON.parse(localStorage.getItem('verma_slider_images') || '[]');
     let currentSlide = 0;
     function initSlider() { const container = document.getElementById('hero-slider'); if(sliderImages.length > 0) { container.innerHTML = sliderImages.map((src, i) => `<img src="${src}" class="slide-img ${i===0?'active':''}">`).join(''); } if(sliderImages.length > 1) setInterval(nextSlide, 4000); }
     function nextSlide() { const slides = document.querySelectorAll('.slide-img'); if(slides.length < 2) return; slides[currentSlide].classList.remove('active'); currentSlide = (currentSlide + 1) % slides.length; slides[currentSlide].classList.add('active'); }
     function handleSliderUpload(e) { const files = Array.from(e.target.files); if(!files.length) return; sliderImages = []; let loaded = 0; files.forEach(file => { const reader = new FileReader(); reader.onload = (evt) => { sliderImages.push(evt.target.result); loaded++; if(loaded === files.length) { localStorage.setItem('verma_slider_images', JSON.stringify(sliderImages)); initSlider(); } }; reader.readAsDataURL(file); }); }
 
-    // --- LABOUR UI & BILL CALC ---
+    // Labour UI & Manual Balance
     function toggleLabour(id) { document.getElementById(`labour-body-${id}`).classList.toggle('open'); }
     function toggleFoodInput(id) { const chk = document.getElementById(`food-${id}`); const inp = document.getElementById(`foodCost-${id}`); inp.style.display = chk.checked ? 'block' : 'none'; if(chk.checked) inp.focus(); }
     window.calcManualBalance = () => { const agreed = parseFloat(document.getElementById('manual-agreed').value) || 0; const advance = parseFloat(document.getElementById('manual-advance').value) || 0; document.getElementById('manual-balance').value = agreed - advance; autoSaveLocal(); };
 
+    // --- STANDARD BILL TABLE RENDER & CALC ---
     const itemList = [ "टेन्ट (Tent)", "टेन्ट", "टेन्ट", "टेन्ट राउन्ड", "टेन्ट राउन्ड", "हलुवाई टेन्ट", "वालिंग टेन्ट", "वालिंग टेन्ट", "कुर्सी फाइबर", "VIP कुर्सी", "मेज (Table)", "गोला मेज", "चारपाई", "तोषक", "तकिया", "चादर", "रजाई", "कम्बल", "फोम गदा", "जाजिम", "दरी", "चौकी", "स्टेज", "कालीन", "तिरपाल", "जयमाल सेट", "स्टाल", "गेट", "कनाट", "मैट", "गणेश जी", "भगोना", "तासा", "किस्ती", "बाल्टी", "कल्छुल", "चुल्हा", "जग", "ड्रम", "बर्नल सेट" ];
     const extraItems = ["पानी ट्रे", "डस्टबीन", "डोगा", "ट्रे", "गोला तासा", "अल्युमिनियम टोप", "नाव", "समियाना", "बिछवना हाफ", "रावती", "बाउन्डरी", "सिंघासन", "मण्डप", "जेनरेटर", "राड", "हाइलोजन"];
     while(itemList.length < 40) itemList.push(""); 
@@ -853,125 +1277,56 @@
         if(data.items) { data.items.forEach((item, i) => { if(document.getElementById(`name_${i}`)) { document.getElementById(`name_${i}`).value = item.n; document.getElementById(`qty_${i}`).value = item.q; document.getElementById(`rate_${i}`).value = item.r; document.getElementById(`bak_${i}`).value = item.b; if(item.q || item.r) calcRow(i); } }); }
         calcFinal();
     }
-    window.filterHistory = () => {
-        const term = document.getElementById('search-box').value.toLowerCase();
-        const dateFrom = document.getElementById('filter-date-from').value;
-        const dateTo = document.getElementById('filter-date-to').value;
-        document.querySelectorAll('.history-item').forEach(e => {
-            const name = e.dataset.name; const date = e.dataset.date;
-            const matchesTerm = name.includes(term) || date.includes(term);
-            let rangeMatch = true;
-            if(dateFrom && dateTo) { if(date < dateFrom || date > dateTo) rangeMatch = false; }
-            e.style.display = (matchesTerm && rangeMatch) ? 'flex' : 'none';
-        });
-    };
+    window.filterHistory = () => { if(window.renderHistoryList) window.renderHistoryList(); };
 
-    // --- UPDATED SHARE & DOWNLOAD FUNCTIONS (FIXED PDF CUTTING) ---
-
-    // 1. Download Image (For Desktop/Storage)
+    // --- STANDARD BILL PDF & DOWNLOAD ---
     window.downloadImage = () => {
         const area = document.getElementById('invoice-area');
         const originalWidth = area.style.width;
         area.style.width = '1000px'; 
         const grid = document.querySelector('.bill-grid-container');
         grid.style.flexDirection = 'row';
-
         html2canvas(area, {scale:2, backgroundColor:"#fff"}).then(c=>{
-            area.style.width = originalWidth;
-            grid.style.flexDirection = '';
+            area.style.width = originalWidth; grid.style.flexDirection = '';
             const a = document.createElement('a'); a.download = `Bill_${document.getElementById('cust-name').value || 'Verma'}.png`; a.href = c.toDataURL(); a.click();
         });
     };
-
-    // 2. Share Image (Mobile Share)
     window.shareImage = () => {
         const area = document.getElementById('invoice-area');
         const originalWidth = area.style.width;
         area.style.width = '1000px'; 
         const grid = document.querySelector('.bill-grid-container');
         grid.style.flexDirection = 'row';
-
         html2canvas(area, {scale:2, backgroundColor:"#fff"}).then(c=>{
-            area.style.width = originalWidth;
-            grid.style.flexDirection = ''; 
+            area.style.width = originalWidth; grid.style.flexDirection = ''; 
             c.toBlob(b => { 
-                if(navigator.share) {
-                    navigator.share({files:[new File([b],`Bill_${document.getElementById('cust-name').value}.png`,{type:'image/png'})]});
-                } else {
-                    alert("Share not supported. Use Download.");
-                }
+                if(navigator.share) { navigator.share({files:[new File([b],`Bill_${document.getElementById('cust-name').value}.png`,{type:'image/png'})]}); } 
+                else { alert("Share not supported. Use Download."); }
             });
         });
     };
-
-    // 3. Share PDF (FULL LENGTH FIX)
     window.sharePDF = async () => {
         showToast("Generating PDF... ⏳");
         const { jsPDF } = window.jspdf;
         const area = document.getElementById('invoice-area');
-        
-        // Save original styles
         const originalWidth = area.style.width;
-        const originalHeight = area.style.height;
-        const originalOverflow = area.style.overflow;
-        
-        // 1. Force styles to capture full content (prevent cutting)
         area.style.width = '1000px'; 
-        area.style.height = 'auto';     
-        area.style.overflow = 'visible';
-        
+        area.style.height = 'auto'; area.style.overflow = 'visible';
         const grid = document.querySelector('.bill-grid-container');
         grid.style.flexDirection = 'row'; 
-
         try {
-            // 2. Capture FULL height
-            const canvas = await html2canvas(area, { 
-                scale: 2, 
-                backgroundColor: "#fff", 
-                useCORS: true,
-                windowWidth: 1000,
-                scrollY: -window.scrollY // Capture hidden parts
-            });
-            
-            // 3. Revert styles
-            area.style.width = originalWidth;
-            area.style.height = originalHeight;
-            area.style.overflow = originalOverflow;
-            grid.style.flexDirection = '';
-
+            const canvas = await html2canvas(area, { scale: 2, backgroundColor: "#fff", useCORS: true, windowWidth: 1000, scrollY: -window.scrollY });
+            area.style.width = originalWidth; area.style.height = ''; area.style.overflow = ''; grid.style.flexDirection = '';
             const imgData = canvas.toDataURL('image/jpeg', 0.8);
-            
-            // 4. Calculate Dynamic Page Size (Not Fixed A4)
-            const imgWidth = 210; // A4 width in mm
-            // Calculate height proportional to the image
+            const imgWidth = 210; 
             const pageHeight = (canvas.height * imgWidth) / canvas.width;
-
-            // Initialize PDF with CUSTOM height so it never cuts
             const pdf = new jsPDF('p', 'mm', [imgWidth, pageHeight + 5]); 
-
             pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, pageHeight);
-            
-            // 5. Create File for Sharing
-            const pdfBlob = pdf.output('blob');
             const fileName = `Bill_${document.getElementById('cust-name').value || 'Customer'}.pdf`;
-            const file = new File([pdfBlob], fileName, { type: "application/pdf" });
-
-            if (navigator.share) {
-                await navigator.share({
-                    files: [file],
-                    title: 'Verma Tent House Bill',
-                    text: 'Here is your bill PDF.'
-                });
-            } else {
-                pdf.save(fileName);
-                showToast("PDF Downloaded");
-            }
-        } catch (error) {
-            console.error(error);
-            showToast("Error creating PDF");
-            area.style.width = originalWidth; // Ensure styles revert on error
-            grid.style.flexDirection = '';
-        }
+            const file = new File([pdf.output('blob')], fileName, { type: "application/pdf" });
+            if (navigator.share) { await navigator.share({ files: [file], title: 'Verma Tent House Bill', text: 'Here is your bill PDF.' }); } 
+            else { pdf.save(fileName); showToast("PDF Downloaded"); }
+        } catch (error) { console.error(error); showToast("Error creating PDF"); area.style.width = originalWidth; grid.style.flexDirection = ''; }
     };
 
     renderTable();
