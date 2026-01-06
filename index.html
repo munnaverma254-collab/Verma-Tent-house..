@@ -107,7 +107,7 @@
             border: 1px solid white; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-size: 12px;
         }
 
-        /* --- BILL DESIGN (Standard) --- */
+        /* --- BILL DESIGN (Full Bill) --- */
         .container { 
             width: 100%; max-width: 900px; background: white; margin: 0 auto; 
             padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
@@ -194,11 +194,12 @@
         .star-icon { font-size: 22px; cursor: pointer; color: #ccc; margin-right: 10px; transition: color 0.2s; }
         .star-icon.starred { color: gold; text-shadow: 0 0 2px black; }
         .due-text { color: red; font-weight: bold; font-size: 14px; margin-top: 5px; display: block; }
+        .pending-tag { font-size: 11px; background: #e74c3c; color: white; padding: 2px 6px; border-radius: 4px; margin-left: 5px; }
 
-        /* --- SHORT BILL DESIGN --- */
+        /* --- UPDATED SHORT BILL DESIGN --- */
         .sb-card {
             background: white; padding: 20px; border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1); max-width: 500px; margin: 0 auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1); max-width: 600px; margin: 0 auto;
             font-family: sans-serif; border-top: 5px solid #c0392b; position: relative;
         }
         .sb-header-text h2 { color: #c0392b; margin: 0; text-transform: uppercase; font-weight: 800; font-size: 24px; text-align: center; }
@@ -209,6 +210,11 @@
         }
         .sb-input:focus { border-color: #c0392b; box-shadow: 0 0 5px rgba(192, 57, 43, 0.2); }
         .sb-row { display: flex; gap: 10px; }
+        
+        /* New Date Row for Short Bill */
+        .sb-date-row { display: flex; gap: 5px; margin-bottom: 10px; background: #fdfdfd; padding: 8px; border: 1px solid #eee; border-radius: 5px; }
+        .sb-date-input { flex: 1; padding: 5px; font-size: 13px; border: 1px solid #ccc; border-radius: 4px; }
+        
         .sb-add-box {
             background: #f2f2f2; padding: 15px; border-radius: 5px; display: flex; flex-direction: column; gap: 5px;
             border: 1px solid #e0e0e0;
@@ -221,16 +227,28 @@
             background: #222; color: white; display: flex; padding: 8px 5px; font-size: 13px; font-weight: bold; margin-top: 20px; border-radius: 4px 4px 0 0;
         }
         .sb-list-item { display: flex; padding: 10px 5px; border-bottom: 1px solid #eee; font-size: 13px; align-items: center; background: white; }
-        .sb-col-1 { width: 10%; text-align: center; }
-        .sb-col-2 { width: 40%; padding-left: 5px; font-weight: 600; }
-        .sb-col-3 { width: 15%; text-align: center; }
-        .sb-col-4 { width: 15%; text-align: center; }
-        .sb-col-5 { width: 20%; text-align: right; font-weight: bold; padding-right: 5px; }
-        .sb-col-6 { width: 10%; text-align: center; color: red; cursor: pointer; font-weight: bold; }
+        .sb-col-1 { width: 8%; text-align: center; }
+        .sb-col-2 { width: 35%; padding-left: 5px; font-weight: 600; display:flex; flex-direction:column; }
+        .sb-col-3 { width: 15%; text-align: center; } /* Rate */
+        .sb-col-4 { width: 15%; text-align: center; } /* Qty */
+        .sb-col-5 { width: 17%; text-align: right; font-weight: bold; padding-right: 5px; }
+        .sb-col-6 { width: 10%; text-align: center; display:flex; gap:5px; justify-content:center; }
         .suggestion-list { position: absolute; top: 100%; left: 0; width: 100%; background: white; border: 1px solid #ddd; z-index: 100; max-height: 200px; overflow-y: auto; display: none; box-shadow: 0 4px 10px rgba(0,0,0,0.2); border-radius: 0 0 8px 8px; }
         .suggestion-item { padding: 10px; border-bottom: 1px solid #f0f0f0; cursor: pointer; display: flex; justify-content: space-between; }
         .suggestion-item:hover { background: #f0f4ff; }
         
+        .sb-edit-btn { color: blue; cursor: pointer; font-weight: bold; }
+        .sb-del-btn { color: red; cursor: pointer; font-weight: bold; }
+        .sb-pending-note { color: #d35400; font-size: 10px; margin-top: 2px; }
+
+        /* New Final Settlement Box for Short Bill */
+        .sb-settlement-box {
+            margin-top: 15px; background: #fff8e1; border: 1px solid #ffecb3; 
+            padding: 10px; border-radius: 6px;
+        }
+        .sb-settlement-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 14px; }
+        .sb-settlement-row input { width: 100px; padding: 5px; text-align: right; border: 1px solid #ccc; border-radius: 4px; font-weight: bold; }
+
         /* NEW: Hidden Template for Short Bill PDF Generation */
         #short-bill-pdf-template {
             display: none; width: 800px; background: white; padding: 20px; border: 1px solid #333; margin: 0 auto;
@@ -272,8 +290,8 @@
     <div class="nav-scroller">
         <div class="nav-left">
             <div class="nav-item active" onclick="switchView('home')">🏠 होम</div>
-            <div class="nav-item" onclick="switchView('bill')">📄 पक्का बिल</div>
-            <div class="nav-item" onclick="switchView('short-bill')">⚡ शॉर्ट बिल</div> 
+            <div class="nav-item" onclick="switchView('bill')">📄 Full Bill</div>
+            <div class="nav-item" onclick="switchView('short-bill')">⚡ Short Bill</div> 
             <div class="nav-item" onclick="switchView('history')">📜 रिकॉर्ड</div>
             <div class="nav-item" onclick="switchView('labour')">👷 लेबर</div>
             <div class="nav-item" onclick="switchView('services')">🛠️ सेवाएं</div>
@@ -301,8 +319,8 @@
             <p class="welcome-subtitle">✨ शाही शादियों का भरोसेमंद साथी ✨</p>
             <p style="color: #ccc; font-size: 0.9em;">रघुनाथपुर, बलिया (उ०प्र०)</p>
             <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
-                <button class="royal-btn" onclick="switchView('bill')">📝 पक्का बिल</button>
-                <button class="royal-btn" style="background: linear-gradient(45deg, #00c6ff, #0072ff); color:white;" onclick="switchView('short-bill')">⚡ शॉर्ट बिल</button>
+                <button class="royal-btn" onclick="switchView('bill')">📝 Full Bill</button>
+                <button class="royal-btn" style="background: linear-gradient(45deg, #00c6ff, #0072ff); color:white;" onclick="switchView('short-bill')">⚡ Short Bill</button>
             </div>
             <br>
             <button class="action-btn btn-new" style="padding:10px 20px; font-size:1em; background:transparent; border:1px solid #FFD700; margin-top: 15px;" onclick="switchView('history')">🔍 पुराना बिल देखें</button>
@@ -312,45 +330,59 @@
         </div>
     </div>
 </div>
-
 <div id="short-bill-view" class="view-section">
     <div class="sb-card">
         <div class="sb-header-text">
             <h2>VERMA TENT HOUSE</h2>
             <div style="font-size:13px; color:#333; margin-top:2px; font-weight:bold;">Proprietor: Mr. Shivnarayan Verma</div>
             <div class="sb-sub-text">We provide tents, lights, and all wedding arrangements.</div>
-            <hr style="border:0; border-top:1px solid #333; margin:10px 0 20px 0;">
+            <hr style="border:0; border-top:1px solid #333; margin:10px 0 15px 0;">
         </div>
 
         <div class="sb-row">
             <input type="text" id="sb-name" placeholder="Customer Name" class="sb-input">
-            <input type="date" id="sb-date" class="sb-input" style="width:45%;">
+            <input type="number" id="sb-mobile" placeholder="Mobile Number" class="sb-input" style="width:50%;">
         </div>
-        <input type="number" id="sb-mobile" placeholder="Mobile Number" class="sb-input">
 
-        <div style="margin:10px 0 15px 0; color:#555; font-size:12px; display:flex; justify-content:space-between;">
-            <span>Name: ...........................</span>
-            <span>Date: ...........................</span>
+        <div class="sb-date-row">
+            <div style="flex:1;">
+                <label style="font-size:11px; font-weight:bold;">From (ले गए):</label>
+                <input type="date" id="sb-date-give" class="sb-date-input" onchange="calcShortBillDays()">
+            </div>
+            <div style="flex:1;">
+                <label style="font-size:11px; font-weight:bold;">To (लौटाया):</label>
+                <input type="date" id="sb-date-return" class="sb-date-input" onchange="calcShortBillDays()">
+            </div>
+            <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; min-width:50px;">
+                <label style="font-size:11px; font-weight:bold;">Days</label>
+                <input type="number" id="sb-days" value="1" readonly style="width:40px; text-align:center; font-weight:bold; border:none; background:transparent;">
+            </div>
         </div>
 
         <div class="sb-add-box">
             <div style="position:relative;">
-                <input type="text" id="sb-search" placeholder="Item Name (e.g. Chair)" class="sb-input" style="margin:0; background:white;" oninput="handleShortBillSearch()">
-                <div id="sb-suggestions" class="suggestion-list" style="top:42px; width:100%;"></div>
+                <input type="text" id="sb-search" placeholder="Item Name (e.g. Chair/Tent)" class="sb-input" style="margin:0; background:white;" oninput="handleShortBillSearch()">
+                <div id="sb-suggestions" class="suggestion-list"></div>
             </div>
             
-            <input type="number" id="sb-qty" placeholder="Quantity" class="sb-input" style="margin:0; background:white;">
-            <input type="number" id="sb-rate" placeholder="Rate" class="sb-input" style="margin:0; background:white;">
+            <div style="display:flex; gap:5px;">
+                <input type="number" id="sb-qty" placeholder="Qty" class="sb-input" style="margin:0; background:white; flex:1;">
+                <input type="number" id="sb-rate" placeholder="Rate" class="sb-input" style="margin:0; background:white; flex:1;">
+            </div>
             
-            <button onclick="addItemToShortBill()" class="sb-green-btn">Add Item (+)</button>
+            <input type="number" id="sb-pending-input" placeholder="बाकी सामान (Pending Qty) - Optional" class="sb-input" style="margin:0; background:#fff0f0; border-color:#ffcccc; color:red;">
+            
+            <button onclick="addItemToShortBill()" class="sb-green-btn" id="sb-add-btn">Add Item (+)</button>
+            <button onclick="updateShortItem()" class="sb-green-btn" id="sb-update-btn" style="display:none; background:#000080;">Update Item (✓)</button>
         </div>
 
         <div class="sb-table-header">
-            <div class="sb-col-1">S.No</div>
-            <div class="sb-col-2">Item</div>
-            <div class="sb-col-4">Qty</div> <div class="sb-col-3">Rate</div>
+            <div class="sb-col-1">#</div>
+            <div class="sb-col-2">Item Name</div>
+            <div class="sb-col-4">Qty</div> 
+            <div class="sb-col-3">Rate</div>
             <div class="sb-col-5">Total</div>
-            <div class="sb-col-6">X</div>
+            <div class="sb-col-6">Action</div>
         </div>
 
         <div id="sb-items-list">
@@ -359,7 +391,10 @@
 
         <div style="background:#f9f9f9; padding:15px; border-radius:0 0 8px 8px; margin-top:0; border:1px solid #eee; border-top:none;">
             <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                <span>Total:</span> <strong id="sb-total" style="font-size:18px;">₹0</strong>
+                <span>Total Items Cost:</span> <strong id="sb-subtotal">₹0</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:5px; color:#000080;">
+                <span>Grand Total (x Days):</span> <strong id="sb-grand-total" style="font-size:18px;">₹0</strong>
             </div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
                 <span>Advance:</span> 
@@ -367,6 +402,19 @@
             </div>
             <div style="display:flex; justify-content:space-between; color:#c0392b; font-size:18px; font-weight:bold; border-top:1px dashed #ccc; padding-top:10px; margin-top:5px;">
                 <span>Balance:</span> <span id="sb-balance">₹0</span>
+            </div>
+
+            <div class="sb-settlement-box">
+                <div style="text-align:center; font-weight:bold; font-size:12px; margin-bottom:8px; text-decoration:underline; color:#d35400;">Final Settlement (हिसाब चुकता)</div>
+                <div class="sb-settlement-row">
+                    <span>तय पैसा (Agreed):</span> <input type="number" id="sb-manual-agreed" oninput="calcShortBillSettlement()">
+                </div>
+                <div class="sb-settlement-row">
+                    <span>जमा (Paid):</span> <input type="number" id="sb-manual-paid" oninput="calcShortBillSettlement()">
+                </div>
+                <div class="sb-settlement-row" style="color:#c0392b; font-weight:bold;">
+                    <span>देना बाकी (Due):</span> <input type="number" id="sb-manual-due" readonly style="background:#f9ebe7; color:#c0392b; border:1px solid #c0392b;">
+                </div>
             </div>
 
             <div style="display:flex; gap:10px; margin-top:15px; flex-wrap:wrap;">
@@ -402,12 +450,14 @@
                     <th style="border:1px solid #000; padding:8px;">Qty</th>
                     <th style="border:1px solid #000; padding:8px;">Rate</th>
                     <th style="border:1px solid #000; padding:8px;">Total</th>
+                    <th style="border:1px solid #000; padding:8px; background:#c0392b;">Pending</th>
                 </tr>
             </thead>
             <tbody id="pdf-items-body"></tbody>
         </table>
 
         <div style="text-align:right; font-size:16px;">
+            <div style="margin-bottom:5px;">Days: <strong id="pdf-days"></strong></div>
             <div style="margin-bottom:5px;">Total Amount: <strong id="pdf-total"></strong></div>
             <div style="margin-bottom:5px;">Advance: <strong id="pdf-advance"></strong></div>
             <div style="font-size:18px; color:#c0392b; border-top:1px solid #000; padding-top:5px;">Balance Due: <strong id="pdf-balance"></strong></div>
@@ -435,12 +485,19 @@
         <h2 style="text-align:center; color:#000080; margin-top:0;">📜 पुराने बिल (Records)</h2>
         
         <div class="tab-container">
-            <button class="tab-btn active-tab" onclick="setHistoryTab('full')">📄 पक्का बिल (Full)</button>
-            <button class="tab-btn" onclick="setHistoryTab('short')">⚡ शॉर्ट बिल (Short)</button>
+            <button class="tab-btn active-tab" onclick="setHistoryTab('full')">📄 Full Bill</button>
+            <button class="tab-btn" onclick="setHistoryTab('short')">⚡ Short Bill</button>
         </div>
 
         <input type="text" id="search-box" style="width:100%; padding:12px; border:2px solid #000080; border-radius:25px; outline:none; margin-bottom:10px;" placeholder="🔍 ग्राहक का नाम..." oninput="filterHistory()">
         
+        <div id="pending-filter-container" style="margin-bottom:10px; padding:5px; background:#ffe6e6; border-radius:5px; display:none;">
+            <label style="color:#c0392b; font-weight:bold; cursor:pointer;">
+                <input type="checkbox" id="filter-pending-only" onchange="filterHistory()"> 
+                ⚠️ सिर्फ बाकी सामान वाले दिखाएं (Show Pending Items Only)
+            </label>
+        </div>
+
         <div style="background:#f0f4ff; padding:10px; border-radius:8px; border:1px solid #000080;">
             <label style="font-size:12px; font-weight:bold; color:#000080;">📅 तारीख से खोजें (Calendar Filter):</label>
             <div class="filter-row">
@@ -453,6 +510,46 @@
     <div id="history-list">Loading...</div>
 </div>
 
+<div id="services-view" class="view-section">
+    <div class="services-container">
+        <h2 style="text-align:center; color:#000080; border-bottom:2px solid #ddd; padding-bottom:10px;">हमारी सेवाएं</h2>
+        <div class="service-grid">
+            <div class="service-card"><h3>⛺ टेंट</h3><ul><li>वाटरप्रूफ पंडाल, पाइप पंडाल, एंट्री गेट।</li></ul></div>
+            <div class="service-card"><h3>🪑 फर्नीचर</h3><ul><li>वीआईपी सोफा, कुर्सियां, राउंड टेबल।</li></ul></div>
+            <div class="service-card"><h3>💡 लाइट</h3><ul><li>हैलोजन, LED लाइट, झूमर, जनरेटर।</li></ul></div>
+            <div class="service-card"><h3>🍽️ कैटरिंग</h3><ul><li>क्रोकरी, वेटर सर्विस, बड़े बर्तन।</li></ul></div>
+            <div class="service-card"><h3>✨ सजावट</h3><ul><li>जयमाल स्टेज, मंडप, फ्लावर डेकोरेशन।</li></ul></div>
+        </div>
+    </div>
+</div>
+
+<div id="contact-view" class="view-section">
+    <div class="contact-container">
+        <h2 style="text-align:center; color:#000080;">संपर्क करें</h2>
+        <div style="text-align:center; padding:20px; border:1px solid #eee; border-radius:10px;">
+            <p><strong>वर्मा टेन्ट हाउस एण्ड समियाना</strong><br>ग्राम + पोस्ट - रघुनाथपुर, जिला - बलिया</p>
+            <p style="font-size:18px; font-weight:bold;">📞 9918691464, 7408832903</p>
+            <iframe width="100%" height="250" frameborder="0" style="margin-top:15px;" src="https://maps.google.com/maps?q=Raghunathpur,+Ballia,+Uttar+Pradesh&t=&z=13&ie=UTF8&iwloc=&output=embed"></iframe>
+        </div>
+    </div>
+</div>
+
+<div id="gallery-view" class="view-section">
+    <div class="gallery-container">
+        <h2 style="text-align:center; color:#000080;">गैलरी</h2>
+        <div style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
+            <div style="flex:1; background:#ddd; padding:10px; text-align:center; border-radius:5px; cursor:pointer;" onclick="document.getElementById('galleryInput').click()">
+                📸 फोटो अपलोड (Upload Photo)
+                <input type="file" id="galleryInput" multiple accept="image/*" style="display:none;" onchange="window.handleImageUpload(event)">
+            </div>
+            <div style="flex:2; display:flex; gap:5px;">
+                <input type="text" id="video-link-input" placeholder="YouTube/Video Link here..." style="flex:1; padding:5px; border:1px solid #ccc; border-radius:5px;">
+                <button onclick="addVideoLink()" style="background:#e74c3c; color:white; border:none; padding:5px 15px; border-radius:5px;">Add Video</button>
+            </div>
+        </div>
+        <div id="gallery-grid" class="gallery-grid"></div>
+    </div>
+</div>
 <div id="invoice-view" class="view-section">
     <div class="container" id="invoice-area">
         
@@ -581,46 +678,6 @@
     </div>
 </div>
 
-<div id="services-view" class="view-section">
-    <div class="services-container">
-        <h2 style="text-align:center; color:#000080; border-bottom:2px solid #ddd; padding-bottom:10px;">हमारी सेवाएं</h2>
-        <div class="service-grid">
-            <div class="service-card"><h3>⛺ टेंट</h3><ul><li>वाटरप्रूफ पंडाल, पाइप पंडाल, एंट्री गेट।</li></ul></div>
-            <div class="service-card"><h3>🪑 फर्नीचर</h3><ul><li>वीआईपी सोफा, कुर्सियां, राउंड टेबल।</li></ul></div>
-            <div class="service-card"><h3>💡 लाइट</h3><ul><li>हैलोजन, LED लाइट, झूमर, जनरेटर।</li></ul></div>
-            <div class="service-card"><h3>🍽️ कैटरिंग</h3><ul><li>क्रोकरी, वेटर सर्विस, बड़े बर्तन।</li></ul></div>
-            <div class="service-card"><h3>✨ सजावट</h3><ul><li>जयमाल स्टेज, मंडप, फ्लावर डेकोरेशन।</li></ul></div>
-        </div>
-    </div>
-</div>
-
-<div id="contact-view" class="view-section">
-    <div class="contact-container">
-        <h2 style="text-align:center; color:#000080;">संपर्क करें</h2>
-        <div style="text-align:center; padding:20px; border:1px solid #eee; border-radius:10px;">
-            <p><strong>वर्मा टेन्ट हाउस एण्ड समियाना</strong><br>ग्राम + पोस्ट - रघुनाथपुर, जिला - बलिया</p>
-            <p style="font-size:18px; font-weight:bold;">📞 9918691464, 7408832903</p>
-            <iframe width="100%" height="250" frameborder="0" style="margin-top:15px;" src="https://maps.google.com/maps?q=Raghunathpur,+Ballia,+Uttar+Pradesh&t=&z=13&ie=UTF8&iwloc=&output=embed"></iframe>
-        </div>
-    </div>
-</div>
-
-<div id="gallery-view" class="view-section">
-    <div class="gallery-container">
-        <h2 style="text-align:center; color:#000080;">गैलरी</h2>
-        <div style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
-            <div style="flex:1; background:#ddd; padding:10px; text-align:center; border-radius:5px; cursor:pointer;" onclick="document.getElementById('galleryInput').click()">
-                📸 फोटो अपलोड (Upload Photo)
-                <input type="file" id="galleryInput" multiple accept="image/*" style="display:none;" onchange="window.handleImageUpload(event)">
-            </div>
-            <div style="flex:2; display:flex; gap:5px;">
-                <input type="text" id="video-link-input" placeholder="YouTube/Video Link here..." style="flex:1; padding:5px; border:1px solid #ccc; border-radius:5px;">
-                <button onclick="addVideoLink()" style="background:#e74c3c; color:white; border:none; padding:5px 15px; border-radius:5px;">Add Video</button>
-            </div>
-        </div>
-        <div id="gallery-grid" class="gallery-grid"></div>
-    </div>
-</div>
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getFirestore, collection, addDoc, setDoc, onSnapshot, deleteDoc, doc, query, orderBy, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
@@ -631,7 +688,7 @@
     window.currentBillId = null;       // For Standard Bill
     window.currentShortBillId = null;  // For Short Bill Edit Mode
     window.billsData = {};
-    window.activeHistoryTab = 'full'; 
+    window.activeHistoryTab = 'full'; // Default Tab
 
     try {
         const app = initializeApp(firebaseConfig);
@@ -640,7 +697,7 @@
         labourRef = collection(db, "labour");
         galleryRef = collection(db, "gallery");
 
-        // --- HISTORY LOADER (With Calendar & Star Logic) ---
+        // --- UPDATED HISTORY LOADER (Tabs, Filters, Pending, Stars) ---
         onSnapshot(query(billsRef, orderBy("timestamp", "desc")), (snap) => {
             window.allBillsList = []; // Raw data storage
             window.billsData = {};
@@ -686,7 +743,6 @@
                                 <button onclick="addLabourEntry('${doc.id}')" style="background:#000080; color:white; border:none; padding:5px; border-radius:4px;">Save</button>
                             </div>
                             <input type="number" id="foodCost-${doc.id}" placeholder="Food ₹" value="0" style="width:100%; display:none; margin-bottom:5px;">
-                            
                             <div class="labour-table-container">
                                 <table class="labour-table">
                                     <thead><tr><th>Date</th><th>Work</th><th>Pay</th><th>Food</th><th>Note</th><th>X</th></tr></thead>
@@ -726,11 +782,17 @@
 
     } catch(e) { console.error("Firebase Error:", e); }
 
-    // --- HISTORY TAB & RENDER LOGIC ---
+    // --- NEW: HISTORY TAB & RENDER LOGIC ---
     window.setHistoryTab = (tab) => {
         window.activeHistoryTab = tab;
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-tab'));
         event.target.classList.add('active-tab');
+        
+        // Show/Hide Pending Filter checkbox based on tab
+        const pendingFilter = document.getElementById('pending-filter-container');
+        if(tab === 'short') pendingFilter.style.display = 'block';
+        else pendingFilter.style.display = 'none';
+
         if(window.renderHistoryList) window.renderHistoryList();
     };
 
@@ -743,14 +805,13 @@
     window.renderHistoryList = () => {
         const list = document.getElementById('history-list');
         const term = document.getElementById('search-box').value.toLowerCase();
-        
-        // Update 5: Calendar Filter Inputs
         const dateFrom = document.getElementById('filter-date-from').value;
         const dateTo = document.getElementById('filter-date-to').value;
+        const onlyPending = document.getElementById('filter-pending-only').checked;
 
         if(!window.allBillsList) return;
 
-        // 1. Filter by Tab
+        // 1. Filter by Tab (Full vs Short)
         let filtered = window.allBillsList.filter(item => {
             const isShort = item.billType === 'short';
             return window.activeHistoryTab === 'short' ? isShort : !isShort;
@@ -762,7 +823,6 @@
             const date = item.billDate || "";
             const matchesTerm = name.includes(term) || date.includes(term);
             
-            // Calendar Logic Check
             let rangeMatch = true;
             if(dateFrom && dateTo) {
                 if(date < dateFrom || date > dateTo) rangeMatch = false;
@@ -773,7 +833,15 @@
             return matchesTerm && rangeMatch;
         });
 
-        // 3. Sort (Starred First)
+        // 3. Filter by Pending Items (Only for Short Bills)
+        if(window.activeHistoryTab === 'short' && onlyPending) {
+            filtered = filtered.filter(item => {
+                // Check if any item has pending > 0
+                return item.items && item.items.some(i => (i.pending || 0) > 0);
+            });
+        }
+
+        // 4. Sort (Starred First, then Date)
         filtered.sort((a, b) => {
             if (a.isStarred === b.isStarred) return b.timestamp - a.timestamp;
             return a.isStarred ? -1 : 1;
@@ -783,7 +851,17 @@
         if(filtered.length === 0) { list.innerHTML = "<div style='text-align:center; padding:20px; color:#888;'>No records found.</div>"; return; }
 
         filtered.forEach(d => {
+            // Calculate Due Amount (Prefer Manual Settlement if exists)
             let dueAmount = d.manualBalance ? parseFloat(d.manualBalance) : parseFloat(d.balance || 0);
+            
+            // Check for Pending Items (Short Bill Only)
+            let pendingTag = "";
+            if (d.billType === 'short' && d.items) {
+                const hasPending = d.items.some(i => (i.pending || 0) > 0);
+                if(hasPending) pendingTag = `<span class="pending-tag">⚠️ सामान बाकी</span>`;
+            }
+
+            // Red Color Alert for Due Logic
             const dueDisplay = dueAmount > 0 
                 ? `<span class="due-text">देना बाकी: ₹${dueAmount}</span>` 
                 : `<span style="color:green; font-size:12px;">(Paid/Clear)</span>`;
@@ -792,7 +870,7 @@
                 <div class="history-item" data-id="${d.id}" style="border-left: 5px solid ${d.isStarred ? 'gold' : '#000080'};">
                     <span class="star-icon ${d.isStarred ? 'starred' : ''}" onclick="toggleStar(event, '${d.id}')">${d.isStarred ? '⭐' : '☆'}</span>
                     <div onclick="loadBillWrapper('${d.id}', '${d.billType}')" style="flex-grow:1; cursor:pointer;">
-                        <strong style="font-size:16px;">${d.custName}</strong> 
+                        <strong style="font-size:16px;">${d.custName}</strong> ${pendingTag}
                         <span style="float:right; color:#000080; font-weight:bold;">₹${d.grandTotal || d.total}</span>
                         <br>
                         <span style="font-size:12px; color:#666;">📅 ${d.billDate}</span>
@@ -810,30 +888,9 @@
             loadBill(id);
         }
     };
-
-    // Update 6: EDIT MODE for Short Bills
-    window.loadShortBill = (id) => {
-        const d = window.billsData[id];
-        if(!d) return;
-
-        // Set Editing ID
-        window.currentShortBillId = id;
-
-        // Fill Inputs
-        document.getElementById('sb-name').value = d.custName || "";
-        document.getElementById('sb-date').value = d.billDate || "";
-        document.getElementById('sb-mobile').value = d.custMobile || "";
-        document.getElementById('sb-advance').value = d.advance || "";
-
-        // Fill Items Array
-        window.shortBillItems = d.items || [];
-
-        // Render & Switch
-        renderShortBillList();
-        switchView('short-bill');
-        showToast("✏️ Edit Mode: Short Bill Opened");
-    };
-    // --- SHORT BILL LOGIC (Smart Search & Calculations) ---
+// --- SHORT BILL LOGIC (UPDATED WITH EDIT & PENDING) ---
+    
+    // 1. Smart Autocomplete Dictionary (English -> Hindi)
     const itemDictionary = [
         { key: "chair", val: "कुर्सी फाइबर (Chair)", price: 6 },
         { key: "kurshi", val: "कुर्सी फाइबर (Chair)", price: 6 },
@@ -848,8 +905,40 @@
         { key: "generator", val: "जेनरेटर (Gen)", price: 500 }
     ];
 
-    window.shortBillItems = []; 
+    window.shortBillItems = [];
+    window.editingItemIndex = -1; // For editing items before save
 
+    // 2. Load Short Bill for Editing (From History)
+    window.loadShortBill = (id) => {
+        const d = window.billsData[id];
+        if(!d) return;
+
+        window.currentShortBillId = id;
+
+        // Basic Info
+        document.getElementById('sb-name').value = d.custName || "";
+        document.getElementById('sb-mobile').value = d.custMobile || "";
+        document.getElementById('sb-date-give').value = d.dateGive || "";
+        document.getElementById('sb-date-return').value = d.dateReturn || "";
+        document.getElementById('sb-days').value = d.days || 1;
+        
+        // Financials
+        document.getElementById('sb-advance').value = d.advance || "";
+        
+        // Final Settlement
+        document.getElementById('sb-manual-agreed').value = d.manualAgreed || "";
+        document.getElementById('sb-manual-paid').value = d.manualPaid || "";
+
+        // Items
+        window.shortBillItems = d.items || [];
+
+        renderShortBillList();
+        calcShortBillSettlement();
+        switchView('short-bill');
+        showToast("✏️ Edit Mode: Short Bill Opened");
+    };
+
+    // 3. Search & Add Logic
     window.handleShortBillSearch = () => {
         const input = document.getElementById('sb-search').value.toLowerCase();
         const box = document.getElementById('sb-suggestions');
@@ -868,7 +957,7 @@
                 div.onclick = () => {
                     document.getElementById('sb-search').value = m.val;
                     document.getElementById('sb-rate').value = m.price;
-                    document.getElementById('sb-qty').focus(); // Auto focus on Quantity
+                    document.getElementById('sb-qty').focus(); 
                     box.style.display = "none";
                 };
                 box.appendChild(div);
@@ -882,44 +971,88 @@
         const name = document.getElementById('sb-search').value;
         const qty = parseFloat(document.getElementById('sb-qty').value) || 0;
         const rate = parseFloat(document.getElementById('sb-rate').value) || 0;
+        const pending = parseFloat(document.getElementById('sb-pending-input').value) || 0;
 
         if(!name || qty <= 0) { alert("Please enter valid Item & Qty"); return; }
 
-        window.shortBillItems.push({ name, qty, rate, total: qty * rate });
+        window.shortBillItems.push({ name, qty, rate, pending, total: qty * rate });
         renderShortBillList();
+        clearSbInputs();
+    };
+
+    // 4. Edit Logic (Inside List)
+    window.editShortItem = (index) => {
+        const item = window.shortBillItems[index];
+        document.getElementById('sb-search').value = item.name;
+        document.getElementById('sb-qty').value = item.qty;
+        document.getElementById('sb-rate').value = item.rate;
+        document.getElementById('sb-pending-input').value = item.pending || "";
         
-        // Clear Inputs
+        window.editingItemIndex = index;
+        document.getElementById('sb-add-btn').style.display = 'none';
+        document.getElementById('sb-update-btn').style.display = 'inline-block';
+    };
+
+    window.updateShortItem = () => {
+        if(window.editingItemIndex === -1) return;
+        
+        const name = document.getElementById('sb-search').value;
+        const qty = parseFloat(document.getElementById('sb-qty').value) || 0;
+        const rate = parseFloat(document.getElementById('sb-rate').value) || 0;
+        const pending = parseFloat(document.getElementById('sb-pending-input').value) || 0;
+
+        window.shortBillItems[window.editingItemIndex] = { name, qty, rate, pending, total: qty * rate };
+        
+        renderShortBillList();
+        clearSbInputs();
+        
+        // Reset Buttons
+        window.editingItemIndex = -1;
+        document.getElementById('sb-add-btn').style.display = 'inline-block';
+        document.getElementById('sb-update-btn').style.display = 'none';
+    };
+
+    function clearSbInputs() {
         document.getElementById('sb-search').value = "";
         document.getElementById('sb-qty').value = "";
         document.getElementById('sb-rate').value = "";
-    };
+        document.getElementById('sb-pending-input').value = "";
+    }
 
+    // 5. Render & Calculations
     window.renderShortBillList = () => {
         const container = document.getElementById('sb-items-list');
         container.innerHTML = "";
-        let total = 0;
+        let subtotal = 0;
 
         if (window.shortBillItems.length === 0) {
             container.innerHTML = "<div style='text-align:center; padding:20px; color:#aaa; border:1px solid #eee; border-top:none;'>No items added</div>";
         }
 
         window.shortBillItems.forEach((item, index) => {
-            total += item.total;
+            subtotal += item.total;
+            const pendingHtml = item.pending > 0 ? `<div class="sb-pending-note">⚠️ Pending: ${item.pending}</div>` : '';
+            
             container.innerHTML += `
                 <div class="sb-list-item">
                     <div class="sb-col-1">${index + 1}</div>
-                    <div class="sb-col-2">${item.name}</div>
+                    <div class="sb-col-2">
+                        ${item.name}
+                        ${pendingHtml}
+                    </div>
                     <div class="sb-col-4">${item.qty}</div>
                     <div class="sb-col-3">${item.rate}</div>
                     <div class="sb-col-5">₹${item.total}</div>
-                    <div class="sb-col-6" onclick="removeShortItem(${index})">×</div>
+                    <div class="sb-col-6">
+                        <span class="sb-edit-btn" onclick="editShortItem(${index})">✎</span>
+                        <span class="sb-del-btn" onclick="removeShortItem(${index})">×</span>
+                    </div>
                 </div>`;
         });
 
-        const advance = parseFloat(document.getElementById('sb-advance').value) || 0;
-        document.getElementById('sb-total').innerText = "₹" + total;
-        document.getElementById('sb-balance').innerText = "₹" + (total - advance);
-        window.sbTempTotal = total; 
+        document.getElementById('sb-subtotal').innerText = "₹" + subtotal;
+        window.sbSubTotal = subtotal;
+        calcShortBillTotal();
     };
 
     window.removeShortItem = (index) => {
@@ -927,80 +1060,114 @@
         renderShortBillList();
     };
 
-    window.calcShortBillTotal = () => {
-        const total = window.sbTempTotal || 0;
-        const advance = parseFloat(document.getElementById('sb-advance').value) || 0;
-        document.getElementById('sb-balance').innerText = "₹" + (total - advance);
+    window.calcShortBillDays = () => {
+        const d1 = document.getElementById('sb-date-give').value;
+        const d2 = document.getElementById('sb-date-return').value;
+        let days = 1;
+        if(d1 && d2) {
+            const diff = Math.ceil((new Date(d2) - new Date(d1))/(1000*60*60*24));
+            days = diff > 0 ? diff : 1;
+        }
+        document.getElementById('sb-days').value = days;
+        calcShortBillTotal();
     };
 
-    // --- SAVE LOGIC (HANDLES BOTH NEW AND EDIT) ---
+    window.calcShortBillTotal = () => {
+        const days = parseInt(document.getElementById('sb-days').value) || 1;
+        const subtotal = window.sbSubTotal || 0;
+        const grandTotal = subtotal * days;
+        const advance = parseFloat(document.getElementById('sb-advance').value) || 0;
+        
+        document.getElementById('sb-grand-total').innerText = "₹" + grandTotal;
+        document.getElementById('sb-balance').innerText = "₹" + (grandTotal - advance);
+        window.sbGrandTotal = grandTotal;
+    };
+
+    window.calcShortBillSettlement = () => {
+        const agreed = parseFloat(document.getElementById('sb-manual-agreed').value) || 0;
+        const paid = parseFloat(document.getElementById('sb-manual-paid').value) || 0;
+        document.getElementById('sb-manual-due').value = agreed - paid;
+    };
+
+    // 6. Save Short Bill
     window.saveShortBill = async () => {
         const name = document.getElementById('sb-name').value;
-        const date = document.getElementById('sb-date').value;
-        if(!name || !date || window.shortBillItems.length === 0) { alert("Fill Name, Date and add Items!"); return; }
+        if(!name || window.shortBillItems.length === 0) { alert("Fill Name and add Items!"); return; }
 
-        const total = window.sbTempTotal;
+        const total = window.sbGrandTotal;
         const advance = parseFloat(document.getElementById('sb-advance').value) || 0;
+        const manualDue = document.getElementById('sb-manual-due').value;
+
+        // Use Manual Due for history display if set, otherwise standard balance
+        const effectiveBalance = manualDue ? parseFloat(manualDue) : (total - advance);
 
         const billData = {
             billType: 'short', 
             custName: name,
-            billDate: date,
             custMobile: document.getElementById('sb-mobile').value || "",
+            dateGive: document.getElementById('sb-date-give').value,
+            dateReturn: document.getElementById('sb-date-return').value,
+            days: document.getElementById('sb-days').value,
             items: window.shortBillItems,
-            total: total,
+            total: total, // Grand total
             advance: advance,
-            balance: total - advance, 
-            grandTotal: total, // Compatibility field
-            timestamp: Date.now() // Always update timestamp to show at top
+            balance: effectiveBalance,
+            
+            // Settlement Data
+            manualAgreed: document.getElementById('sb-manual-agreed').value,
+            manualPaid: document.getElementById('sb-manual-paid').value,
+            manualBalance: manualDue,
+
+            timestamp: Date.now() 
         };
 
         try {
             if (window.currentShortBillId) {
-                // UPDATE EXISTING (Edit Mode)
                 await setDoc(doc(db, "bills", window.currentShortBillId), billData, { merge: true });
                 showToast("Short Bill Updated! ✏️");
             } else {
-                // CREATE NEW
                 await addDoc(billsRef, billData);
                 showToast("Short Bill Saved! ⚡");
             }
             
             resetShortBill();
-            switchView('history'); // Auto go to history to see change
+            switchView('history'); 
         } catch(e) { alert("Error: " + e.message); }
     };
 
     window.resetShortBill = () => {
-        window.currentShortBillId = null; // Clear Edit ID
+        window.currentShortBillId = null;
         window.shortBillItems = [];
         document.getElementById('sb-name').value = "";
-        document.getElementById('sb-date').valueAsDate = new Date();
         document.getElementById('sb-mobile').value = "";
-        document.getElementById('sb-search').value = "";
-        document.getElementById('sb-qty').value = "";
-        document.getElementById('sb-rate').value = "";
+        document.getElementById('sb-date-give').value = "";
+        document.getElementById('sb-date-return').value = "";
+        document.getElementById('sb-days').value = "1";
         document.getElementById('sb-advance').value = "";
+        document.getElementById('sb-manual-agreed').value = "";
+        document.getElementById('sb-manual-paid').value = "";
+        document.getElementById('sb-manual-due').value = "";
         renderShortBillList();
     };
-    
-    // Set default date
-    document.getElementById('sb-date').valueAsDate = new Date();
 
-    // --- NEW: GENERATE PDF FOR SHORT BILL ---
+    // 7. Generate PDF (Short Bill)
     window.generateShortBillPDF = async () => {
         if(window.shortBillItems.length === 0) { alert("Add items first!"); return; }
-        
         showToast("Generating PDF... ⏳");
 
-        // 1. Populate Hidden Template
+        // Populate Template
         document.getElementById('pdf-cust-name').innerText = document.getElementById('sb-name').value;
-        document.getElementById('pdf-bill-date').innerText = document.getElementById('sb-date').value;
         document.getElementById('pdf-cust-mobile').innerText = document.getElementById('sb-mobile').value;
+        
+        // Date Logic for PDF
+        const d1 = document.getElementById('sb-date-give').value;
+        const d2 = document.getElementById('sb-date-return').value;
+        document.getElementById('pdf-bill-date').innerText = d1 ? `${d1} to ${d2}` : new Date().toLocaleDateString();
         
         const tbody = document.getElementById('pdf-items-body');
         tbody.innerHTML = "";
         window.shortBillItems.forEach((item, i) => {
+            const pendingText = item.pending > 0 ? `<span style="color:red; font-weight:bold;">${item.pending}</span>` : "-";
             tbody.innerHTML += `
                 <tr>
                     <td style="border:1px solid #ddd; padding:8px; text-align:center;">${i+1}</td>
@@ -1008,18 +1175,22 @@
                     <td style="border:1px solid #ddd; padding:8px; text-align:center;">${item.qty}</td>
                     <td style="border:1px solid #ddd; padding:8px; text-align:center;">${item.rate}</td>
                     <td style="border:1px solid #ddd; padding:8px; text-align:right;">₹${item.total}</td>
+                    <td style="border:1px solid #ddd; padding:8px; text-align:center;">${pendingText}</td>
                 </tr>`;
         });
 
-        document.getElementById('pdf-total').innerText = "₹" + window.sbTempTotal;
+        document.getElementById('pdf-days').innerText = document.getElementById('sb-days').value;
+        document.getElementById('pdf-total').innerText = "₹" + window.sbGrandTotal;
         document.getElementById('pdf-advance').innerText = "₹" + (document.getElementById('sb-advance').value || 0);
-        document.getElementById('pdf-balance').innerText = document.getElementById('sb-balance').innerText;
+        
+        // Use settlement due if exists, else calc due
+        const manualDue = document.getElementById('sb-manual-due').value;
+        const calcDue = window.sbGrandTotal - (parseFloat(document.getElementById('sb-advance').value) || 0);
+        document.getElementById('pdf-balance').innerText = "₹" + (manualDue ? manualDue : calcDue);
 
-        // 2. Generate PDF using html2canvas & jsPDF
         const { jsPDF } = window.jspdf;
         const element = document.getElementById('short-bill-pdf-template');
-        
-        element.style.display = "block"; // Temporarily show
+        element.style.display = "block"; 
 
         try {
             const canvas = await html2canvas(element, { scale: 2, useCORS: true });
@@ -1029,31 +1200,21 @@
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
             
             pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
-            
             const fileName = `ShortBill_${document.getElementById('sb-name').value}.pdf`;
             
-            // Share or Download
-            const pdfBlob = pdf.output('blob');
-            const file = new File([pdfBlob], fileName, { type: "application/pdf" });
-
             if (navigator.share) {
-                await navigator.share({
-                    files: [file],
-                    title: 'Verma Tent Bill',
-                    text: 'Here is your bill.'
-                });
+                const pdfBlob = pdf.output('blob');
+                const file = new File([pdfBlob], fileName, { type: "application/pdf" });
+                await navigator.share({ files: [file], title: 'Verma Tent Bill' });
             } else {
                 pdf.save(fileName);
             }
-
-        } catch(err) {
-            console.error(err);
-            alert("PDF Error: " + err.message);
-        } finally {
-            element.style.display = "none"; // Hide again
-        }
+        } catch(err) { console.error(err); alert("PDF Error"); } 
+        finally { element.style.display = "none"; }
     };
-    // --- STANDARD BILL FUNCTIONS (PAKKA BILL) ---
+
+
+    // --- STANDARD BILL FUNCTIONS (FULL BILL) ---
     window.saveBillToFirebase = async () => {
         if(!db) { alert("Database Error"); return; }
         const name = document.getElementById('cust-name').value;
@@ -1078,7 +1239,6 @@
             grandTotal: document.getElementById('grand-total').value,
             advance: document.getElementById('advance').value,
             balance: document.getElementById('balance').value,
-            // Final Settlement Data
             manualAgreed: document.getElementById('manual-agreed').value,
             manualAdvance: document.getElementById('manual-advance').value,
             manualBalance: document.getElementById('manual-balance').value,
@@ -1109,12 +1269,10 @@
         document.getElementById('date-return').value = d.dateReturn;
         document.getElementById('advance').value = d.advance;
 
-        // Load Final Settlement Data
         document.getElementById('manual-agreed').value = d.manualAgreed || "";
         document.getElementById('manual-advance').value = d.manualAdvance || "";
         document.getElementById('manual-balance').value = d.manualBalance || "";
         
-        // Reset & Fill Table
         document.querySelectorAll('input[id^="qty_"]').forEach(i => i.value = "");
         document.querySelectorAll('input[id^="amt_"]').forEach(i => i.value = "");
         d.items.forEach(x => { 
@@ -1127,7 +1285,7 @@
         });
         calcFinal();
         switchView('bill');
-        showToast("Bill Loaded");
+        showToast("Full Bill Loaded");
     };
 
     window.clearBillData = (ask=true) => {
@@ -1214,7 +1372,7 @@
     function toggleFoodInput(id) { const chk = document.getElementById(`food-${id}`); const inp = document.getElementById(`foodCost-${id}`); inp.style.display = chk.checked ? 'block' : 'none'; if(chk.checked) inp.focus(); }
     window.calcManualBalance = () => { const agreed = parseFloat(document.getElementById('manual-agreed').value) || 0; const advance = parseFloat(document.getElementById('manual-advance').value) || 0; document.getElementById('manual-balance').value = agreed - advance; autoSaveLocal(); };
 
-    // --- STANDARD BILL TABLE RENDER & CALC ---
+    // --- FULL BILL TABLE RENDER & CALC ---
     const itemList = [ "टेन्ट (Tent)", "टेन्ट", "टेन्ट", "टेन्ट राउन्ड", "टेन्ट राउन्ड", "हलुवाई टेन्ट", "वालिंग टेन्ट", "वालिंग टेन्ट", "कुर्सी फाइबर", "VIP कुर्सी", "मेज (Table)", "गोला मेज", "चारपाई", "तोषक", "तकिया", "चादर", "रजाई", "कम्बल", "फोम गदा", "जाजिम", "दरी", "चौकी", "स्टेज", "कालीन", "तिरपाल", "जयमाल सेट", "स्टाल", "गेट", "कनाट", "मैट", "गणेश जी", "भगोना", "तासा", "किस्ती", "बाल्टी", "कल्छुल", "चुल्हा", "जग", "ड्रम", "बर्नल सेट" ];
     const extraItems = ["पानी ट्रे", "डस्टबीन", "डोगा", "ट्रे", "गोला तासा", "अल्युमिनियम टोप", "नाव", "समियाना", "बिछवना हाफ", "रावती", "बाउन्डरी", "सिंघासन", "मण्डप", "जेनरेटर", "राड", "हाइलोजन"];
     while(itemList.length < 40) itemList.push(""); 
