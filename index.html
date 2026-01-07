@@ -9,6 +9,7 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
     <style>
         /* --- GLOBAL STYLES --- */
@@ -47,18 +48,80 @@
         }
         
         /* Navbar */
-        .navbar { background: linear-gradient(90deg, #000428, #004e92); color: white; padding: 5px 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); position: fixed; top: 0; left: 0; right: 0; z-index: 2000; display: flex; flex-direction: column; align-items: center; min-height: 60px; }
-        .nav-scroller { overflow-x: auto; white-space: nowrap; width: 100%; -webkit-overflow-scrolling: touch; padding-bottom: 5px; scrollbar-width: none; }
-        .nav-left { display: inline-flex; gap: 8px; padding: 0 10px; }
-        .nav-item { cursor: pointer; padding: 6px 12px; border-radius: 20px; font-weight: bold; transition: all 0.3s; font-size: 13px; color: rgba(255,255,255,0.9); border: 1px solid rgba(255,255,255,0.2); display: inline-block; }
-        .nav-item.active { background-color: #fff; color: #000080; box-shadow: 0 2px 5px rgba(0,0,0,0.2); border-color: white; }
-        .nav-actions { display: flex; gap: 8px; justify-content: center; width: 100%; margin-top: 5px; padding-bottom: 5px; flex-wrap: wrap; }
-        .action-btn { padding: 6px 12px; color: white; border: none; cursor: pointer; font-size: 12px; border-radius: 5px; font-weight: bold; display: flex; align-items: center; gap: 5px; text-decoration: none; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .navbar { 
+            background: linear-gradient(90deg, #000428, #004e92); 
+            color: white; 
+            padding: 5px 10px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3); 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            z-index: 2000; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            min-height: 60px; 
+        }
+        .nav-scroller { 
+            overflow-x: auto; 
+            white-space: nowrap; 
+            width: 100%; 
+            -webkit-overflow-scrolling: touch; 
+            padding-bottom: 5px; 
+            scrollbar-width: none; 
+        }
+        .nav-left { 
+            display: inline-flex; 
+            gap: 8px; 
+            padding: 0 10px; 
+        }
+        .nav-item { 
+            cursor: pointer; 
+            padding: 6px 12px; 
+            border-radius: 20px; 
+            font-weight: bold; 
+            transition: all 0.3s; 
+            font-size: 13px; 
+            color: rgba(255,255,255,0.9); 
+            border: 1px solid rgba(255,255,255,0.2); 
+            display: inline-block; 
+        }
+        .nav-item.active { 
+            background-color: #fff; 
+            color: #000080; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
+            border-color: white; 
+        }
+        .nav-actions { 
+            display: flex; 
+            gap: 8px; 
+            justify-content: center; 
+            width: 100%; 
+            margin-top: 5px; 
+            padding-bottom: 5px; 
+            flex-wrap: wrap; 
+        }
+        .action-btn { 
+            padding: 6px 12px; 
+            color: white; 
+            border: none; 
+            cursor: pointer; 
+            font-size: 12px; 
+            border-radius: 5px; 
+            font-weight: bold; 
+            display: flex; 
+            align-items: center; 
+            gap: 5px; 
+            text-decoration: none; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); 
+        }
         .btn-download { background: #27ae60; }
         .btn-share { background: #2980b9; }
         .btn-pdf { background: #e74c3c; } 
         .btn-save-db { background: #e67e22; }
         .btn-new { background: #7f8c8d; }
+        .btn-multi-pdf { background: #9b59b6; }
 
         @media (min-width: 768px) {
             .navbar { flex-direction: row; height: 60px; justify-content: space-between; padding: 0 20px; }
@@ -67,7 +130,22 @@
             :root { --header-height: 80px; }
         }
 
-        #toast { visibility: hidden; min-width: 250px; margin-left: -125px; background-color: #333; color: #fff; text-align: center; border-radius: 50px; padding: 16px; position: fixed; z-index: 3000; left: 50%; bottom: 30px; font-size: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        #toast { 
+            visibility: hidden; 
+            min-width: 250px; 
+            margin-left: -125px; 
+            background-color: #333; 
+            color: #fff; 
+            text-align: center; 
+            border-radius: 50px; 
+            padding: 16px; 
+            position: fixed; 
+            z-index: 3000; 
+            left: 50%; 
+            bottom: 30px; 
+            font-size: 14px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
+        }
         #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
         @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
         @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
@@ -164,12 +242,7 @@
         .labour-table th { color: #333; border: 1px solid #ddd; padding: 8px; }
         .labour-table td { border: 1px solid #ddd; padding: 8px; text-align: center; }
         .labour-input-row { display: grid; grid-template-columns: 1fr 0.8fr 0.8fr 0.4fr 1.2fr 0.4fr; gap: 5px; margin-bottom: 10px; align-items: center; background: #fffbe6; padding: 10px; border-radius: 5px; }
-        @media (max-width: 768px) {
-            .labour-input-row { grid-template-columns: 1fr 1fr; }
-            .header-grid { grid-template-columns: 1fr 1fr; }
-            .shop-title { grid-column: span 2; order: -1; }
-        }
-
+        
         /* Services, Gallery & Contact */
         .services-container, .gallery-container, .contact-container { max-width: 900px; margin: 0 auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         .service-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
@@ -195,6 +268,24 @@
         .due-text { color: red; font-weight: bold; font-size: 14px; margin-top: 5px; display: block; }
         .pending-tag { font-size: 11px; background: #e74c3c; color: white; padding: 2px 6px; border-radius: 4px; margin-left: 5px; }
 
+        /* MULTIPLE BILL SELECTION STYLES */
+        .multi-bill-controls {
+            background: #fff8e1;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ffd54f;
+            display: none;
+        }
+        .bill-checkbox {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+        .selected-bill {
+            background: #e8f5e9 !important;
+            border-left: 4px solid #4caf50 !important;
+        }
+        
         /* RECYCLING BIN STYLES */
         .recycle-actions { display: flex; gap: 5px; }
         .recycle-btn { padding: 5px 10px; border-radius: 4px; border: none; cursor: pointer; font-size: 11px; font-weight: bold; }
@@ -273,8 +364,170 @@
 
         #short-bill-pdf-template { display: none; width: 800px; background: white; padding: 20px; border: 1px solid #333; margin: 0 auto; }
 
+        /* --- MONEY ACCOUNT PAGE STYLES --- */
+        .money-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .money-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .money-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .money-card h3 {
+            margin-top: 0;
+            color: #000080;
+            font-size: 14px;
+        }
+        
+        .money-card .amount {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .positive { color: #27ae60; }
+        .negative { color: #e74c3c; }
+        .neutral { color: #7f8c8d; }
+        
+        .money-form-container {
+            background: #f0f4ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #000080;
+        }
+        
+        .money-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .money-tab {
+            flex: 1;
+            padding: 10px;
+            background: #ddd;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .money-tab.active {
+            background: #000080;
+            color: white;
+        }
+        
+        .money-form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .money-form-grid input,
+        .money-form-grid select,
+        .money-form-grid textarea {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+        
+        .money-form-grid textarea {
+            grid-column: 1 / -1;
+            min-height: 60px;
+        }
+        
+        .money-transaction-list {
+            margin-top: 20px;
+        }
+        
+        .transaction-item {
+            background: white;
+            border-left: 4px solid #000080;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .transaction-type {
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        .type-given { background: #e74c3c; color: white; }
+        .type-received { background: #27ae60; color: white; }
+        
+        .account-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .account-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .account-balance {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .balance-positive { color: #27ae60; }
+        .balance-negative { color: #e74c3c; }
+        .balance-zero { color: #7f8c8d; }
+        
+        /* Money Account Deleted Styles */
+        .money-deleted-item {
+            background: #fff5f5 !important;
+            border-left: 4px solid #c0392b !important;
+            opacity: 0.8;
+        }
+        
+        .money-recycle-actions {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .labour-input-row { grid-template-columns: 1fr 1fr; }
+            .header-grid { grid-template-columns: 1fr 1fr; }
+            .shop-title { grid-column: span 2; order: -1; }
+            .money-dashboard { grid-template-columns: 1fr; }
+        }
+
         @media print {
-            .navbar, #home-view, #history-view, #services-view, #gallery-view, #contact-view, #labour-view, #toast, .upload-label, .photo-change-btn, .action-btn, #login-overlay, .bill-footer-actions, #short-bill-view, .tab-container { display: none !important; } 
+            .navbar, #home-view, #history-view, #services-view, #gallery-view, #contact-view, #labour-view, #toast, .upload-label, .photo-change-btn, .action-btn, #login-overlay, .bill-footer-actions, #short-bill-view, .tab-container, #money-account-view { display: none !important; } 
             #invoice-view { display: block !important; margin: 0; padding: 0; }
             .container { width: 100%; max-width: 100%; box-shadow: none; border: none; padding: 0; }
             .bill-grid-container { flex-direction: row; }
@@ -312,6 +565,7 @@
             <div class="nav-item" onclick="switchView('bill')">📄 Full Bill</div>
             <div class="nav-item" onclick="switchView('short-bill')">⚡ Short Bill</div> 
             <div class="nav-item" onclick="switchView('history')">📜 रिकॉर्ड</div>
+            <div class="nav-item" onclick="switchView('money-account')">💰 पैसा हिसाब</div>
             <div class="nav-item" onclick="switchView('labour')">👷 लेबर</div>
             <div class="nav-item" onclick="switchView('services')">🛠️ सेवाएं</div>
             <div class="nav-item" onclick="switchView('contact')">📞 संपर्क</div>
@@ -357,6 +611,130 @@
     </div>
 </div>
 
+<!-- NEW MONEY ACCOUNT PAGE -->
+<div id="money-account-view" class="view-section">
+    <div class="money-container">
+        <h2 style="text-align:center; color:#000080; margin-bottom: 20px;">💰 पैसा हिसाब / उधार खाता</h2>
+        
+        <!-- Dashboard Summary -->
+        <div class="money-dashboard">
+            <div class="money-card">
+                <h3>कुल दिया गया</h3>
+                <div class="amount positive" id="total-given">₹0</div>
+                <div style="font-size:12px; color:#666;">Total Given</div>
+            </div>
+            <div class="money-card">
+                <h3>कुल लेना है</h3>
+                <div class="amount negative" id="total-to-receive">₹0</div>
+                <div style="font-size:12px; color:#666;">Total to Receive</div>
+            </div>
+            <div class="money-card">
+                <h3>शुद्ध बाकी</h3>
+                <div class="amount neutral" id="net-balance">₹0</div>
+                <div style="font-size:12px; color:#666;">Net Balance</div>
+            </div>
+            <div class="money-card">
+                <h3>कुल अकाउंट्स</h3>
+                <div class="amount" id="total-accounts">0</div>
+                <div style="font-size:12px; color:#666;">Total Accounts</div>
+            </div>
+        </div>
+        
+        <!-- Tabs for Forms -->
+        <div class="money-tabs">
+            <button class="money-tab active" onclick="setMoneyTab('account')">👤 नया अकाउंट</button>
+            <button class="money-tab" onclick="setMoneyTab('give')">💸 पैसा दिया</button>
+            <button class="money-tab" onclick="setMoneyTab('receive')">💰 पैसा लेना</button>
+            <button class="money-tab" onclick="setMoneyTab('deleted')" style="background:#e67e22;">🗑️ डिलीटेड</button>
+        </div>
+        
+        <!-- New Account Form -->
+        <div class="money-form-container" id="account-form">
+            <h3 style="margin-top:0; color:#000080;" id="account-form-title">नया अकाउंट / व्यक्ति जोड़ें</h3>
+            <div class="money-form-grid">
+                <input type="text" id="account-name" placeholder="व्यक्ति का नाम *" required>
+                <input type="tel" id="account-mobile" placeholder="मोबाइल नंबर">
+                <input type="text" id="account-address" placeholder="पता">
+                <input type="text" id="account-notes" placeholder="नोट्स / विवरण">
+            </div>
+            <button onclick="addNewAccount()" class="action-btn btn-save-db" style="width:100%; padding:12px;" id="account-submit-btn">➕ अकाउंट जोड़ें</button>
+            <button onclick="cancelEditAccount()" class="action-btn btn-new" style="width:100%; padding:12px; margin-top:10px; display:none;" id="account-cancel-btn">✖️ Cancel Edit</button>
+            <input type="hidden" id="editing-account-id" value="">
+        </div>
+        
+        <!-- Give Money Form -->
+        <div class="money-form-container" id="give-form" style="display:none;">
+            <h3 style="margin-top:0; color:#e74c3c;">पैसा देने का रिकॉर्ड (मैंने दिया)</h3>
+            <div class="money-form-grid">
+                <select id="give-account" required>
+                    <option value="">व्यक्ति चुनें *</option>
+                </select>
+                <input type="number" id="give-amount" placeholder="राशि *" required>
+                <input type="date" id="give-date" value="">
+                <select id="give-method">
+                    <option value="cash">नकद</option>
+                    <option value="upi">UPI</option>
+                    <option value="bank">बैंक</option>
+                </select>
+                <input type="text" id="give-reason" placeholder="पैसे देने का कारण">
+                <textarea id="give-notes" placeholder="अतिरिक्त नोट्स"></textarea>
+            </div>
+            <button onclick="addTransaction('give')" class="action-btn" style="width:100%; padding:12px; background:#e74c3c;">💸 पैसा दिया रिकॉर्ड करें</button>
+        </div>
+        
+        <!-- Receive Money Form -->
+        <div class="money-form-container" id="receive-form" style="display:none;">
+            <h3 style="margin-top:0; color:#27ae60;">पैसा लेने का रिकॉर्ड (मुझे लेना है)</h3>
+            <div class="money-form-grid">
+                <select id="receive-account" required>
+                    <option value="">व्यक्ति चुनें *</option>
+                </select>
+                <input type="number" id="receive-amount" placeholder="राशि *" required>
+                <input type="date" id="receive-date" value="">
+                <input type="text" id="receive-reason" placeholder="पैसे लेने का कारण">
+                <textarea id="receive-notes" placeholder="नोट्स (किस काम के लिए पैसा लेना है)"></textarea>
+            </div>
+            <button onclick="addTransaction('receive')" class="action-btn" style="width:100%; padding:12px; background:#27ae60;">💰 पैसा लेना रिकॉर्ड करें</button>
+        </div>
+        
+        <!-- Deleted Accounts Form -->
+        <div class="money-form-container" id="deleted-form" style="display:none;">
+            <h3 style="margin-top:0; color:#c0392b;">🗑️ डिलीट किए गए अकाउंट्स</h3>
+            <div id="deleted-accounts-list" style="margin-top:15px;">
+                <div style="text-align:center; padding:20px; color:#888;">लोड हो रहा है...</div>
+            </div>
+        </div>
+        
+        <!-- Accounts List -->
+        <div style="margin-top:30px;">
+            <h3 style="color:#000080; border-bottom:2px solid #eee; padding-bottom:5px;">अकाउंट्स की सूची</h3>
+            <div id="accounts-list" style="margin-top:15px;">
+                <div style="text-align:center; padding:20px; color:#888;">लोड हो रहा है...</div>
+            </div>
+        </div>
+        
+        <!-- Transactions History -->
+        <div style="margin-top:30px;">
+            <h3 style="color:#000080; border-bottom:2px solid #eee; padding-bottom:5px;">लेन-देन इतिहास</h3>
+            <div style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
+                <input type="text" id="money-search" placeholder="नाम या नोट्स खोजें..." style="flex:1; padding:8px; border:1px solid #ccc; border-radius:4px;">
+                <input type="date" id="money-date-from" style="padding:8px; border:1px solid #ccc; border-radius:4px;">
+                <input type="date" id="money-date-to" style="padding:8px; border:1px solid #ccc; border-radius:4px;">
+                <button onclick="filterTransactions()" class="action-btn" style="background:#000080;">🔍 खोजें</button>
+            </div>
+            <div id="transactions-list" style="margin-top:15px;">
+                <div style="text-align:center; padding:20px; color:#888;">लोड हो रहा है...</div>
+            </div>
+        </div>
+        
+        <!-- Export Buttons -->
+        <div style="display:flex; gap:10px; margin-top:30px; flex-wrap:wrap;">
+            <button onclick="exportMoneyToExcel()" class="action-btn" style="background:#27ae60; flex:1;">📊 Excel डाउनलोड</button>
+            <button onclick="exportMoneyToPDF()" class="action-btn" style="background:#e74c3c; flex:1;">📄 PDF डाउनलोड</button>
+        </div>
+    </div>
+</div>
+
 <div id="short-bill-view" class="view-section">
     <div class="sb-card">
         <div class="sb-header-text">
@@ -396,12 +774,10 @@
 
         <hr style="border:0; border-top:1px dashed #ccc; margin:15px 0;">
 
-        <!-- ITEM SUGGESTIONS REMOVED AS REQUESTED -->
         <div class="sb-add-box">
             <div style="position:relative;">
                 <label style="font-size:12px; font-weight:bold;">सामान का नाम:</label>
                 <input type="text" id="sb-search" placeholder="Item Name" class="sb-input" style="margin-bottom:5px;">
-                <!-- SUGGESTION LIST REMOVED -->
             </div>
             
             <div style="display:flex; gap:5px; margin-bottom:5px;">
@@ -547,10 +923,25 @@
     <div class="filter-section">
         <h2 style="text-align:center; color:#000080; margin-top:0;">📜 पुराने बिल (Records)</h2>
         
+        <!-- MULTIPLE BILL PDF CONTROLS -->
+        <div class="multi-bill-controls" id="multi-bill-controls">
+            <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                <button class="action-btn btn-multi-pdf" onclick="selectAllBills()">✅ सभी चुनें</button>
+                <button class="action-btn btn-new" onclick="clearBillSelection()">❌ सभी हटाएं</button>
+                <button class="action-btn btn-pdf" onclick="downloadCombinedPDF()">📦 Combined PDF डाउनलोड</button>
+                <button class="action-btn btn-share" onclick="shareCombinedPDF()">📤 Combined PDF शेयर</button>
+                <span id="selected-bills-count" style="margin-left:auto; font-weight:bold; color:#000080;">0 बिल्स चुने गए</span>
+            </div>
+            <div style="margin-top:10px; font-size:12px; color:#666;">
+                ⚡ टिप: अधिकतम 5 बिल्स चुनें और एक PDF में सभी को शामिल करें। तुलना और शेयरिंग के लिए उपयोगी।
+            </div>
+        </div>
+        
         <div class="tab-container">
             <button class="tab-btn active-tab" onclick="setHistoryTab('full')">📄 Full Bill</button>
             <button class="tab-btn" onclick="setHistoryTab('short')">⚡ Short Bill</button>
             <button class="tab-btn" onclick="setHistoryTab('recycle')">🗑️ Recycling Bin</button>
+            <button class="tab-btn" style="background:#9b59b6; color:white;" onclick="toggleMultiBillMode()">📑 Multiple Bills PDF</button>
         </div>
 
         <input type="text" id="search-box" style="width:100%; padding:12px; border:2px solid #000080; border-radius:25px; outline:none; margin-bottom:10px;" placeholder="🔍 ग्राहक का नाम..." oninput="filterHistory()">
@@ -572,6 +963,13 @@
         </div>
     </div>
     <div id="history-list">Loading...</div>
+</div>
+
+<!-- MULTIPLE BILL PDF TEMPLATE -->
+<div id="combined-pdf-template" style="display:none; width:800px; background:white; padding:0; margin:0 auto;">
+    <div style="padding:20px; border:2px solid #000080;" id="combined-pdf-content">
+        <!-- Content will be generated dynamically -->
+    </div>
 </div>
 
 <div id="services-view" class="view-section">
@@ -752,13 +1150,16 @@
 
     const firebaseConfig = { apiKey: "AIzaSyBQ61XTeTsapoD3oBAfMI9YHA3p0ibRym4", authDomain: "verma-tent-house-a3f17.firebaseapp.com", projectId: "verma-tent-house-a3f17", storageBucket: "verma-tent-house-a3f17.firebasestorage.app", messagingSenderId: "659727419794", appId: "1:659727419794:web:ce5326b9d78b702b73194b", measurementId: "G-64PWQGZPXP" };
 
-    let db, billsRef, labourRef, galleryRef;
+    let db, billsRef, labourRef, galleryRef, accountsRef, transactionsRef;
     window.currentBillId = null;       
     window.currentShortBillId = null;  
     window.billsData = {};
     window.activeHistoryTab = 'full';
-    window.lastDeletedBill = null; // For undo deletion
+    window.lastDeletedBill = null;
     window.undoDeleteTimeout = null;
+    window.selectedBills = new Set(); // For multiple bill selection
+    window.multiBillMode = false; // Multiple bill mode flag
+    window.editingAccountId = null; // For money account editing
 
     try {
         const app = initializeApp(firebaseConfig);
@@ -766,6 +1167,8 @@
         billsRef = collection(db, "bills");
         labourRef = collection(db, "labour");
         galleryRef = collection(db, "gallery");
+        accountsRef = collection(db, "moneyAccounts");
+        transactionsRef = collection(db, "moneyTransactions");
 
         // --- RECYCLING BIN SYSTEM ---
         onSnapshot(query(billsRef, orderBy("timestamp", "desc")), (snap) => {
@@ -849,12 +1252,862 @@
             });
         });
 
+        // Money Accounts Loader
+        onSnapshot(query(accountsRef, orderBy("timestamp", "desc")), (snap) => {
+            window.moneyAccounts = {};
+            window.moneyAccountsList = [];
+            window.deletedMoneyAccounts = [];
+            snap.forEach(doc => {
+                const d = doc.data();
+                window.moneyAccounts[doc.id] = d;
+                if (d.deleted) {
+                    window.deletedMoneyAccounts.push({ id: doc.id, ...d });
+                } else {
+                    window.moneyAccountsList.push({ id: doc.id, ...d });
+                }
+            });
+            if(window.renderAccountsList) window.renderAccountsList();
+            if(window.updateAccountDropdowns) window.updateAccountDropdowns();
+            if(window.renderDeletedAccountsList) window.renderDeletedAccountsList();
+        });
+
+        // Money Transactions Loader
+        onSnapshot(query(transactionsRef, orderBy("timestamp", "desc")), (snap) => {
+            window.moneyTransactions = [];
+            snap.forEach(doc => {
+                const d = doc.data();
+                window.moneyTransactions.push({ id: doc.id, ...d });
+            });
+            if(window.renderTransactionsList) window.renderTransactionsList();
+            if(window.updateMoneyDashboard) window.updateMoneyDashboard();
+        });
+
     } catch(e) { console.error("Firebase Error:", e); }
+
+    // --- MONEY ACCOUNT FUNCTIONS ---
+    window.setMoneyTab = (tab) => {
+        document.querySelectorAll('.money-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.money-form-container').forEach(f => f.style.display = 'none');
+        
+        if(tab === 'account') {
+            document.querySelector('.money-tab:nth-child(1)').classList.add('active');
+            document.getElementById('account-form').style.display = 'block';
+        } else if(tab === 'give') {
+            document.querySelector('.money-tab:nth-child(2)').classList.add('active');
+            document.getElementById('give-form').style.display = 'block';
+        } else if(tab === 'receive') {
+            document.querySelector('.money-tab:nth-child(3)').classList.add('active');
+            document.getElementById('receive-form').style.display = 'block';
+        } else if(tab === 'deleted') {
+            document.querySelector('.money-tab:nth-child(4)').classList.add('active');
+            document.getElementById('deleted-form').style.display = 'block';
+            if(window.renderDeletedAccountsList) window.renderDeletedAccountsList();
+        }
+    };
+
+    window.addNewAccount = async () => {
+        const name = document.getElementById('account-name').value;
+        const mobile = document.getElementById('account-mobile').value;
+        const address = document.getElementById('account-address').value;
+        const notes = document.getElementById('account-notes').value;
+
+        if(!name) { alert("कृपया व्यक्ति का नाम दर्ज करें"); return; }
+
+        try {
+            if (window.editingAccountId) {
+                // Update existing account
+                await updateDoc(doc(db, "moneyAccounts", window.editingAccountId), {
+                    name: name,
+                    mobile: mobile,
+                    address: address,
+                    notes: notes,
+                    updatedAt: Date.now()
+                });
+                
+                showToast("अकाउंट अपडेट किया गया! ✏️");
+                window.editingAccountId = null;
+                
+                // Reset form
+                document.getElementById('account-form-title').textContent = "नया अकाउंट / व्यक्ति जोड़ें";
+                document.getElementById('account-submit-btn').textContent = "➕ अकाउंट जोड़ें";
+                document.getElementById('account-cancel-btn').style.display = 'none';
+            } else {
+                // Add new account
+                await addDoc(accountsRef, {
+                    name: name,
+                    mobile: mobile,
+                    address: address,
+                    notes: notes,
+                    balance: 0,
+                    given: 0,
+                    received: 0,
+                    deleted: false,
+                    timestamp: Date.now()
+                });
+                
+                showToast("नया अकाउंट जोड़ा गया! ✅");
+            }
+
+            // Clear form
+            document.getElementById('account-name').value = '';
+            document.getElementById('account-mobile').value = '';
+            document.getElementById('account-address').value = '';
+            document.getElementById('account-notes').value = '';
+            document.getElementById('editing-account-id').value = '';
+            
+        } catch(e) {
+            console.error("Error adding/updating account:", e);
+            alert("त्रुटि: " + e.message);
+        }
+    };
+
+    window.editAccount = (accountId) => {
+        const account = window.moneyAccounts[accountId];
+        if (!account) return;
+        
+        window.editingAccountId = accountId;
+        
+        document.getElementById('account-name').value = account.name || '';
+        document.getElementById('account-mobile').value = account.mobile || '';
+        document.getElementById('account-address').value = account.address || '';
+        document.getElementById('account-notes').value = account.notes || '';
+        document.getElementById('editing-account-id').value = accountId;
+        
+        document.getElementById('account-form-title').textContent = "अकाउंट एडिट करें";
+        document.getElementById('account-submit-btn').textContent = "💾 अपडेट करें";
+        document.getElementById('account-cancel-btn').style.display = 'block';
+        
+        // Switch to account tab
+        setMoneyTab('account');
+    };
+
+    window.cancelEditAccount = () => {
+        window.editingAccountId = null;
+        
+        document.getElementById('account-name').value = '';
+        document.getElementById('account-mobile').value = '';
+        document.getElementById('account-address').value = '';
+        document.getElementById('account-notes').value = '';
+        document.getElementById('editing-account-id').value = '';
+        
+        document.getElementById('account-form-title').textContent = "नया अकाउंट / व्यक्ति जोड़ें";
+        document.getElementById('account-submit-btn').textContent = "➕ अकाउंट जोड़ें";
+        document.getElementById('account-cancel-btn').style.display = 'none';
+    };
+
+    window.deleteAccount = async (accountId) => {
+        if(!confirm("क्या आप इस अकाउंट को डिलीट करना चाहते हैं? डिलीटेड अकाउंट्स को बाद में रिस्टोर किया जा सकता है।")) return;
+        
+        try {
+            await updateDoc(doc(db, "moneyAccounts", accountId), {
+                deleted: true,
+                deletedAt: Date.now()
+            });
+            
+            showToast("अकाउंट डिलीट किया गया! 🗑️");
+        } catch(e) {
+            console.error("Error deleting account:", e);
+            alert("त्रुटि: " + e.message);
+        }
+    };
+
+    window.restoreAccount = async (accountId) => {
+        try {
+            await updateDoc(doc(db, "moneyAccounts", accountId), {
+                deleted: false,
+                deletedAt: null
+            });
+            
+            showToast("अकाउंट रिस्टोर किया गया! ♻️");
+        } catch(e) {
+            console.error("Error restoring account:", e);
+            alert("त्रुटि: " + e.message);
+        }
+    };
+
+    window.permanentDeleteAccount = async (accountId) => {
+        if(!confirm("⚠️ क्या आप इस अकाउंट को स्थायी रूप से डिलीट करना चाहते हैं? यह एक्शन वापस नहीं आएगा!")) return;
+        
+        try {
+            // First, delete all transactions for this account
+            const transactionsToDelete = window.moneyTransactions.filter(t => t.accountId === accountId);
+            for (const transaction of transactionsToDelete) {
+                await deleteDoc(doc(db, "moneyTransactions", transaction.id));
+            }
+            
+            // Then delete the account
+            await deleteDoc(doc(db, "moneyAccounts", accountId));
+            
+            showToast("अकाउंट स्थायी रूप से डिलीट किया गया! 🗑️");
+        } catch(e) {
+            console.error("Error permanently deleting account:", e);
+            alert("त्रुटि: " + e.message);
+        }
+    };
+
+    window.updateAccountDropdowns = () => {
+        const giveSelect = document.getElementById('give-account');
+        const receiveSelect = document.getElementById('receive-account');
+        
+        if(!giveSelect || !receiveSelect) return;
+
+        giveSelect.innerHTML = '<option value="">व्यक्ति चुनें *</option>';
+        receiveSelect.innerHTML = '<option value="">व्यक्ति चुनें *</option>';
+
+        window.moneyAccountsList.forEach(account => {
+            const option = `<option value="${account.id}">${account.name} (${account.mobile || 'No mobile'})</option>`;
+            giveSelect.innerHTML += option;
+            receiveSelect.innerHTML += option;
+        });
+    };
+
+    window.addTransaction = async (type) => {
+        const accountId = type === 'give' 
+            ? document.getElementById('give-account').value
+            : document.getElementById('receive-account').value;
+        
+        const amount = type === 'give'
+            ? parseFloat(document.getElementById('give-amount').value)
+            : parseFloat(document.getElementById('receive-amount').value);
+        
+        const date = type === 'give'
+            ? document.getElementById('give-date').value || new Date().toISOString().split('T')[0]
+            : document.getElementById('receive-date').value || new Date().toISOString().split('T')[0];
+        
+        const reason = type === 'give'
+            ? document.getElementById('give-reason').value
+            : document.getElementById('receive-reason').value;
+        
+        const notes = type === 'give'
+            ? document.getElementById('give-notes').value
+            : document.getElementById('receive-notes').value;
+
+        if(!accountId || !amount || amount <= 0) {
+            alert("कृपया सभी आवश्यक फ़ील्ड भरें");
+            return;
+        }
+
+        try {
+            // Add transaction
+            await addDoc(transactionsRef, {
+                accountId: accountId,
+                type: type, // 'give' or 'receive'
+                amount: amount,
+                date: date,
+                reason: reason,
+                notes: notes,
+                timestamp: Date.now()
+            });
+
+            // Update account balance
+            const account = window.moneyAccounts[accountId];
+            if(account) {
+                const newGiven = type === 'give' ? (account.given || 0) + amount : (account.given || 0);
+                const newReceived = type === 'receive' ? (account.received || 0) + amount : (account.received || 0);
+                const newBalance = newReceived - newGiven;
+
+                await updateDoc(doc(db, "moneyAccounts", accountId), {
+                    given: newGiven,
+                    received: newReceived,
+                    balance: newBalance
+                });
+            }
+
+            // Clear form
+            if(type === 'give') {
+                document.getElementById('give-amount').value = '';
+                document.getElementById('give-reason').value = '';
+                document.getElementById('give-notes').value = '';
+            } else {
+                document.getElementById('receive-amount').value = '';
+                document.getElementById('receive-reason').value = '';
+                document.getElementById('receive-notes').value = '';
+            }
+
+            showToast(type === 'give' ? "पैसा दिया रिकॉर्ड किया गया! 💸" : "पैसा लेना रिकॉर्ड किया गया! 💰");
+        } catch(e) {
+            console.error("Error adding transaction:", e);
+            alert("त्रुटि: " + e.message);
+        }
+    };
+
+    window.renderAccountsList = () => {
+        const container = document.getElementById('accounts-list');
+        if(!container) return;
+
+        if(!window.moneyAccountsList || window.moneyAccountsList.length === 0) {
+            container.innerHTML = '<div style="text-align:center; padding:20px; color:#888;">कोई अकाउंट नहीं मिला। नया अकाउंट जोड़ें।</div>';
+            return;
+        }
+
+        container.innerHTML = '';
+        window.moneyAccountsList.forEach(account => {
+            const balanceClass = account.balance > 0 ? 'balance-positive' : 
+                                account.balance < 0 ? 'balance-negative' : 'balance-zero';
+            
+            container.innerHTML += `
+                <div class="account-card">
+                    <div class="account-header">
+                        <div>
+                            <strong style="font-size:16px;">${account.name}</strong>
+                            <div style="font-size:12px; color:#666;">${account.mobile || 'No mobile'} | ${account.address || 'No address'}</div>
+                        </div>
+                        <div class="account-balance ${balanceClass}">
+                            ${account.balance >= 0 ? '₹' + Math.abs(account.balance) + ' लेना है' : '₹' + Math.abs(account.balance) + ' देना है'}
+                        </div>
+                    </div>
+                    <div style="font-size:12px; color:#888; margin-bottom:10px;">${account.notes || 'No notes'}</div>
+                    <div style="display:flex; justify-content:space-between; font-size:12px;">
+                        <span>दिया: ₹${account.given || 0}</span>
+                        <span>लेना: ₹${account.received || 0}</span>
+                        <div style="display:flex; gap:5px;">
+                            <button onclick="editAccount('${account.id}')" style="background:#3498db; color:white; border:none; padding:3px 10px; border-radius:3px; font-size:10px;">Edit</button>
+                            <button onclick="deleteAccount('${account.id}')" style="background:#e74c3c; color:white; border:none; padding:3px 10px; border-radius:3px; font-size:10px;">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    };
+
+    window.renderDeletedAccountsList = () => {
+        const container = document.getElementById('deleted-accounts-list');
+        if(!container) return;
+
+        if(!window.deletedMoneyAccounts || window.deletedMoneyAccounts.length === 0) {
+            container.innerHTML = '<div style="text-align:center; padding:20px; color:#888;">कोई डिलीटेड अकाउंट नहीं मिला।</div>';
+            return;
+        }
+
+        container.innerHTML = '';
+        window.deletedMoneyAccounts.forEach(account => {
+            const balanceClass = account.balance > 0 ? 'balance-positive' : 
+                                account.balance < 0 ? 'balance-negative' : 'balance-zero';
+            
+            const deletedDate = account.deletedAt ? new Date(account.deletedAt).toLocaleDateString() : 'Unknown';
+            
+            container.innerHTML += `
+                <div class="account-card money-deleted-item">
+                    <div class="account-header">
+                        <div>
+                            <strong style="font-size:16px;">${account.name}</strong>
+                            <div style="font-size:12px; color:#666;">${account.mobile || 'No mobile'} | ${account.address || 'No address'}</div>
+                            <div style="font-size:10px; color:#c0392b; margin-top:2px;">🗑️ Deleted on: ${deletedDate}</div>
+                        </div>
+                        <div class="account-balance ${balanceClass}">
+                            ${account.balance >= 0 ? '₹' + Math.abs(account.balance) + ' लेना है' : '₹' + Math.abs(account.balance) + ' देना है'}
+                        </div>
+                    </div>
+                    <div style="font-size:12px; color:#888; margin-bottom:10px;">${account.notes || 'No notes'}</div>
+                    <div class="money-recycle-actions">
+                        <button onclick="restoreAccount('${account.id}')" class="recycle-btn restore">♻️ Restore</button>
+                        <button onclick="permanentDeleteAccount('${account.id}')" class="recycle-btn perm-delete">🗑️ Permanent Delete</button>
+                    </div>
+                </div>
+            `;
+        });
+    };
+
+    window.renderTransactionsList = () => {
+        const container = document.getElementById('transactions-list');
+        if(!container || !window.moneyTransactions) return;
+
+        // Apply filters
+        let filtered = [...window.moneyTransactions];
+        const search = document.getElementById('money-search')?.value.toLowerCase() || '';
+        const dateFrom = document.getElementById('money-date-from')?.value;
+        const dateTo = document.getElementById('money-date-to')?.value;
+
+        if(search) {
+            filtered = filtered.filter(t => {
+                const account = window.moneyAccounts[t.accountId];
+                return (account?.name?.toLowerCase().includes(search) || 
+                       t.reason?.toLowerCase().includes(search) ||
+                       t.notes?.toLowerCase().includes(search));
+            });
+        }
+
+        if(dateFrom) {
+            filtered = filtered.filter(t => t.date >= dateFrom);
+        }
+
+        if(dateTo) {
+            filtered = filtered.filter(t => t.date <= dateTo);
+        }
+
+        if(filtered.length === 0) {
+            container.innerHTML = '<div style="text-align:center; padding:20px; color:#888;">कोई लेन-देन नहीं मिला।</div>';
+            return;
+        }
+
+        container.innerHTML = '';
+        filtered.forEach(transaction => {
+            const account = window.moneyAccounts[transaction.accountId];
+            const isGive = transaction.type === 'give';
+            
+            container.innerHTML += `
+                <div class="transaction-item">
+                    <div>
+                        <span class="transaction-type ${isGive ? 'type-given' : 'type-received'}">
+                            ${isGive ? 'दिया' : 'लेना'}
+                        </span>
+                        <strong>${account?.name || 'Unknown'}</strong>
+                        <div style="font-size:12px; color:#666; margin-top:2px;">
+                            ${transaction.reason || 'No reason'} | ${transaction.date}
+                        </div>
+                        <div style="font-size:11px; color:#888;">${transaction.notes || ''}</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="font-size:18px; font-weight:bold; color:${isGive ? '#e74c3c' : '#27ae60'}">
+                            ${isGive ? '-' : '+'}₹${transaction.amount}
+                        </div>
+                        <div style="font-size:10px; color:#999;">${new Date(transaction.timestamp).toLocaleDateString()}</div>
+                    </div>
+                </div>
+            `;
+        });
+    };
+
+    window.updateMoneyDashboard = () => {
+        let totalGiven = 0;
+        let totalToReceive = 0;
+        let netBalance = 0;
+        
+        if(window.moneyAccountsList) {
+            window.moneyAccountsList.forEach(account => {
+                totalGiven += account.given || 0;
+                totalToReceive += account.received || 0;
+                netBalance += account.balance || 0;
+            });
+        }
+
+        document.getElementById('total-given').textContent = '₹' + totalGiven;
+        document.getElementById('total-to-receive').textContent = '₹' + totalToReceive;
+        document.getElementById('net-balance').textContent = '₹' + Math.abs(netBalance);
+        document.getElementById('total-accounts').textContent = window.moneyAccountsList?.length || 0;
+        
+        // Update balance color
+        const netBalanceElem = document.getElementById('net-balance');
+        netBalanceElem.className = 'amount ' + (netBalance > 0 ? 'positive' : netBalance < 0 ? 'negative' : 'neutral');
+    };
+
+    window.filterTransactions = () => {
+        if(window.renderTransactionsList) window.renderTransactionsList();
+    };
+
+    window.exportMoneyToExcel = () => {
+        if(!window.moneyAccountsList || window.moneyAccountsList.length === 0) {
+            alert("कोई डेटा नहीं है एक्सपोर्ट करने के लिए");
+            return;
+        }
+
+        const wsData = [
+            ['नाम', 'मोबाइल', 'पता', 'दिया गया', 'लेना है', 'शुद्ध बाकी', 'नोट्स']
+        ];
+
+        window.moneyAccountsList.forEach(account => {
+            wsData.push([
+                account.name,
+                account.mobile || '',
+                account.address || '',
+                account.given || 0,
+                account.received || 0,
+                account.balance || 0,
+                account.notes || ''
+            ]);
+        });
+
+        const ws = XLSX.utils.aoa_to_sheet(wsData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "पैसा हिसाब");
+        
+        XLSX.writeFile(wb, `Verma_Money_Account_${new Date().toISOString().split('T')[0]}.xlsx`);
+        showToast("Excel फ़ाइल डाउनलोड की गई 📊");
+    };
+
+    window.exportMoneyToPDF = async () => {
+        showToast("PDF जेनरेट हो रहा है... ⏳");
+        
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        let yPos = 20;
+        
+        // Header
+        pdf.setFontSize(20);
+        pdf.setTextColor(0, 35, 102); // Royal blue
+        pdf.text("वर्मा टेंट हाउस - पैसा हिसाब", 105, yPos, { align: 'center' });
+        yPos += 10;
+        
+        pdf.setFontSize(12);
+        pdf.setTextColor(0, 0, 0);
+        pdf.text(`रिपोर्ट तिथि: ${new Date().toLocaleDateString('hi-IN')}`, 105, yPos, { align: 'center' });
+        yPos += 15;
+        
+        // Summary
+        pdf.setFontSize(14);
+        pdf.text("सारांश:", 20, yPos);
+        yPos += 10;
+        
+        pdf.setFontSize(12);
+        pdf.text(`कुल दिया गया: ₹${document.getElementById('total-given').textContent.replace('₹', '')}`, 30, yPos);
+        yPos += 7;
+        pdf.text(`कुल लेना है: ₹${document.getElementById('total-to-receive').textContent.replace('₹', '')}`, 30, yPos);
+        yPos += 7;
+        pdf.text(`शुद्ध बाकी: ₹${document.getElementById('net-balance').textContent.replace('₹', '')}`, 30, yPos);
+        yPos += 10;
+        
+        // Accounts Table
+        pdf.setFontSize(14);
+        pdf.text("अकाउंट्स की सूची:", 20, yPos);
+        yPos += 10;
+        
+        const accounts = window.moneyAccountsList || [];
+        accounts.forEach((account, index) => {
+            if(yPos > 270) {
+                pdf.addPage();
+                yPos = 20;
+            }
+            
+            pdf.setFontSize(10);
+            pdf.text(`${index + 1}. ${account.name} (${account.mobile || 'No mobile'})`, 25, yPos);
+            yPos += 5;
+            pdf.text(`   दिया: ₹${account.given || 0} | लेना: ₹${account.received || 0} | बाकी: ₹${account.balance || 0}`, 25, yPos);
+            yPos += 7;
+        });
+        
+        pdf.save(`Verma_Money_Account_${new Date().toISOString().split('T')[0]}.pdf`);
+        showToast("PDF डाउनलोड की गई 📄");
+    };
+
+    // --- MULTIPLE BILL PDF FUNCTIONS ---
+    window.toggleMultiBillMode = () => {
+        window.multiBillMode = !window.multiBillMode;
+        const controls = document.getElementById('multi-bill-controls');
+        const btn = document.querySelector('.tab-btn[style*="background:#9b59b6"]');
+        
+        if(window.multiBillMode) {
+            controls.style.display = 'block';
+            btn.textContent = '✖️ Cancel Selection';
+            btn.style.background = '#e74c3c';
+        } else {
+            controls.style.display = 'none';
+            btn.textContent = '📑 Multiple Bills PDF';
+            btn.style.background = '#9b59b6';
+            window.selectedBills.clear();
+            updateSelectedCount();
+            if(window.renderHistoryList) window.renderHistoryList();
+        }
+    };
+
+    window.selectAllBills = () => {
+        if(!window.allBillsList) return;
+        
+        const filtered = window.allBillsList.filter(bill => {
+            if(bill.deleted === true) return false;
+            if(window.activeHistoryTab === 'short') return bill.billType === 'short';
+            if(window.activeHistoryTab === 'full') return bill.billType === 'full';
+            return false;
+        });
+        
+        // Limit to maximum 5 bills
+        const maxBills = Math.min(5, filtered.length);
+        const limitedBills = filtered.slice(0, maxBills);
+        
+        limitedBills.forEach(bill => {
+            window.selectedBills.add(bill.id);
+        });
+        
+        updateSelectedCount();
+        if(window.renderHistoryList) window.renderHistoryList();
+        showToast(`अधिकतम ${maxBills} बिल्स चुने गए ✅`);
+    };
+
+    window.clearBillSelection = () => {
+        window.selectedBills.clear();
+        updateSelectedCount();
+        if(window.renderHistoryList) window.renderHistoryList();
+        showToast("सभी चयन हटा दिए गए ❌");
+    };
+
+    window.updateSelectedCount = () => {
+        const countElem = document.getElementById('selected-bills-count');
+        if(countElem) {
+            countElem.textContent = `${window.selectedBills.size} बिल्स चुने गए (अधिकतम 5)`;
+        }
+    };
+
+    window.toggleBillSelection = (billId) => {
+        if(window.selectedBills.size >= 5 && !window.selectedBills.has(billId)) {
+            alert("आप अधिकतम 5 बिल्स ही चुन सकते हैं");
+            return;
+        }
+        
+        if(window.selectedBills.has(billId)) {
+            window.selectedBills.delete(billId);
+        } else {
+            window.selectedBills.add(billId);
+        }
+        updateSelectedCount();
+        
+        // Update UI
+        const billElement = document.querySelector(`.history-item[data-id="${billId}"]`);
+        if(billElement) {
+            if(window.selectedBills.has(billId)) {
+                billElement.classList.add('selected-bill');
+            } else {
+                billElement.classList.remove('selected-bill');
+            }
+        }
+    };
+
+    window.downloadCombinedPDF = async () => {
+        if(window.selectedBills.size === 0) {
+            alert("कृपया कम से कम एक बिल चुनें");
+            return;
+        }
+
+        if(window.selectedBills.size > 5) {
+            alert("कृपया अधिकतम 5 बिल्स ही चुनें");
+            return;
+        }
+
+        showToast(`${window.selectedBills.size} बिल्स का PDF जेनरेट हो रहा है... ⏳`);
+        
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        
+        // Sort selected bills by date
+        const selectedBillsList = Array.from(window.selectedBills)
+            .map(id => window.billsData[id])
+            .filter(bill => bill)
+            .sort((a, b) => new Date(b.billDate || b.timestamp) - new Date(a.billDate || a.timestamp));
+        
+        // Create a container for combined bills
+        const combinedContainer = document.getElementById('combined-pdf-content');
+        combinedContainer.innerHTML = '';
+        
+        for(let i = 0; i < selectedBillsList.length; i++) {
+            const bill = selectedBillsList[i];
+            
+            // Create bill HTML based on type
+            let billHTML = '';
+            if(bill.billType === 'full') {
+                billHTML = generateFullBillHTML(bill);
+            } else {
+                billHTML = generateShortBillHTML(bill);
+            }
+            
+            // Add bill to combined container
+            combinedContainer.innerHTML += billHTML;
+            
+            // Add page break except for last bill
+            if(i < selectedBillsList.length - 1) {
+                combinedContainer.innerHTML += '<div style="page-break-after: always;"></div>';
+            }
+        }
+        
+        // Convert to PDF
+        const template = document.getElementById('combined-pdf-template');
+        template.style.display = 'block';
+        
+        const canvas = await html2canvas(combinedContainer, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: "#ffffff",
+            width: template.offsetWidth,
+            height: combinedContainer.offsetHeight
+        });
+        
+        template.style.display = 'none';
+        
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = 210; // A4 width in mm
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        
+        // Add image to PDF
+        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+        
+        // Save PDF
+        const fileName = `Verma_Combined_Bills_${selectedBillsList.length}_${new Date().toISOString().split('T')[0]}.pdf`;
+        pdf.save(fileName);
+        
+        showToast(`${selectedBillsList.length} बिल्स का PDF डाउनलोड हो गया 📦`);
+    };
+
+    window.shareCombinedPDF = async () => {
+        if(window.selectedBills.size === 0) {
+            alert("कृपया कम से कम एक बिल चुनें");
+            return;
+        }
+
+        if(window.selectedBills.size > 5) {
+            alert("कृपया अधिकतम 5 बिल्स ही चुनें");
+            return;
+        }
+
+        showToast("PDF शेयर की तैयारी हो रही है... 📤");
+        
+        // First download the PDF
+        await window.downloadCombinedPDF();
+        
+        // Note: PDF sharing through browser's share API might not work directly
+        // We'll show a message instead
+        showToast("PDF डाउनलोड हो गया। मैन्युअल रूप से शेयर करें।");
+    };
+
+    // Helper functions for bill HTML generation
+    function generateFullBillHTML(bill) {
+        let itemsHTML = '';
+        if(bill.items) {
+            bill.items.forEach((item, index) => {
+                if(item.n && item.q) {
+                    itemsHTML += `
+                        <tr>
+                            <td style="border:1px solid #ddd; padding:8px;">${index + 1}</td>
+                            <td style="border:1px solid #ddd; padding:8px;">${item.n}</td>
+                            <td style="border:1px solid #ddd; padding:8px; text-align:center;">${item.q}</td>
+                            <td style="border:1px solid #ddd; padding:8px; text-align:center;">${item.r || 0}</td>
+                            <td style="border:1px solid #ddd; padding:8px; text-align:right;">₹${item.a || 0}</td>
+                            <td style="border:1px solid #ddd; padding:8px; text-align:center;">${item.b || '-'}</td>
+                        </tr>
+                    `;
+                }
+            });
+        }
+        
+        return `
+            <div style="border: 2px solid #000080; padding: 20px; margin-bottom: 20px;">
+                <div style="text-align:center; color:#000080; margin-bottom:20px;">
+                    <div style="font-size:14px; font-weight:bold;">!! श्री गणेशाय नमः !!</div>
+                    <h1 style="margin:5px 0; font-size:32px; text-transform:uppercase;">वर्मा टेन्ट हाउस</h1>
+                    <div style="background:#000080; color:white; border-radius:20px; padding:5px 20px; display:inline-block; font-size:14px;">ग्रा०+पो०- रघुनाथपुर, बलिया</div>
+                    <div style="margin-top:5px; font-weight:bold;">📞 9918691464, 7408832903</div>
+                    <div style="font-size:14px; font-weight:bold; margin-top:5px; border-top:1px solid #ccc; padding-top:5px;">प्रो० शिवनारायण वर्मा</div>
+                </div>
+                
+                <div style="display:flex; justify-content:space-between; margin-bottom:15px; border:1px solid #ccc; padding:10px; background:#f9f9f9;">
+                    <div><strong>Name:</strong> ${bill.custName || 'Unknown'}</div>
+                    <div><strong>Date:</strong> ${bill.billDate || 'Unknown'}</div>
+                    <div><strong>Mobile:</strong> ${bill.custMobile || 'N/A'}</div>
+                </div>
+                
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:13px;">
+                    <div><strong>From:</strong> ${bill.dateGive || 'N/A'}</div>
+                    <div><strong>To:</strong> ${bill.dateReturn || 'N/A'}</div>
+                    <div><strong>Days:</strong> ${bill.days || 1}</div>
+                </div>
+
+                <table style="width:100%; border-collapse:collapse; margin-bottom:20px;">
+                    <thead>
+                        <tr style="background:#000080; color:white;">
+                            <th style="border:1px solid #000; padding:8px;">#</th>
+                            <th style="border:1px solid #000; padding:8px; text-align:left;">विवरण</th>
+                            <th style="border:1px solid #000; padding:8px;">पिस</th>
+                            <th style="border:1px solid #000; padding:8px;">रेट</th>
+                            <th style="border:1px solid #000; padding:8px;">मूल्य</th>
+                            <th style="border:1px solid #000; padding:8px;">बाकी</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${itemsHTML}
+                    </tbody>
+                </table>
+
+                <div style="text-align:right; font-size:16px;">
+                    <div style="margin-bottom:5px;">Total Amount: <strong>₹${bill.grandTotal || 0}</strong></div>
+                    <div style="margin-bottom:5px;">Advance: <strong>₹${bill.advance || 0}</strong></div>
+                    <div style="font-size:18px; color:#c0392b; border-top:1px solid #000; padding-top:5px;">Balance Due: <strong>₹${bill.balance || bill.manualBalance || 0}</strong></div>
+                </div>
+                
+                <div style="margin-top:40px; display:flex; justify-content:space-between; font-weight:bold; font-size:12px;">
+                    <div style="border-top:1px solid #000; width:100px; text-align:center;">Signature</div>
+                    <div style="border-top:1px solid #000; width:100px; text-align:center;">Proprietor</div>
+                </div>
+            </div>
+        `;
+    }
+
+    function generateShortBillHTML(bill) {
+        let itemsHTML = '';
+        if(bill.items) {
+            bill.items.forEach((item, index) => {
+                itemsHTML += `
+                    <tr>
+                        <td style="border:1px solid #ddd; padding:8px;">${index + 1}</td>
+                        <td style="border:1px solid #ddd; padding:8px;">${item.name}</td>
+                        <td style="border:1px solid #ddd; padding:8px; text-align:center;">${item.qty || 0}</td>
+                        <td style="border:1px solid #ddd; padding:8px; text-align:center;">${item.rate || 0}</td>
+                        <td style="border:1px solid #ddd; padding:8px; text-align:right;">₹${item.total || 0}</td>
+                        <td style="border:1px solid #ddd; padding:8px; text-align:center; background:#${item.pending > 0 ? 'fadbd8' : 'e8f6f3'};">
+                            ${item.pending > 0 ? item.pending : '-'}
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+        
+        return `
+            <div style="border: 2px solid #000080; padding: 20px; margin-bottom: 20px;">
+                <div style="text-align:center; color:#000080; margin-bottom:20px;">
+                    <div style="font-size:14px; font-weight:bold;">!! श्री गणेशाय नमः !!</div>
+                    <h1 style="margin:5px 0; font-size:32px; text-transform:uppercase;">वर्मा टेन्ट हाउस</h1>
+                    <div style="background:#000080; color:white; border-radius:20px; padding:5px 20px; display:inline-block; font-size:14px;">ग्रा०+पो०- रघुनाथपुर, बलिया</div>
+                    <div style="margin-top:5px; font-weight:bold;">📞 9918691464, 7408832903</div>
+                    <div style="font-size:14px; font-weight:bold; margin-top:5px; border-top:1px solid #ccc; padding-top:5px;">प्रो० शिवनारायण वर्मा</div>
+                </div>
+                
+                <div style="display:flex; justify-content:space-between; margin-bottom:15px; border:1px solid #ccc; padding:10px; background:#f9f9f9;">
+                    <div><strong>Name:</strong> ${bill.custName || 'Unknown'}</div>
+                    <div><strong>Date:</strong> ${bill.billDate || 'Unknown'}</div>
+                    <div><strong>Mobile:</strong> ${bill.custMobile || 'N/A'}</div>
+                </div>
+                
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:13px;">
+                    <div><strong>From:</strong> ${bill.dateGive || 'N/A'}</div>
+                    <div><strong>To:</strong> ${bill.dateReturn || 'N/A'}</div>
+                    <div><strong>Days:</strong> ${bill.days || 1}</div>
+                </div>
+
+                <table style="width:100%; border-collapse:collapse; margin-bottom:20px;">
+                    <thead>
+                        <tr style="background:#000080; color:white;">
+                            <th style="border:1px solid #000; padding:8px;">#</th>
+                            <th style="border:1px solid #000; padding:8px; text-align:left;">Item Name</th>
+                            <th style="border:1px solid #000; padding:8px;">Qty</th>
+                            <th style="border:1px solid #000; padding:8px;">Rate</th>
+                            <th style="border:1px solid #000; padding:8px;">Total</th>
+                            <th style="border:1px solid #000; padding:8px; background:#c0392b; color:white;">Pending</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${itemsHTML}
+                    </tbody>
+                </table>
+
+                <div style="text-align:right; font-size:16px;">
+                    <div style="margin-bottom:5px;">Total Amount: <strong>₹${bill.total || 0}</strong></div>
+                    <div style="margin-bottom:5px;">Advance: <strong>₹${bill.advance || 0}</strong></div>
+                    <div style="font-size:18px; color:#c0392b; border-top:1px solid #000; padding-top:5px;">Balance Due: <strong>₹${bill.balance || bill.manualBalance || 0}</strong></div>
+                </div>
+                
+                <div style="margin-top:40px; display:flex; justify-content:space-between; font-weight:bold; font-size:12px;">
+                    <div style="border-top:1px solid #000; width:100px; text-align:center;">Signature</div>
+                    <div style="border-top:1px solid #000; width:100px; text-align:center;">Proprietor</div>
+                </div>
+            </div>
+        `;
+    }
 
     // --- HISTORY TAB & RENDER LOGIC WITH RECYCLING BIN ---
     window.setHistoryTab = (tab) => {
         window.activeHistoryTab = tab;
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-tab'));
+        window.selectedBills.clear(); // Clear selection when tab changes
+        updateSelectedCount();
+        
+        document.querySelectorAll('.tab-btn').forEach(b => {
+            if(b.textContent.includes('Multiple')) return;
+            b.classList.remove('active-tab');
+        });
         event.target.classList.add('active-tab');
         
         const pendingFilter = document.getElementById('pending-filter-container');
@@ -870,7 +2123,6 @@
         try { await updateDoc(doc(db, "bills", id), { isStarred: !isStarred }); } catch(err) { console.error(err); }
     };
 
-    // NEW DELETE BILL FUNCTION WITH RECYCLING BIN
     window.deleteBill = async (id) => {
         if(!confirm("क्या आप इस बिल को Recycling Bin में भेजना चाहते हैं?")) return;
         
@@ -892,7 +2144,6 @@
         }
     };
 
-    // PERMANENT DELETE FROM RECYCLING BIN
     window.permanentDeleteBill = async (id) => {
         if(!confirm("⚠️ स्थायी रूप से डिलीट करें? यह एक्शन वापस नहीं आएगा!")) return;
         
@@ -906,7 +2157,6 @@
         }
     };
 
-    // RESTORE BILL FROM RECYCLING BIN
     window.restoreBill = async (id) => {
         try {
             await updateDoc(doc(db, "bills", id), { 
@@ -922,7 +2172,6 @@
         }
     };
 
-    // UNDO LAST DELETE
     window.undoLastDelete = async () => {
         if(!window.lastDeletedBill) return;
         
@@ -1059,10 +2308,18 @@
             const dueDisplay = dueAmount > 0 
                 ? `<span class="due-text">देना बाकी: ₹${dueAmount}</span>` 
                 : `<span style="color:green; font-size:12px;">(Paid/Clear)</span>`;
+            
+            const isSelected = window.selectedBills.has(d.id);
+            const selectedClass = isSelected ? 'selected-bill' : '';
 
             list.innerHTML += `
-                <div class="history-item" data-id="${d.id}" style="border-left: 5px solid ${d.isStarred ? 'gold' : '#000080'};">
-                    <span class="star-icon ${d.isStarred ? 'starred' : ''}" onclick="toggleStar(event, '${d.id}')">${d.isStarred ? '⭐' : '☆'}</span>
+                <div class="history-item ${selectedClass}" data-id="${d.id}" style="border-left: 5px solid ${d.isStarred ? 'gold' : '#000080'};">
+                    ${window.multiBillMode ? `
+                        <input type="checkbox" class="bill-checkbox" ${isSelected ? 'checked' : ''} 
+                               onclick="toggleBillSelection('${d.id}')" style="margin-right:10px;">
+                    ` : `
+                        <span class="star-icon ${d.isStarred ? 'starred' : ''}" onclick="toggleStar(event, '${d.id}')">${d.isStarred ? '⭐' : '☆'}</span>
+                    `}
                     <div onclick="loadBillWrapper('${d.id}', '${d.billType}')" style="flex-grow:1; cursor:pointer;">
                         <strong style="font-size:16px;">${d.custName}</strong> ${pendingTag}
                         <span style="float:right; color:#000080; font-weight:bold;">₹${d.grandTotal || d.total}</span>
@@ -1070,7 +2327,9 @@
                         <span style="font-size:12px; color:#666;">📅 ${d.billDate}</span>
                         ${dueDisplay}
                     </div>
-                    <button style="background:#c0392b; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer; margin-left:10px;" onclick="deleteBill('${d.id}')">🗑️</button>
+                    ${!window.multiBillMode ? `
+                        <button style="background:#c0392b; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer; margin-left:10px;" onclick="deleteBill('${d.id}')">🗑️</button>
+                    ` : ''}
                 </div>`;
         });
     };
@@ -1083,9 +2342,9 @@
         }
     };
 
-    // --- SHORT BILL LOGIC (ITEM SUGGESTIONS REMOVED) ---
+    // --- SHORT BILL LOGIC ---
     
-    // Hinglish to Hindi Dictionary (Kept for reference but suggestions removed)
+    // Hinglish to Hindi Dictionary
     const itemDictionary = [
         { key: "chair", val: "कुर्सी फाइबर", price: 6 },
         { key: "kurshi", val: "कुर्सी फाइबर", price: 6 },
@@ -1130,8 +2389,6 @@
         window.shortBillItems = JSON.parse(window.sbRedoStack.pop());
         renderShortBillList();
     };
-
-    // REMOVED: handleShortBillSearch function and suggestions
 
     // Calculate Pending based on "Aa Gaya Saman"
     window.calcSbPendingLogic = () => {
@@ -1410,7 +2667,7 @@
         });
     };
 
-    // --- FULL BILL LOGIC (UNCHANGED) ---
+    // --- FULL BILL LOGIC ---
     window.fbHistory = [];
     window.fbRedoStack = [];
     function getFullBillState() {
@@ -1535,7 +2792,7 @@
     window.deleteLabourEntry = async (id, index) => { if(!confirm("Remove entry?")) return; const labourDoc = doc(db, "labour", id); const snapshot = await getDoc(labourDoc); const currentEntries = snapshot.data().entries || []; currentEntries.splice(index, 1); await updateDoc(labourDoc, { entries: currentEntries }); };
     window.deleteLabour = async (id) => { if(confirm("Delete Labour Profile?")) await deleteDoc(doc(db, "labour", id)); };
     window.handleImageUpload = async (e) => { const files = e.target.files; if(!files.length) return; Array.from(files).forEach(file => { const reader = new FileReader(); reader.onload = (evt) => { const img = new Image(); img.src = evt.target.result; img.onload = async () => { const c = document.createElement('canvas'); const ctx = c.getContext('2d'); const scale = 1000/img.width; c.width = 1000; c.height = img.height*scale; ctx.drawImage(img,0,0,c.width,c.height); try { await addDoc(galleryRef, { image: c.toDataURL('image/jpeg', 0.7), type:'image', timestamp: Date.now() }); showToast("Uploaded"); } catch(err){} } }; reader.readAsDataURL(file); }); };
-    window.addVideoLink = async () => { const url = document.getElementById('video-link-input').value; if(!url) return; try { await addDoc(galleryRef, { url: url, type:'video', timestamp: Date.now() }); showToast("Link Added"); document.getElementById('video-link-input').value = ""; } catch(e){ alert(e); } }
+    window.addVideoLink = async () => { const url = document.getElementById('video-link-input').value; if(!url) return; try { await addDoc(galleryRef, { url: url, type:'video', timestamp: Date.now() }); showToast("Link Added"); document.getElementById('video-link-input').value = ""; } catch(e){ alert(e); } };
     window.delDoc = async (col, id) => { if(confirm("Delete?")) await deleteDoc(doc(db, col, id)); };
 
 </script>
@@ -1553,7 +2810,6 @@
         message.textContent = `"${billName}" moved to Recycling Bin`;
         toast.style.display = 'block';
         
-        // Auto hide after 10 seconds
         clearTimeout(window.undoDeleteTimeout);
         window.undoDeleteTimeout = setTimeout(() => {
             hideUndoToast();
@@ -1572,6 +2828,11 @@
         } 
         initSlider(); 
         if(window.resetShortBill) window.resetShortBill();
+        
+        // Set default dates for money forms
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('give-date').value = today;
+        document.getElementById('receive-date').value = today;
     };
     
     function checkLogin() { 
@@ -1623,7 +2884,8 @@
             'gallery':'gallery-view', 
             'contact':'contact-view', 
             'labour':'labour-view', 
-            'short-bill': 'short-bill-view'
+            'short-bill': 'short-bill-view',
+            'money-account': 'money-account-view'
         }; 
         const section = document.getElementById(map[id]); 
         if(section) {
